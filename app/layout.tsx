@@ -16,13 +16,14 @@ export const metadata: Metadata = {
   title: "GV80",
   description: "Brandon Car - Smart 차계부",
   icons: {
-    icon: "/icon.jpg", // app 폴더에 넣은 파일명과 일치해야 합니다.
+    icon: "/icon.jpg",         // 일반 브라우저 아이콘
+    apple: "/icon.jpg",        // iOS (아이폰/아이패드) 홈 화면 아이콘
   },
   // 안드로이드 및 기타 모바일 기기를 위한 설정
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "GV80 차계부",
+    title: "GV80",
   },
 };
 
