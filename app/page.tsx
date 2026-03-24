@@ -171,14 +171,15 @@ export default function Home() {
         <div className="p-4 overflow-y-auto">
           <div className="flex justify-between items-center mb-4">
             <div className="flex items-baseline gap-2">
-              <h1 className={`text-xl font-black cursor-pointer tracking-tighter ${activeTab === 'fuel' ? 'text-slate-800' : 'text-slate-300'}`} onClick={() => {setActiveTab("fuel"); resetForm();}}>🚗 GV80</h1>
+              <h1 className={`text-xl font-black cursor-pointer tracking-tighter ${activeTab === 'fuel' ? 'text-slate-800' : 'text-slate-300'}`} onClick={() => {setActiveTab("fuel"); resetForm();}}><img src="/GV80.jpg" alt="GV80 Icon" className="w-6 h-6 inline-block mr-1 -mt-1 rounded-md" />
+                GV80</h1>
               <span className={`text-[14px] font-black cursor-pointer uppercase ${activeTab === 'maint' ? 'text-blue-600' : 'text-slate-300'}`} onClick={() => {setActiveTab("maint"); resetForm();}}>Maintenance</span>
             </div>
-            <button onClick={handleLogout} className="text-[10px] font-bold text-slate-400 hover:text-red-500">LOGOUT</button>
+            <button onClick={handleLogout} className="text-[10px] font-bold text-slate-400 hover:text-red-500 transition-colors">LOGOUT</button>
           </div>
 
           <section className={`p-4 rounded-2xl border ${editingId ? 'bg-orange-50 border-orange-200' : 'bg-slate-50 border-slate-100'}`}>
-            <form onSubmit={handleSave} className="space-y-4">
+            <form onSubmit={handleSave} className="space-y-3">
               {activeTab === "fuel" ? (
                 <>
                   <div className="grid grid-cols-2 gap-3">
@@ -186,11 +187,15 @@ export default function Home() {
                     <div><label className="text-[11px] font-bold text-slate-600 ml-1 mb-1 block tracking-tighter">주유회사</label><select className="p-2 border border-slate-300 rounded-xl w-full text-sm font-bold text-slate-900 bg-white outline-none" value={formData.brand} onChange={(e) => setFormData({...formData, brand: e.target.value})}><option value="1">SK Enclean</option><option value="2">GS Caltex</option><option value="3">알뜰주유소</option></select></div>
                   </div>
                   <div className="grid grid-cols-3 gap-2">
-                    <div><label className="text-[11px] font-bold text-slate-600 ml-1 mb-1 block tracking-tighter">단가</label><input type="number" className="p-2 border border-slate-300 rounded-xl w-full text-sm text-right font-bold" value={formData.unit_price_krw} onChange={(e) => setFormData({...formData, unit_price_krw: e.target.value})} required /></div>
-                    <div><label className="text-[11px] font-bold text-slate-600 ml-1 mb-1 block tracking-tighter">주유량</label><input type="number" step="0.01" className="p-2 border border-slate-300 rounded-xl w-full text-sm text-right font-bold" value={formData.fuel_volume_l} onChange={(e) => setFormData({...formData, fuel_volume_l: e.target.value})} required /></div>
-                    <div><label className="text-[11px] font-black text-blue-600 ml-1 mb-1 block tracking-tighter">주유액</label><input type="number" className="p-2 border-2 border-blue-200 rounded-xl w-full text-sm font-black text-right bg-blue-50 text-blue-800" value={formData.amount_krw} onChange={(e) => setFormData({...formData, amount_krw: e.target.value})} required /></div>
+                    <div><label className="text-[11px] font-bold text-slate-600 ml-1 mb-1 block tracking-tighter">주유단가(원)</label><input type="number" className="p-2 border border-slate-300 rounded-xl w-full text-sm text-right font-bold outline-none" value={formData.unit_price_krw} onChange={(e) => setFormData({...formData, unit_price_krw: e.target.value})} required /></div>
+                    <div><label className="text-[11px] font-bold text-slate-600 ml-1 mb-1 block tracking-tighter">주유량(L)</label><input type="number" step="0.01" className="p-2 border border-slate-300 rounded-xl w-full text-sm text-right font-bold outline-none" value={formData.fuel_volume_l} onChange={(e) => setFormData({...formData, fuel_volume_l: e.target.value})} required /></div>
+                    <div><label className="text-[11px] font-black text-blue-600 ml-1 mb-1 block tracking-tighter">주유금액(원)</label><input type="number" className="p-2 border-2 border-blue-200 rounded-xl w-full text-sm font-black text-right bg-blue-50 text-blue-800 outline-none" value={formData.amount_krw} onChange={(e) => setFormData({...formData, amount_krw: e.target.value})} required /></div>
                   </div>
-                  <div><label className="text-[11px] font-bold text-slate-600 ml-1 mb-1 block tracking-tighter">주행거리(km)</label><input type="number" className="p-2 border border-slate-300 rounded-xl w-full text-sm font-bold text-blue-600 text-right" value={formData.distance_km} onChange={(e) => setFormData({...formData, distance_km: e.target.value})} required /></div>
+                  {/* [변경]: 주행거리 입력창 크기를 단가와 맞추고(grid-cols-3 사용) 저장 버튼을 키움 */}
+                  <div className="grid grid-cols-3 gap-2 items-end">
+                    <div className="col-span-1"><label className="text-[11px] font-bold text-slate-600 ml-1 mb-1 block tracking-tighter">주행거리(km)</label><input type="number" className="p-2 border border-slate-300 rounded-xl w-full text-sm font-bold text-blue-600 text-right outline-none" value={formData.distance_km} onChange={(e) => setFormData({...formData, distance_km: e.target.value})} required /></div>
+                    <button type="submit" className={`col-span-2 py-2 rounded-xl font-black text-white shadow-md active:scale-95 transition-all ${editingId ? 'bg-orange-600' : 'bg-slate-900'}`}>{editingId ? "수정" : "저장"}</button>
+                  </div>
                 </>
               ) : (
                 <>
@@ -198,15 +203,17 @@ export default function Home() {
                     <div><label className="text-[11px] font-bold text-slate-600 ml-1 mb-1 block tracking-tighter">정비일자</label><input type="date" className="p-2 border border-slate-300 rounded-xl w-full text-sm font-bold bg-white outline-none" value={maintFormData.maint_date} onChange={(e) => setMaintFormData({...maintFormData, maint_date: e.target.value})} required /></div>
                     <div><label className="text-[11px] font-bold text-slate-600 ml-1 mb-1 block tracking-tighter">정비회사</label><input type="text" className="p-2 border border-slate-300 rounded-xl w-full text-sm font-bold outline-none" value={maintFormData.company} onChange={(e) => setMaintFormData({...maintFormData, company: e.target.value})} required placeholder="블루핸즈" /></div>
                   </div>
-                  <div><label className="text-[11px] font-bold text-slate-600 ml-1 mb-1 block tracking-tighter">정비내역</label><input type="text" maxLength={100} className="p-2 border border-slate-300 rounded-xl w-full text-sm font-bold outline-none" value={maintFormData.content} onChange={(e) => setMaintFormData({...maintFormData, content: e.target.value})} required placeholder="예: 엔진오일 교환" /></div>
+                  <div><label className="text-[11px] font-bold text-slate-600 ml-1 mb-1 block tracking-tighter">정비내역 (100자 이내)</label><input type="text" maxLength={100} className="p-2 border border-slate-300 rounded-xl w-full text-sm font-bold outline-none" value={maintFormData.content} onChange={(e) => setMaintFormData({...maintFormData, content: e.target.value})} required placeholder="예: 엔진오일 교환" /></div>
                   <div className="grid grid-cols-2 gap-3">
-                    <div><label className="text-[11px] font-bold text-slate-600 ml-1 mb-1 block tracking-tighter">정비금액</label><input type="number" className="p-2 border border-slate-300 rounded-xl w-full text-sm text-right font-bold outline-none" value={maintFormData.amount_krw} onChange={(e) => setMaintFormData({...maintFormData, amount_krw: e.target.value})} required /></div>
+                    <div><label className="text-[11px] font-bold text-slate-600 ml-1 mb-1 block tracking-tighter">정비금액(원)</label><input type="number" className="p-2 border border-slate-300 rounded-xl w-full text-sm text-right font-bold outline-none" value={maintFormData.amount_krw} onChange={(e) => setMaintFormData({...maintFormData, amount_krw: e.target.value})} required /></div>
                     <div><label className="text-[11px] font-bold text-slate-600 ml-1 mb-1 block tracking-tighter">주행거리(km)</label><input type="number" className="p-2 border border-slate-300 rounded-xl w-full text-sm font-bold text-blue-600 text-right outline-none" value={maintFormData.odometer_km} onChange={(e) => setMaintFormData({...maintFormData, odometer_km: e.target.value})} required /></div>
                   </div>
-                  <div><label className="text-[11px] font-bold text-slate-600 ml-1 mb-1 block tracking-tighter">메모</label><input type="text" maxLength={100} className="p-2 border border-slate-300 rounded-xl w-full text-sm font-bold outline-none" value={maintFormData.memo} onChange={(e) => setMaintFormData({...maintFormData, memo: e.target.value})} /></div>
+                  <div className="flex gap-2 items-end">
+                    <div className="flex-1"><label className="text-[11px] font-bold text-slate-600 ml-1 mb-1 block tracking-tighter">메모 (200자 이내)</label><input type="text" maxLength={100} className="p-2 border border-slate-300 rounded-xl w-full text-sm font-bold outline-none" value={maintFormData.memo} onChange={(e) => setMaintFormData({...maintFormData, memo: e.target.value})} /></div>
+                    <button type="submit" className={`w-20 py-2 rounded-xl font-black text-white shadow-md active:scale-95 transition-all ${editingId ? 'bg-orange-600' : 'bg-slate-900'}`}>{editingId ? "수정" : "저장"}</button>
+                  </div>
                 </>
               )}
-              <button type="submit" className={`w-full py-2 rounded-xl font-black text-white shadow-md active:scale-95 ${editingId ? 'bg-orange-600' : 'bg-slate-900'}`}>{editingId ? "수정" : "저장"}</button>
               {editingId && (
                 <div className="grid grid-cols-2 gap-2 pt-1">
                   <button type="button" onClick={handleDelete} className="py-2 bg-red-50 text-red-600 border border-red-100 rounded-xl font-bold text-xs active:scale-95">삭제</button>
@@ -268,12 +275,11 @@ export default function Home() {
               })
             ) : (
               maintLogs.map((log) => (
-                <div key={log.id} onDoubleClick={() => startEdit(log)} className={`flex items-center px-3 py-4 hover:bg-slate-50 cursor-pointer transition-colors ${editingId === log.id ? 'bg-orange-50 ring-1 ring-inset ring-orange-200' : ''}`}>
+                <div key={log.id} onDoubleClick={() => startEdit(log)} className={`flex items-center px-3 py-4 hover:bg-slate-50 cursor-pointer transition-colors whitespace-nowrap ${editingId === log.id ? 'bg-orange-50 ring-1 ring-inset ring-orange-200' : ''}`}>
                   <div className="w-[90px] shrink-0 text-[13px] font-black text-slate-950 text-center tracking-tighter">{log.maint_date}</div>
                   <div className="w-[85px] shrink-0 text-sm font-black text-blue-800 text-right pr-4 border-r border-slate-100 bg-slate-50/50 py-1 tracking-tight">
                     {log.amount_krw.toLocaleString()}
                   </div>
-                  {/* [변경]: 줄바꿈 허용 (whitespace-normal) */}
                   <div className="flex-1 px-3 py-1 overflow-hidden whitespace-normal break-all">
                     <div className="text-sm font-black text-slate-900 leading-tight mb-1">{log.content}</div>
                     <div className="text-[10px] font-bold leading-tight">
@@ -281,7 +287,6 @@ export default function Home() {
                       {log.memo && <span className="text-blue-400 ml-1">| {log.memo}</span>}
                     </div>
                   </div>
-                  {/* [변경]: 폰트 크기 복구(text-sm) 및 셀 너비 추가 축소(50px) */}
                   <div className="w-[50px] shrink-0 text-sm font-black text-slate-900 text-right pr-3 tracking-tighter">
                     {log.odometer_km?.toLocaleString()}
                   </div>
@@ -305,7 +310,7 @@ export default function Home() {
                 <div className="w-[85px] text-sm font-black text-orange-400 text-right pr-4 border-r border-slate-700 tracking-tight">
                   {totalMaintAmount.toLocaleString()}
                 </div>
-                <div className="flex-1 text-center text-[14px] text-slate-500 font-bold uppercase tracking-widest">Maintenance Total</div>
+                <div className="flex-1 text-center text-[14px] text-slate-500 font-bold uppercase tracking-widest">Brandon GV80</div>
                 <div className="w-[50px] shrink-0"></div>
               </>
             )}
