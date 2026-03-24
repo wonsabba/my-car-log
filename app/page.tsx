@@ -151,7 +151,7 @@ export default function Home() {
     return (
       <div className="flex items-center justify-center h-screen bg-slate-100 font-sans p-6">
         <div className="w-full max-w-sm bg-white p-8 rounded-3xl shadow-2xl">
-          <h1 className="text-2xl font-black text-slate-800 mb-6 text-center">Brandonc</h1>
+          <h1 className="text-2xl font-black text-slate-800 mb-6 text-center">Brandon Car</h1>
           <form onSubmit={handleLogin} className="space-y-4">
             <input type="email" placeholder="이메일" className="w-full p-4 border border-slate-200 rounded-2xl outline-none font-bold" value={email} onChange={(e) => setEmail(e.target.value)} required />
             <input type="password" placeholder="비밀번호" className="w-full p-4 border border-slate-200 rounded-2xl outline-none font-bold" value={password} onChange={(e) => setPassword(e.target.value)} required />
@@ -242,7 +242,7 @@ export default function Home() {
               ) : (
                 <>
                   <div className="w-[90px] text-center shrink-0">정비일자</div>
-                  <div className="w-[95px] text-right pr-8 shrink-0 border-r border-slate-300 bg-slate-100">금액(원)</div>
+                  <div className="w-[85px] text-right pr-8 shrink-0 border-r border-slate-300 bg-slate-100">금액(원)</div>
                   <div className="flex-1 text-center px-2">정비내역 / 업체 / 메모</div>
                   <div className="w-[50px] text-right pr-3 shrink-0">주행거리(Km)</div>
                 </>
@@ -270,7 +270,7 @@ export default function Home() {
               maintLogs.map((log) => (
                 <div key={log.id} onDoubleClick={() => startEdit(log)} className={`flex items-center px-3 py-4 hover:bg-slate-50 cursor-pointer transition-colors ${editingId === log.id ? 'bg-orange-50 ring-1 ring-inset ring-orange-200' : ''}`}>
                   <div className="w-[90px] shrink-0 text-[13px] font-black text-slate-950 text-center tracking-tighter">{log.maint_date}</div>
-                  <div className="w-[95px] shrink-0 text-sm font-black text-blue-800 text-right pr-4 border-r border-slate-100 bg-slate-50/50 py-1 tracking-tight">
+                  <div className="w-[85px] shrink-0 text-sm font-black text-blue-800 text-right pr-4 border-r border-slate-100 bg-slate-50/50 py-1 tracking-tight">
                     {log.amount_krw.toLocaleString()}
                   </div>
                   {/* [변경]: 줄바꿈 허용 (whitespace-normal) */}
@@ -302,7 +302,7 @@ export default function Home() {
             ) : (
               <>
                 <div className="w-[90px] text-[14px] font-black text-slate-400 text-center tracking-tighter leading-none">Total</div>
-                <div className="w-[95px] text-sm font-black text-orange-400 text-right pr-4 border-r border-slate-700 tracking-tight">
+                <div className="w-[85px] text-sm font-black text-orange-400 text-right pr-4 border-r border-slate-700 tracking-tight">
                   {totalMaintAmount.toLocaleString()}
                 </div>
                 <div className="flex-1 text-center text-[14px] text-slate-500 font-bold uppercase tracking-widest">Maintenance Total</div>
