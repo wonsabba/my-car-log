@@ -164,12 +164,12 @@ export default function Home() {
           </div>
           
           <div className="bg-slate-50 px-4 py-2 flex items-center border-t border-slate-200 text-[11px] font-black text-slate-500 uppercase tracking-tight">
-            <div className="flex-1 text-center">Date</div>
-            <div className="w-[80px] text-center shrink-0">Company</div>
-            <div className="w-[65px] text-right pr-2 shrink-0">Price</div>
-            <div className="w-[65px] text-right pr-3 shrink-0 border-r border-slate-300">Liter</div>
-            <div className="w-[85px] text-right pr-3 shrink-0">Amount</div>
-            <div className="w-[80px] text-right pr-4 shrink-0">Distance</div>
+            <div className="flex-1 text-center">주유일자</div>
+            <div className="w-[60px] text-center shrink-0">회사</div>
+            <div className="w-[65px] text-center shrink-0">단가</div>
+            <div className="w-[65px] text-center shrink-0 border-r border-slate-300">주유량</div>
+            <div className="w-[85px] text-center shrink-0">주유액</div>
+            <div className="w-[85px] text-center shrink-0">주행거리</div>
           </div>
         </div>
 
@@ -177,11 +177,11 @@ export default function Home() {
           {logs.map((log) => (
             <div key={log.id} onDoubleClick={() => startEdit(log)} className={`flex items-center px-4 py-4 hover:bg-slate-50 cursor-pointer transition-colors ${editingId === log.id ? 'bg-orange-50 ring-1 ring-inset ring-orange-200' : ''}`}>
               <div className="flex-1 text-base font-black text-slate-950 text-center tracking-tighter">{log.refuel_date}</div>
-              <div className={`w-[80px] shrink-0 text-base font-black text-center tracking-tighter ${brandConfig[log.brand]?.color || "text-slate-950"}`}>{brandConfig[log.brand]?.name || "-"}</div>
+              <div className={`w-[60px] shrink-0 text-base font-black text-center tracking-tighter ${brandConfig[log.brand]?.color || "text-slate-950"}`}>{brandConfig[log.brand]?.name || "-"}</div>
               <div className="w-[65px] shrink-0 text-base font-bold text-slate-600 text-right pr-2 tracking-tighter">{log.unit_price_krw.toLocaleString()}</div>
               <div className="w-[65px] shrink-0 text-base font-bold text-slate-600 text-right pr-3 border-r border-slate-100 tracking-tighter">{log.fuel_volume_l.toLocaleString()}</div>
               <div className="w-[85px] shrink-0 text-base font-black text-slate-950 text-right pr-3 tracking-tighter">{log.amount_krw.toLocaleString()}</div>
-              <div className="w-[80px] shrink-0 text-base font-black text-blue-700 text-right pr-4 tracking-tighter">{log.distance_km.toLocaleString()}</div>
+              <div className="w-[85px] shrink-0 text-base font-black text-blue-700 text-right pr-4 tracking-tighter">{log.distance_km.toLocaleString()}</div>
             </div>
           ))}
         </div>
@@ -191,7 +191,7 @@ export default function Home() {
           <div className="w-[80px] shrink-0"></div><div className="w-[65px] shrink-0"></div>
           <div className="w-[65px] shrink-0 text-orange-400 text-base font-black text-right pr-3 border-r border-slate-700 tracking-tight">{totalVolume.toFixed(1)}</div>
           <div className="w-[85px] shrink-0 text-base font-black text-white text-right pr-3 tracking-tight">{totalAmount.toLocaleString()}</div>
-          <div className="w-[80px] shrink-0 text-right pr-4 text-slate-500 text-[10px] self-center uppercase tracking-tighter">Total Results</div>
+          <div className="w-[85px] shrink-0 text-right pr-4 text-slate-500 text-[10px] self-center uppercase tracking-tighter">Total Results</div>
         </div>
       </main>
 
