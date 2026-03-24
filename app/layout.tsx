@@ -18,6 +18,12 @@ export const metadata: Metadata = {
   icons: {
     icon: "/icon.jpg", // app 폴더에 넣은 파일명과 일치해야 합니다.
   },
+  // 안드로이드 및 기타 모바일 기기를 위한 설정
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "GV80 차계부",
+  },
 };
 
 export default function RootLayout({
