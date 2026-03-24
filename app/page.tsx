@@ -244,7 +244,7 @@ export default function Home() {
                   <div className="w-[90px] text-center shrink-0">정비일자</div>
                   <div className="w-[85px] text-right pr-8 shrink-0 border-r border-slate-300 bg-slate-100">금액(원)</div>
                   <div className="flex-1 text-center px-2">정비내역 / 업체 / 메모</div>
-                  <div className="w-[50px] text-right pr-3 shrink-0">주행거리(Km)</div>
+                  <div className="w-[50px] text-right pr-3 shrink-0">주행거리</div>
                 </>
               )}
             </div>
