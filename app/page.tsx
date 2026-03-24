@@ -22,7 +22,6 @@ export default function Home() {
     setTimeout(() => setToast(null), 3000);
   };
 
-  // 자동 계산 로직
   useEffect(() => {
     const price = Number(formData.unit_price_krw);
     const volume = Number(formData.fuel_volume_l);
@@ -55,17 +54,16 @@ export default function Home() {
 
     if (editingId) {
       const { error } = await supabase.from("fuel_logs").update(payload).eq("id", editingId);
-      if (error) showToast("수정 실패: " + error.message, "error");
+      if (error) showToast("수정 실패", "error");
       else {
-        showToast("✅ 수정 완료!");
+        showToast("✅ 수정 완료");
         setEditingId(null);
       }
     } else {
       const { error } = await supabase.from("fuel_logs").insert([payload]);
-      if (error) showToast("저장 실패: " + error.message, "error");
-      else showToast("🚀 저장 완료!");
+      if (error) showToast("저장 실패", "error");
+      else showToast("🚀 저장 완료");
     }
-
     resetForm();
     fetchLogs();
   };
@@ -92,14 +90,12 @@ export default function Home() {
       distance_km: log.distance_km.toString(),
       memo: log.memo || ""
     });
-    // 모바일 배려: 입력창이 있는 상단으로 자동 스크롤
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    showToast("📝 수정 모드 진입");
   };
 
   const handleDelete = async () => {
     if (!editingId) return;
-    if (confirm("이 기록을 삭제하시겠습니까?")) {
+    if (confirm("삭제하시겠습니까?")) {
       const { error } = await supabase.from("fuel_logs").delete().eq("id", editingId);
       if (error) showToast("삭제 실패", "error");
       else {
@@ -111,72 +107,60 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col md:flex-row h-screen bg-slate-50 max-w-6xl mx-auto overflow-hidden border-x border-slate-200 relative">
+    <div className="flex flex-col md:flex-row h-screen bg-white max-w-6xl mx-auto overflow-hidden border-x border-slate-200">
       
       {toast && (
-        <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-full shadow-2xl bg-slate-800 text-white font-bold text-sm">
+        <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-50 px-6 py-2 rounded-full shadow-xl bg-slate-800 text-white font-bold text-xs">
           {toast.msg}
         </div>
       )}
 
-      <header className="w-full md:w-[360px] bg-white z-20 border-b md:border-b-0 md:border-r border-slate-200 flex flex-col shadow-sm">
-        <div className="p-5">
-          <h1 className="text-xl font-black mb-4 text-slate-800 flex items-center justify-center md:justify-start gap-2">
-            <span className="bg-blue-600 p-1.5 rounded-lg text-white text-sm">⛽</span> 내 차계부
-          </h1>
-          
-          <section className={`p-4 rounded-2xl border transition-all ${editingId ? 'bg-orange-50 border-orange-200' : 'bg-blue-50/30 border-blue-100'}`}>
-            <h2 className={`text-[10px] font-bold mb-3 uppercase tracking-widest ${editingId ? 'text-orange-500' : 'text-blue-500'}`}>
-              {editingId ? "Editing Mode" : "New Entry"}
-            </h2>
+      {/* --- [입력 영역] --- */}
+      <header className="w-full md:w-[350px] bg-white z-20 border-b md:border-b-0 md:border-r border-slate-200 flex flex-col">
+        <div className="p-4">
+          <h1 className="text-xl font-black mb-4 text-slate-800">🚗 내 차계부</h1>
+          <section className={`p-4 rounded-2xl border ${editingId ? 'bg-orange-50 border-orange-200' : 'bg-slate-50 border-slate-100'}`}>
             <form onSubmit={handleSave} className="space-y-3">
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[10px] font-bold text-slate-400 ml-1 mb-1 block">주유 일자</label>
-                  <input type="date" className="p-2.5 border border-slate-200 rounded-xl w-full text-sm outline-none bg-white font-bold text-slate-900" 
+                  <label className="text-xs font-bold text-slate-400 ml-1 mb-1 block tracking-tighter">주유 일자</label>
+                  <input type="date" className="p-2.5 border border-slate-200 rounded-xl w-full text-sm font-bold text-slate-900 outline-none bg-white" 
                     value={formData.refuel_date} onChange={(e) => setFormData({...formData, refuel_date: e.target.value})} required />
                 </div>
                 <div>
-                  <label className="text-[10px] font-bold text-slate-400 ml-1 mb-1 block">단가(원/L)</label>
-                  <input type="number" className="p-2.5 border border-slate-200 rounded-xl w-full text-sm outline-none text-right text-slate-900 font-bold"
+                  <label className="text-xs font-bold text-slate-400 ml-1 mb-1 block tracking-tighter">단가(원/L)</label>
+                  <input type="number" className="p-2.5 border border-slate-200 rounded-xl w-full text-sm text-right font-bold outline-none"
                     value={formData.unit_price_krw} onChange={(e) => setFormData({...formData, unit_price_krw: e.target.value})} required />
                 </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="text-[10px] font-bold text-slate-400 ml-1 mb-1 block">주유량(L)</label>
-                  <input type="number" step="0.01" className="p-2.5 border border-slate-200 rounded-xl w-full text-sm outline-none text-right font-bold text-slate-900"
+                  <label className="text-xs font-bold text-slate-400 ml-1 mb-1 block tracking-tighter">주유량(L)</label>
+                  <input type="number" step="0.01" className="p-2.5 border border-slate-200 rounded-xl w-full text-sm text-right font-bold outline-none"
                     value={formData.fuel_volume_l} onChange={(e) => setFormData({...formData, fuel_volume_l: e.target.value})} required />
                 </div>
                 <div>
-                  <label className="text-[10px] font-black text-blue-500 ml-1 mb-1 block">주유액(자동)</label>
-                  <input type="number" className="p-2.5 border-2 border-blue-200 rounded-xl w-full text-sm outline-none font-black text-right bg-blue-50 text-blue-800" 
+                  <label className="text-xs font-black text-blue-500 ml-1 mb-1 block tracking-tighter">주유액(자동)</label>
+                  <input type="number" className="p-2.5 border border-slate-200 rounded-xl w-full text-sm font-black text-right bg-blue-50 text-blue-800 outline-none" 
                     value={formData.amount_krw} onChange={(e) => setFormData({...formData, amount_krw: e.target.value})} required />
                 </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="text-[10px] font-bold text-slate-400 ml-1 mb-1 block">주행거리(km)</label>
-                  <input type="number" className="p-2.5 border border-slate-200 rounded-xl w-full text-sm outline-none font-bold text-blue-600 text-right"
+                  <label className="text-xs font-bold text-slate-400 ml-1 mb-1 block tracking-tighter">주행거리(km)</label>
+                  <input type="number" className="p-2.5 border border-slate-200 rounded-xl w-full text-sm font-bold text-blue-600 text-right outline-none"
                     value={formData.distance_km} onChange={(e) => setFormData({...formData, distance_km: e.target.value})} required />
                 </div>
                 <div>
-                  <label className="text-[10px] font-bold text-slate-400 ml-1 mb-1 block">메모</label>
-                  <input type="text" className="p-2.5 border border-slate-200 rounded-xl w-full text-sm outline-none font-bold text-slate-900"
+                  <label className="text-xs font-bold text-slate-400 ml-1 mb-1 block tracking-tighter">메모</label>
+                  <input type="text" className="p-2.5 border border-slate-200 rounded-xl w-full text-sm font-bold outline-none text-slate-900"
                     value={formData.memo} onChange={(e) => setFormData({...formData, memo: e.target.value})} />
                 </div>
               </div>
-              
               <div className="flex flex-col gap-2 pt-1">
-                <button type="submit" className={`w-full py-3.5 rounded-xl font-black text-white shadow-lg active:scale-95 transition-all ${editingId ? 'bg-orange-500' : 'bg-slate-800'}`}>
-                  {editingId ? "수정 내용 저장" : "새 기록 저장하기"}
+                <button type="submit" className={`w-full py-3.5 rounded-xl font-black text-white shadow-lg transition-all ${editingId ? 'bg-orange-500' : 'bg-slate-800'}`}>
+                  {editingId ? "내역 수정 저장" : "주유 기록 저장"}
                 </button>
                 {editingId && (
                   <div className="flex gap-2">
-                    <button type="button" onClick={handleDelete} className="flex-1 bg-red-50 text-red-500 border border-red-100 py-3 rounded-xl font-bold text-sm active:bg-red-100">삭제</button>
-                    <button type="button" onClick={resetForm} className="flex-1 bg-slate-100 text-slate-500 py-3 rounded-xl font-bold text-sm active:bg-slate-200">취소</button>
+                    <button type="button" onClick={handleDelete} className="flex-1 bg-red-50 text-red-600 border border-red-100 py-2.5 rounded-lg font-bold">삭제</button>
+                    <button type="button" onClick={resetForm} className="flex-1 bg-slate-100 text-slate-500 py-2.5 rounded-lg font-bold">취소</button>
                   </div>
                 )}
               </div>
@@ -185,44 +169,53 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="flex-1 overflow-y-auto p-4 md:p-6 pb-20 custom-scrollbar bg-slate-50">
-        <div className="mb-6 px-1 flex justify-between items-end">
-          <h2 className="text-xl font-black text-slate-800 tracking-tight leading-none">주유 내역 <span className="text-xs text-slate-400 font-bold ml-1">더블클릭하여 수정</span></h2>
-          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{logs.length}건</span>
+      {/* --- [내역 영역: 정렬 최적화] --- */}
+      <main className="flex-1 overflow-y-auto custom-scrollbar bg-white flex flex-col">
+        <div className="px-5 py-4 border-b border-slate-100 flex justify-between items-center bg-white shrink-0 font-sans">
+          <h2 className="text-lg font-black text-slate-800 tracking-tight">주유 내역 <span className="text-[10px] text-slate-300 font-normal ml-1">더블클릭 수정</span></h2>
+          <span className="bg-slate-800 text-white text-[10px] px-2 py-0.5 rounded-md font-bold">{logs.length}건</span>
         </div>
         
-        <div className="space-y-2">
+        {/* 고정 헤더: 정렬에 맞춰 텍스트 정렬 변경 */}
+        <div className="sticky top-0 bg-slate-50 px-4 py-2 border-b border-slate-200 z-10 flex items-center shadow-sm font-sans">
+          <div className="w-[110px] shrink-0 text-[11px] font-bold text-slate-400 text-center uppercase tracking-tight">Date</div>
+          <div className="w-[100px] shrink-0 text-[11px] font-bold text-slate-400 text-right pr-4 uppercase border-r border-slate-200 tracking-tight">Amount</div>
+          <div className="flex-1 grid grid-cols-3 text-[11px] font-bold text-slate-400 uppercase tracking-tight">
+            <span className="text-right pr-4">Price</span>
+            <span className="text-right pr-4">Liter</span>
+            <span className="text-right pr-4">Distance</span>
+          </div>
+        </div>
+
+        {/* 목록 데이터: 날짜 중앙 / 나머지 우측 정렬 */}
+        <div className="divide-y divide-slate-100 overflow-y-auto flex-1 font-sans">
           {logs.map((log) => (
             <div 
               key={log.id} 
               onDoubleClick={() => startEdit(log)}
-              className={`group bg-white p-4 rounded-2xl border transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-2 cursor-pointer active:scale-[0.98] ${editingId === log.id ? 'border-orange-400 ring-2 ring-orange-100' : 'border-white hover:border-blue-100 shadow-sm hover:shadow-md'}`}
+              className={`flex items-center px-4 py-4 hover:bg-slate-50 transition-colors cursor-pointer ${editingId === log.id ? 'bg-orange-50 ring-1 ring-inset ring-orange-200' : ''}`}
             >
-              <div className="flex items-center gap-4 flex-wrap">
-                <div className="text-base font-mono font-black text-slate-900 bg-slate-100 px-3 py-1 rounded-lg border border-slate-200">
-                  {log.refuel_date}
-                </div>
-                <div className="text-base font-black text-slate-800 tracking-tight">
-                  {log.amount_krw.toLocaleString()}<span className="text-[10px] font-normal ml-0.5 text-slate-400">원</span>
-                </div>
+              {/* 1. 날짜 (중앙 정렬) */}
+              <div className="w-[110px] shrink-0 text-base font-black text-slate-950 text-center tracking-tight">
+                {log.refuel_date}
               </div>
 
-              <div className="flex items-center gap-x-6 gap-y-1 text-base font-black text-slate-900">
-                <div className="flex items-center gap-1.5 min-w-[70px]">
-                  <span className="text-[10px] font-bold uppercase text-slate-400 tracking-tighter">@</span>
-                  <span>{log.unit_price_krw}</span>
-                </div>
-                <div className="flex items-center gap-1.5 min-w-[60px]">
-                  <span className="text-[10px] text-slate-300 font-bold uppercase tracking-tighter">L</span>
-                  <span>{log.fuel_volume_l}</span>
-                </div>
-                <div className="flex items-center gap-1.5 min-w-[100px] text-blue-600">
-                  <span className="text-[10px] text-blue-200 font-bold uppercase tracking-tighter">Km</span>
-                  <span>{log.distance_km.toLocaleString()}</span>
-                </div>
+              {/* 2. 주유액 (우측 정렬) */}
+              <div className="w-[100px] shrink-0 text-base font-black text-slate-950 text-right pr-4 border-r border-slate-100 tracking-tight">
+                {log.amount_krw.toLocaleString()}
+              </div>
+
+              {/* 3. 상세 수치들 (전부 우측 정렬) */}
+              <div className="flex-1 grid grid-cols-3 font-black text-slate-950 text-base tracking-tight">
+                <div className="text-right pr-4 tracking-tighter">{log.unit_price_krw.toLocaleString()}</div>
+                <div className="text-right pr-4 tracking-tighter">{log.fuel_volume_l.toLocaleString()}</div>
+                <div className="text-right pr-4 text-blue-700 tracking-tighter">{log.distance_km.toLocaleString()}</div>
               </div>
             </div>
           ))}
+          {logs.length === 0 && (
+            <div className="text-center py-20 text-slate-300 font-bold italic font-mono uppercase">NO DATA</div>
+          )}
         </div>
       </main>
 
