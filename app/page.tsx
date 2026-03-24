@@ -155,7 +155,7 @@ export default function Home() {
           <form onSubmit={handleLogin} className="space-y-4">
             <input type="email" placeholder="이메일" className="w-full p-4 border border-slate-200 rounded-2xl outline-none font-bold" value={email} onChange={(e) => setEmail(e.target.value)} required />
             <input type="password" placeholder="비밀번호" className="w-full p-4 border border-slate-200 rounded-2xl outline-none font-bold" value={password} onChange={(e) => setPassword(e.target.value)} required />
-            <button type="submit" className="w-full py-4 bg-slate-900 text-white rounded-2xl font-black text-lg active:scale-95 transition-all">로그인</button>
+            <button type="submit" className="w-full py-4 bg-slate-900 text-white rounded-2xl font-black text-lg active:scale-95">로그인</button>
           </form>
           {toast && <div className="mt-4 text-center text-xs font-bold text-red-500">{toast.msg}</div>}
         </div>
@@ -168,13 +168,13 @@ export default function Home() {
       {toast && <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 px-6 py-2 rounded-full shadow-xl bg-slate-800 text-white font-bold text-xs shrink-0">{toast.msg}</div>}
 
       <header className="w-full md:w-[340px] bg-white z-20 border-b md:border-b-0 md:border-r border-slate-200 flex flex-col shrink-0">
-        <div className="p-4">
+        <div className="p-4 overflow-y-auto">
           <div className="flex justify-between items-center mb-4">
             <div className="flex items-baseline gap-2">
               <h1 className={`text-xl font-black cursor-pointer tracking-tighter ${activeTab === 'fuel' ? 'text-slate-800' : 'text-slate-300'}`} onClick={() => {setActiveTab("fuel"); resetForm();}}>🚗 GV80</h1>
-              <span className={`text-[12px] font-black cursor-pointer uppercase ${activeTab === 'maint' ? 'text-blue-600' : 'text-slate-300'}`} onClick={() => {setActiveTab("maint"); resetForm();}}>Maintenance</span>
+              <span className={`text-[14px] font-black cursor-pointer uppercase ${activeTab === 'maint' ? 'text-blue-600' : 'text-slate-300'}`} onClick={() => {setActiveTab("maint"); resetForm();}}>Maintenance</span>
             </div>
-            <button onClick={handleLogout} className="text-[10px] font-bold text-slate-400 hover:text-red-500 transition-colors">LOGOUT</button>
+            <button onClick={handleLogout} className="text-[10px] font-bold text-slate-400 hover:text-red-500">LOGOUT</button>
           </div>
 
           <section className={`p-4 rounded-2xl border ${editingId ? 'bg-orange-50 border-orange-200' : 'bg-slate-50 border-slate-100'}`}>
@@ -186,11 +186,11 @@ export default function Home() {
                     <div><label className="text-[11px] font-bold text-slate-600 ml-1 mb-1 block tracking-tighter">주유회사</label><select className="p-2 border border-slate-300 rounded-xl w-full text-sm font-bold text-slate-900 bg-white outline-none" value={formData.brand} onChange={(e) => setFormData({...formData, brand: e.target.value})}><option value="1">SK Enclean</option><option value="2">GS Caltex</option><option value="3">알뜰주유소</option></select></div>
                   </div>
                   <div className="grid grid-cols-3 gap-2">
-                    <div><label className="text-[11px] font-bold text-slate-600 ml-1 mb-1 block tracking-tighter">단가</label><input type="number" className="p-2 border border-slate-300 rounded-xl w-full text-sm text-right font-bold outline-none" value={formData.unit_price_krw} onChange={(e) => setFormData({...formData, unit_price_krw: e.target.value})} required /></div>
-                    <div><label className="text-[11px] font-bold text-slate-600 ml-1 mb-1 block tracking-tighter">주유량</label><input type="number" step="0.01" className="p-2 border border-slate-300 rounded-xl w-full text-sm text-right font-bold outline-none" value={formData.fuel_volume_l} onChange={(e) => setFormData({...formData, fuel_volume_l: e.target.value})} required /></div>
-                    <div><label className="text-[11px] font-black text-blue-600 ml-1 mb-1 block tracking-tighter">주유액</label><input type="number" className="p-2 border-2 border-blue-200 rounded-xl w-full text-sm font-black text-right bg-blue-50 text-blue-800 outline-none" value={formData.amount_krw} onChange={(e) => setFormData({...formData, amount_krw: e.target.value})} required /></div>
+                    <div><label className="text-[11px] font-bold text-slate-600 ml-1 mb-1 block tracking-tighter">단가</label><input type="number" className="p-2 border border-slate-300 rounded-xl w-full text-sm text-right font-bold" value={formData.unit_price_krw} onChange={(e) => setFormData({...formData, unit_price_krw: e.target.value})} required /></div>
+                    <div><label className="text-[11px] font-bold text-slate-600 ml-1 mb-1 block tracking-tighter">주유량</label><input type="number" step="0.01" className="p-2 border border-slate-300 rounded-xl w-full text-sm text-right font-bold" value={formData.fuel_volume_l} onChange={(e) => setFormData({...formData, fuel_volume_l: e.target.value})} required /></div>
+                    <div><label className="text-[11px] font-black text-blue-600 ml-1 mb-1 block tracking-tighter">주유액</label><input type="number" className="p-2 border-2 border-blue-200 rounded-xl w-full text-sm font-black text-right bg-blue-50 text-blue-800" value={formData.amount_krw} onChange={(e) => setFormData({...formData, amount_krw: e.target.value})} required /></div>
                   </div>
-                  <div><label className="text-[11px] font-bold text-slate-600 ml-1 mb-1 block tracking-tighter">주행거리(km)</label><input type="number" className="p-2 border border-slate-300 rounded-xl w-full text-sm font-bold text-blue-600 text-right outline-none" value={formData.distance_km} onChange={(e) => setFormData({...formData, distance_km: e.target.value})} required /></div>
+                  <div><label className="text-[11px] font-bold text-slate-600 ml-1 mb-1 block tracking-tighter">주행거리(km)</label><input type="number" className="p-2 border border-slate-300 rounded-xl w-full text-sm font-bold text-blue-600 text-right" value={formData.distance_km} onChange={(e) => setFormData({...formData, distance_km: e.target.value})} required /></div>
                 </>
               ) : (
                 <>
@@ -241,11 +241,10 @@ export default function Home() {
                 </>
               ) : (
                 <>
-                  {/* [정비 목록 헤더 밸런스 조정] */}
-                  <div className="w-[75px] text-center shrink-0">정비일자</div>
-                  <div className="w-[95px] text-right pr-4 shrink-0 border-r border-slate-300 bg-slate-100">금액(원)</div>
-                  <div className="flex-1 text-center px-2">정비내역 및 업체/메모</div>
-                  <div className="w-[60px] text-right pr-3 shrink-0">Odo</div>
+                  <div className="w-[90px] text-center shrink-0">정비일자</div>
+                  <div className="w-[95px] text-right pr-8 shrink-0 border-r border-slate-300 bg-slate-100">금액(원)</div>
+                  <div className="flex-1 text-center px-2">정비내역 / 업체 / 메모</div>
+                  <div className="w-[50px] text-right pr-3 shrink-0">주행거리(Km)</div>
                 </>
               )}
             </div>
@@ -269,25 +268,21 @@ export default function Home() {
               })
             ) : (
               maintLogs.map((log) => (
-                <div key={log.id} onDoubleClick={() => startEdit(log)} className={`flex items-center px-3 py-4 hover:bg-slate-50 cursor-pointer transition-colors whitespace-nowrap ${editingId === log.id ? 'bg-orange-50 ring-1 ring-inset ring-orange-200' : ''}`}>
-                  {/* 정비일자 너비 축소(75px) 및 폰트 크기 미세 조정 */}
-                  <div className="w-[75px] shrink-0 text-[13px] font-black text-slate-950 text-center tracking-tighter leading-none">{log.maint_date}</div>
-                  
-                  {/* 금액 강조: 배경색 및 폰트 크기 확대 */}
+                <div key={log.id} onDoubleClick={() => startEdit(log)} className={`flex items-center px-3 py-4 hover:bg-slate-50 cursor-pointer transition-colors ${editingId === log.id ? 'bg-orange-50 ring-1 ring-inset ring-orange-200' : ''}`}>
+                  <div className="w-[90px] shrink-0 text-[13px] font-black text-slate-950 text-center tracking-tighter">{log.maint_date}</div>
                   <div className="w-[95px] shrink-0 text-sm font-black text-blue-800 text-right pr-4 border-r border-slate-100 bg-slate-50/50 py-1 tracking-tight">
                     {log.amount_krw.toLocaleString()}
                   </div>
-
-                  <div className="flex-1 px-3 overflow-hidden">
-                    <div className="text-sm font-black text-slate-900 truncate">{log.content}</div>
-                    <div className="text-[10px] font-bold truncate">
+                  {/* [변경]: 줄바꿈 허용 (whitespace-normal) */}
+                  <div className="flex-1 px-3 py-1 overflow-hidden whitespace-normal break-all">
+                    <div className="text-sm font-black text-slate-900 leading-tight mb-1">{log.content}</div>
+                    <div className="text-[10px] font-bold leading-tight">
                       <span className="text-slate-500">{log.company}</span>
                       {log.memo && <span className="text-blue-400 ml-1">| {log.memo}</span>}
                     </div>
                   </div>
-
-                  {/* 주행거리 너비 축소(60px) 및 색상 차별화 */}
-                  <div className="w-[60px] shrink-0 text-[11px] font-bold text-slate-400 text-right pr-3 tracking-tighter">
+                  {/* [변경]: 폰트 크기 복구(text-sm) 및 셀 너비 추가 축소(50px) */}
+                  <div className="w-[50px] shrink-0 text-sm font-black text-slate-900 text-right pr-3 tracking-tighter">
                     {log.odometer_km?.toLocaleString()}
                   </div>
                 </div>
@@ -306,12 +301,12 @@ export default function Home() {
               </>
             ) : (
               <>
-                <div className="w-[75px] text-[14px] font-black text-slate-400 text-center tracking-tighter leading-none uppercase">Sum</div>
+                <div className="w-[90px] text-[14px] font-black text-slate-400 text-center tracking-tighter leading-none">Total</div>
                 <div className="w-[95px] text-sm font-black text-orange-400 text-right pr-4 border-r border-slate-700 tracking-tight">
                   {totalMaintAmount.toLocaleString()}
                 </div>
-                <div className="flex-1 text-center text-[10px] text-slate-500 font-bold uppercase tracking-widest">Maintenance Total</div>
-                <div className="w-[60px] shrink-0"></div>
+                <div className="flex-1 text-center text-[14px] text-slate-500 font-bold uppercase tracking-widest">Maintenance Total</div>
+                <div className="w-[50px] shrink-0"></div>
               </>
             )}
           </div>
