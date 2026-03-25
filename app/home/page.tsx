@@ -86,7 +86,7 @@ export default function HouseholdLedger() {
         </button>
       </header>
 
-      <main className="flex-1 overflow-y-auto pb-80 custom-scrollbar bg-white">
+      <main className="flex-1 overflow-y-auto pb-[320px] custom-scrollbar bg-white">
         {isAdding && (
           <div className="bg-blue-50 p-3 border-b border-blue-100 space-y-2 animate-in slide-in-from-top duration-200">
             <div className="flex gap-2 items-center">
@@ -105,7 +105,6 @@ export default function HouseholdLedger() {
           </div>
         )}
 
-        {/* 목록 헤더 & 데이터 (기존과 동일) */}
         <div className="bg-slate-50 px-4 py-2.5 flex text-[11px] font-black text-slate-500 border-b border-slate-200 sticky top-0 z-10 uppercase tracking-widest">
           <div className={`${colWidths.item} shrink-0 text-center`}>Item</div>
           <div className={`${colWidths.amount} text-right ${colWidths.spacer} shrink-0 border-r border-slate-200 bg-slate-100/50`}>Amount</div>
@@ -113,56 +112,83 @@ export default function HouseholdLedger() {
         </div>
 
         <div className="divide-y divide-slate-100">
-          {logs.map((log) => (
-            <div key={log.id} className="flex items-center px-4 py-4 hover:bg-slate-50 transition-colors" onDoubleClick={() => { setEditingId(log.id); setEditMode("all"); setTempData({ item_name: log.item_name, amount: log.amount.toString(), remarks: log.remarks || "", is_card: log.is_card }); }}>
-               {/* 목록 렌더링 로직 생략 */}
-               <div className={`${colWidths.item} shrink-0 font-black text-sm text-center ${log.is_card ? 'text-blue-700' : 'text-slate-900'}`}>{log.item_name}</div>
-               <div className={`${colWidths.amount} shrink-0 text-right ${colWidths.spacer} border-r border-slate-100 font-black text-sm`}>
-                 {editingId === log.id ? <input autoFocus type="number" className="w-full text-right outline-none bg-yellow-50" value={tempData.amount} onChange={e => setTempData({...tempData, amount: e.target.value})} onKeyDown={e => e.key === 'Enter' && handleSave()} /> : log.amount.toLocaleString()}
-               </div>
-               <div className="flex-1 px-5 text-[12px] font-bold text-slate-400 truncate">{log.remarks || "-"}</div>
-            </div>
-          ))}
+          {logs.map((log) => {
+            const isEditing = editingId === log.id;
+            return (
+              <div key={log.id} className={`flex items-center px-4 py-4 hover:bg-slate-50 transition-colors ${isEditing ? 'bg-yellow-50' : ''}`}
+                onDoubleClick={() => { setEditingId(log.id); setEditMode("all"); setTempData({ item_name: log.item_name, amount: log.amount.toString(), remarks: log.remarks || "", is_card: log.is_card }); }}>
+                <div className={`${colWidths.item} shrink-0 font-black text-sm text-center ${log.is_card ? 'text-blue-700' : 'text-slate-900'}`}>{log.item_name}</div>
+                <div className={`${colWidths.amount} shrink-0 text-right ${colWidths.spacer} border-r border-slate-100 font-black text-sm`}>
+                  {isEditing ? <input autoFocus type="number" className="w-full text-right outline-none bg-transparent" value={tempData.amount} onChange={e => setTempData({...tempData, amount: e.target.value})} onKeyDown={e => e.key === 'Enter' && handleSave()} /> : log.amount.toLocaleString()}
+                </div>
+                <div className="flex-1 px-5 flex items-center justify-between min-w-0">
+                  {isEditing && editMode === "all" ? (
+                    <div className="flex-1 flex gap-2 items-center">
+                      <input className="flex-1 text-xs font-bold border-b-2 border-blue-400 outline-none bg-transparent" value={tempData.remarks} onChange={e => setTempData({...tempData, remarks: e.target.value})} />
+                      <button onClick={handleSave} className="text-[11px] font-black text-blue-600">SAVE</button>
+                      <button onClick={() => handleDelete(log.id)} className="text-[11px] font-black text-red-600 ml-1">DEL</button>
+                    </div>
+                  ) : (
+                    <div className="text-[12px] font-bold text-slate-400 whitespace-normal break-all leading-snug">{log.remarks || "-"}</div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </main>
 
-      {/* [수정]: 모바일 주소창을 고려하여 하단 여백과 시그니처를 추가한 푸터 */}
-      <footer className="absolute bottom-0 left-0 right-0 bg-slate-900 text-white p-5 pb-10 space-y-2 z-30 shadow-[0_-10px_40px_rgba(0,0,0,0.4)] rounded-t-3xl border-t border-slate-700">
+      {/* [수정]: 5단 합계 완벽 복구 + 하단 Brandon 시그니처 여백 대폭 확장 */}
+      <footer className="absolute bottom-0 left-0 right-0 bg-slate-900 text-white p-5 pb-12 space-y-2 z-30 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] rounded-t-[2.5rem] border-t border-slate-700 transition-all">
+        {/* 1. 카드종합 */}
         <div className="flex items-center">
           <div className={`${colWidths.item} text-center text-[10px] font-black text-slate-500 tracking-tighter`}>CARD TOTAL</div>
           <div className={`${colWidths.amount} text-right ${colWidths.spacer} font-black text-sm border-r border-slate-700 text-blue-400`}>{totalCard.toLocaleString()}</div>
           <div className="flex-1 pl-4 text-[10px] text-slate-600 font-bold uppercase tracking-tight">Credit Sum</div>
         </div>
+
+        {/* 2. 현금종합 */}
         <div className="flex items-center">
           <div className={`${colWidths.item} text-center text-[10px] font-black text-slate-500 tracking-tighter`}>CASH TOTAL</div>
           <div className={`${colWidths.amount} text-right ${colWidths.spacer} font-black text-sm border-r border-slate-700 text-emerald-400`}>{totalCash.toLocaleString()}</div>
           <div className="flex-1 pl-4 text-[10px] text-slate-600 font-bold uppercase tracking-tight">General Sum</div>
         </div>
-        <div className="flex items-center border-t border-slate-800 pt-2 mt-1">
-          <div className={`${colWidths.item} text-center text-[11px] font-black text-slate-400`}>BUDGET</div>
+
+        {/* 3. 지출 종합 (복구 완료!) */}
+        <div className="flex items-center border-t border-slate-800 pt-1 mt-1">
+          <div className={`${colWidths.item} text-center text-[10px] font-black text-slate-400 uppercase`}>SPENT TOTAL</div>
+          <div className={`${colWidths.amount} text-right ${colWidths.spacer} font-black text-sm border-r border-slate-700 text-white`}>{totalSpent.toLocaleString()}</div>
+          <div className="flex-1 pl-4 text-[10px] text-slate-500 font-black italic">Combined</div>
+        </div>
+
+        {/* 4. 예산 */}
+        <div className="flex items-center">
+          <div className={`${colWidths.item} text-center text-[11px] font-black text-slate-400 uppercase`}>BUDGET</div>
           <div className={`${colWidths.amount} text-right ${colWidths.spacer} border-r border-slate-700`}>
             {editMode === "budget" ? (
               <input autoFocus type="number" className="w-full text-right font-black text-lg bg-slate-800 text-orange-400 outline-none rounded" value={tempBudget} onChange={(e) => setTempBudget(e.target.value)} onBlur={() => { if(tempBudget) setBudget(Number(tempBudget)); setEditMode(null); }} onKeyDown={(e) => e.key === 'Enter' && (setBudget(Number(tempBudget)), setEditMode(null))} />
             ) : (
-              <div className="font-black text-lg text-white cursor-pointer hover:text-orange-400" onClick={() => { setEditMode("budget"); setTempBudget(budget.toString()); }}>{budget.toLocaleString()}</div>
+              <div className="font-black text-lg text-white cursor-pointer hover:text-orange-400 transition-colors" onClick={() => { setEditMode("budget"); setTempBudget(budget.toString()); }}>{budget.toLocaleString()}</div>
             )}
           </div>
-          <div className="flex-1 pl-4 text-[10px] text-slate-500 font-bold">SET</div>
+          <div className="flex-1 pl-4 text-[10px] text-slate-500 font-bold uppercase tracking-tighter">Set Goal</div>
         </div>
-        <div className="flex items-center border-t border-slate-700 pt-2">
-          <div className={`${colWidths.item} text-center text-[12px] font-black text-orange-400 uppercase tracking-tighter`}>Remain</div>
-          <div className={`${colWidths.amount} text-right ${colWidths.spacer} font-black text-2xl border-r border-slate-700 leading-none`}>
+
+        {/* 5. 잔액 (Remain) */}
+        <div className="flex items-center border-t border-slate-700 pt-2 mt-1">
+          <div className={`${colWidths.item} text-center text-[12px] font-black text-orange-400 uppercase tracking-tighter leading-none`}>Remain</div>
+          <div className={`${colWidths.amount} text-right ${colWidths.spacer} font-black text-2xl border-r border-slate-700 leading-none tracking-tighter`}>
              <span className={`${remaining < 0 ? 'text-red-500' : 'text-orange-400'} animate-pulse`}>
               {remaining.toLocaleString()}
             </span>
           </div>
-          <div className="flex-1 text-right pr-2 text-[9px] font-black text-slate-700 uppercase">Krw Surplus</div>
+          <div className="flex-1 text-right pr-2 text-[9px] font-black text-slate-600 uppercase tracking-widest">Krw Surplus</div>
         </div>
 
-        {/* [추가]: 선배님 시그니처 및 여백 라인 */}
-        <div className="pt-4 flex flex-col items-center opacity-20 select-none">
-          <div className="text-[8px] font-black tracking-[0.3em] uppercase">Built for Brandon</div>
-          <div className="text-[7px] font-bold tracking-widest mt-0.5">EST. 1994 DEVELOPER</div>
+        {/* [확장]: 하단 여백 높이 키우고 선배님 이름 배치 */}
+        <div className="pt-8 pb-4 flex flex-col items-center opacity-30 select-none border-t border-slate-800/50 mt-4">
+          <div className="text-[9px] font-black tracking-[0.4em] text-slate-400 uppercase">Designed for BRANDON</div>
+          <div className="text-[8px] font-bold tracking-[0.2em] text-slate-500 mt-1 italic">EST. 1994 DONGSEO UNIV. DEVELOPER</div>
         </div>
       </footer>
 
