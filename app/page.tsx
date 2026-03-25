@@ -314,14 +314,14 @@ export default function Home() {
                 <div className="w-[90px] text-sm font-black text-orange-400 text-right pr-4 border-r border-slate-700 tracking-tight">
                   {totalMaintAmount.toLocaleString()}
                 </div>
-                <div className="flex-1 text-center text-[14px] text-slate-500 font-bold uppercase tracking-widest">Brandon GV80</div>
+                <div className="flex-1 text-center text-[14px] text-slate-500 font-bold tracking-widest">Brandon GV80</div>
                 <div className="w-[50px] shrink-0"></div>
               </>
             )}
           </div>
 
           <div className="bg-slate-800 pt-8 pb-10 flex flex-col items-center select-none border-t border-slate-800/50 shrink-0">
-            <div className="text-[9px] font-black tracking-[0.4em] text-slate-500 opacity-70">Designed for BRANDON</div>
+            <div className="text-[9px] font-black tracking-[0.4em] text-slate-500 opacity-70">Designed By Brandon</div>
           </div>
 
 

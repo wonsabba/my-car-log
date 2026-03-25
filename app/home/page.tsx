@@ -16,6 +16,25 @@ export default function HouseholdLedger() {
   const [budget, setBudget] = useState(5200000);
   const [tempBudget, setTempBudget] = useState("");
 
+  // 💡 [추가] 일반 항목별 고정 금액 설정 (선배님의 기준에 맞춰 수정하세요)
+  const defaultAmounts: { [key: string]: number } = {
+    "BNK 이체": 1000000,
+    "펀드,월세": 1000000,
+    "동백전(수학)": 500000,
+    "국민연금/보험": 369260,
+    "환화종신보험": 208000,
+    "가족,처가,동문": 100000,
+    "주택청약(KB)": 100000,
+    "규원영어": 250000,
+    "생활비": 500000,
+    "ISA": 500000,
+    "안마,치아보험": 68270,
+    "가족통신요금": 88000,
+    "상조회비": 50000,
+    "관리비": 280000,
+    // 여기에 항목명과 초기화될 금액을 계속 추가하시면 됩니다.
+  };
+
   const showToast = (msg: string, type: "success" | "error" = "success") => {
     setToast({ msg, type });
     setTimeout(() => setToast(null), 2000);
@@ -30,6 +49,28 @@ export default function HouseholdLedger() {
   const fetchLogs = async () => {
     const { data, error } = await supabase.from("household_ledger").select("*").order("is_card", { ascending: false }).order("created_at"); 
     if (!error) setLogs(data || []);
+  };
+
+  // 💡 [추가] 일괄 초기화 함수
+  const handleReset = async () => {
+    if (!confirm("새 달을 시작하시겠습니까?\n카드는 0원, 일반 항목은 지정가로 초기화됩니다.")) return;
+
+    try {
+      // 1. 카드 항목 전체 0원 처리
+      await supabase.from("household_ledger").update({ amount: 0 }).eq("is_card", true);
+
+      // 2. 일반 항목 순회하며 지정가로 처리
+      const generalItems = logs.filter(l => !l.is_card);
+      for (const item of generalItems) {
+        const resetVal = defaultAmounts[item.item_name] || 0; // 설정에 없으면 0원
+        await supabase.from("household_ledger").update({ amount: resetVal }).eq("id", item.id);
+      }
+
+      showToast("✨ 가계부 초기화 완료!");
+      fetchLogs();
+    } catch (e) {
+      showToast("초기화 중 오류 발생", "error");
+    }
   };
 
   const handleSave = async () => {
@@ -84,9 +125,14 @@ export default function HouseholdLedger() {
           </Link>
           <h1 className="text-1xl font-black text-blue-600 tracking-tighter">🏠 HOME</h1>
         </div>
-        <button onClick={() => { cancelEdit(); setIsAdding(true); }} className="bg-slate-900 text-white px-4 py-2 rounded-xl text-xs font-black shadow-lg active:scale-95 transition-all">
-          [+] 신규 항목
-        </button>
+        <div className="flex gap-2">
+          <button onClick={handleReset} className="bg-slate-900 text-white px-4 py-2 rounded-xl text-xs font-black shadow-lg active:scale-95 transition-all">
+            🔄 초기화
+          </button>
+          <button onClick={() => { cancelEdit(); setIsAdding(true); }} className="bg-slate-900 text-white px-4 py-2 rounded-xl text-xs font-black shadow-lg active:scale-95 transition-all">
+            [+] 신규 항목
+          </button>
+        </div>
       </header>
 
       <main className="flex-1 overflow-y-auto pb-[280px] custom-scrollbar bg-white">
@@ -110,7 +156,6 @@ export default function HouseholdLedger() {
 
         <div className="bg-slate-50 px-4 py-2.5 flex text-[11px] font-black text-slate-500 border-b border-slate-200 sticky top-0 z-10 uppercase tracking-widest">
           <div className={`${colWidths.item} shrink-0 text-center`}>항목</div>
-          {/* 헤더 '사용금액'을 중앙(text-center)으로 수정 */}
           <div className={`${colWidths.amount} text-right ${colWidths.spacer} pr-[35px] shrink-0 border-r border-slate-200 bg-slate-100/50`}>사용금액</div>
           <div className="flex-1 text-center px-4">비고</div>
         </div>
@@ -122,7 +167,6 @@ export default function HouseholdLedger() {
               <div key={log.id} className={`flex items-left px-4 py-[12px] hover:bg-slate-50 transition-colors ${isEditing ? 'bg-yellow-50' : ''}`}
                 onDoubleClick={() => { setEditingId(log.id); setEditMode("all"); setTempData({ item_name: log.item_name, amount: log.amount.toString(), remarks: log.remarks || "", is_card: log.is_card }); }}>
                 
-                {/* 항목 내용: 왼쪽(text-left) 정렬 및 들여쓰기(pl-4) 추가 */}
                 <div className={`${colWidths.item} shrink-0 font-black text-sm text-left pl-4 ${log.is_card ? 'text-blue-700' : 'text-slate-900'}`}>
                   {isEditing && editMode === "all" ? (
                     <input className="w-full text-left outline-none bg-transparent border-b border-blue-400" value={tempData.item_name} onChange={e => setTempData({...tempData, item_name: e.target.value})} />
@@ -164,6 +208,9 @@ export default function HouseholdLedger() {
       </main>
 
       <footer className="absolute bottom-0 left-0 right-0 bg-slate-900 text-white p-4 py-2 pb-1 space-y-1 z-30 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] rounded-t-[2.5rem] border-t border-slate-700">
+        <div className="flex items-center border-b border-slate-800 pb-1 mb-1 opacity-50">
+           <div className="flex-1 text-center text-[8px] font-black tracking-[0.2em]">MONTHLY RESET SYSTEM READY</div>
+        </div>
         <div className="flex items-center">
           <div className={`${colWidths.item} text-center text-[10px] font-black text-slate-400 tracking-tighter`}>Card Total</div>
           <div className={`${colWidths.amount} text-right ${colWidths.spacer} font-black text-sm border-r border-slate-700 text-blue-400`}>{totalCard.toLocaleString()}</div>
@@ -188,7 +235,7 @@ export default function HouseholdLedger() {
             {editMode === "budget" ? (
               <input autoFocus type="number" className="w-full text-right font-black text-lg bg-slate-800 text-orange-400 outline-none rounded" value={tempBudget} onChange={(e) => setTempBudget(e.target.value)} onBlur={() => { if(tempBudget) setBudget(Number(tempBudget)); setEditMode(null); }} onKeyDown={(e) => e.key === 'Enter' && (setBudget(Number(tempBudget)), setEditMode(null))} />
             ) : (
-              <div className="font-black text-lg text-white cursor-pointer hover:text-orange-400" onClick={() => { setEditMode("budget"); setTempBudget(budget.toString()); }}>{budget.toLocaleString()}</div>
+              <div className="font-black text-lg text-white cursor-pointer hover:text-orange-400 transition-colors" onClick={() => { setEditMode("budget"); setTempBudget(budget.toString()); }}>{budget.toLocaleString()}</div>
             )}
           </div>
           <div className="flex-1 pl-4 text-[10px] text-slate-500 font-bold uppercase tracking-tighter">기준금액</div>
