@@ -240,16 +240,16 @@ export default function Home() {
               {activeTab === 'fuel' ? (
                 <>
                   <div className="flex-1 text-center pr-2">주유일자</div>
-                  <div className="w-[45px] text-center pr-2 shrink-0">회사</div>
+                  <div className="w-[45px] text-center pr-4 shrink-0">회사</div>
                   <div className="w-[55px] text-center pr-1 shrink-0">단가(원)</div>
                   <div className="w-[55px] text-center pr-0 shrink-0 border-r border-slate-300">주유량(L)</div>
-                  <div className="w-[75px] text-center pr-2 shrink-0">주유액(원)</div>
-                  <div className="w-[70px] text-center pr-3 shrink-0">Trip(km)</div>
+                  <div className="w-[75px] text-center pr-1 shrink-1">주유액(원)</div>
+                  <div className="w-[70px] text-center pr-0 shrink-1">Trip(km)</div>
                 </>
               ) : (
                 <>
                   <div className="w-[90px] text-center shrink-0">정비일자</div>
-                  <div className="w-[85px] text-right pr-8 shrink-0 border-r border-slate-300 bg-slate-100">금액(원)</div>
+                  <div className="w-[90px] text-right pr-6 shrink-0 border-r border-slate-300 bg-slate-100">금액(원)</div>
                   <div className="flex-1 text-center px-2">정비내역 / 업체 / 메모</div>
                   <div className="w-[50px] text-right pr-3 shrink-0">주행거리</div>
                 </>
@@ -268,8 +268,8 @@ export default function Home() {
                     <div className={`w-[45px] shrink-0 text-sm font-black text-center tracking-tighter ${brandConfig[log.brand]?.color || "text-slate-950"}`}>{brandConfig[log.brand]?.name.split(' ')[0] || "-"}</div>
                     <div className="w-[55px] shrink-0 text-sm font-bold text-slate-600 text-right pr-2 tracking-tighter">{log.unit_price_krw.toLocaleString()}</div>
                     <div className="w-[55px] shrink-0 text-sm font-bold text-slate-600 text-right pr-2 border-r border-slate-100 tracking-tighter">{log.fuel_volume_l.toLocaleString()}</div>
-                    <div className="w-[75px] shrink-0 text-sm font-black text-slate-950 text-right pr-2 tracking-tighter">{log.amount_krw.toLocaleString()}</div>
-                    <div className="w-[70px] shrink-0 text-sm font-black text-blue-700 text-right pr-3 tracking-tighter">{tripDistance > 0 ? tripDistance.toLocaleString() : "-"}</div>
+                    <div className="w-[75px] shrink-0 text-sm font-black text-slate-950 text-right pr-1 tracking-tighter">{log.amount_krw.toLocaleString()}</div>
+                    <div className="w-[70px] shrink-0 text-sm font-black text-blue-700 text-right pr-1 tracking-tighter">{tripDistance > 0 ? tripDistance.toLocaleString() : "-"}</div>
                   </div>
                 );
               })
@@ -277,7 +277,7 @@ export default function Home() {
               maintLogs.map((log) => (
                 <div key={log.id} onDoubleClick={() => startEdit(log)} className={`flex items-center px-3 py-4 hover:bg-slate-50 cursor-pointer transition-colors whitespace-nowrap ${editingId === log.id ? 'bg-orange-50 ring-1 ring-inset ring-orange-200' : ''}`}>
                   <div className="w-[90px] shrink-0 text-[13px] font-black text-slate-950 text-center tracking-tighter">{log.maint_date}</div>
-                  <div className="w-[85px] shrink-0 text-sm font-black text-blue-800 text-right pr-4 border-r border-slate-100 bg-slate-50/50 py-1 tracking-tight">
+                  <div className="w-[90px] shrink-0 text-sm font-black text-blue-800 text-right pr-2 border-r border-slate-100 bg-slate-50/50 py-1 tracking-tight">
                     {log.amount_krw.toLocaleString()}
                   </div>
                   <div className="flex-1 px-3 py-1 overflow-hidden whitespace-normal break-all">
@@ -287,7 +287,7 @@ export default function Home() {
                       {log.memo && <span className="text-blue-400 ml-1">| {log.memo}</span>}
                     </div>
                   </div>
-                  <div className="w-[50px] shrink-0 text-sm font-black text-slate-900 text-right pr-3 tracking-tighter">
+                  <div className="w-[50px] shrink-0 text-sm font-black text-slate-900 text-right pr-1 tracking-tighter">
                     {log.odometer_km?.toLocaleString()}
                   </div>
                 </div>
@@ -307,7 +307,7 @@ export default function Home() {
             ) : (
               <>
                 <div className="w-[90px] text-[14px] font-black text-slate-400 text-center tracking-tighter leading-none">Total</div>
-                <div className="w-[85px] text-sm font-black text-orange-400 text-right pr-4 border-r border-slate-700 tracking-tight">
+                <div className="w-[90px] text-sm font-black text-orange-400 text-right pr-4 border-r border-slate-700 tracking-tight">
                   {totalMaintAmount.toLocaleString()}
                 </div>
                 <div className="flex-1 text-center text-[14px] text-slate-500 font-bold uppercase tracking-widest">Brandon GV80</div>
