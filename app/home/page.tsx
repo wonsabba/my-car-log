@@ -88,23 +88,23 @@ export default function HouseholdLedger() {
       </header>
 
       <main className="flex-1 overflow-y-auto pb-64 custom-scrollbar bg-white">
-        {/* [수정]: 선배님 요청대로 2단 구성된 콤팩트 입력폼 */}
+        {/* [수정]: 모바일 스크롤 방지를 위해 폭을 더 줄인 2단 입력폼 */}
         {isAdding && (
-          <div className="bg-blue-50 p-4 border-b border-blue-100 space-y-2 animate-in slide-in-from-top duration-200">
-            {/* 첫 줄: 항목명, 금액, 카드체크 */}
+          <div className="bg-blue-50 p-3 border-b border-blue-100 space-y-2 animate-in slide-in-from-top duration-200">
+            {/* 첫 줄: 항목명(120px), 금액(120px), 카드체크(최소화) */}
             <div className="flex gap-2 items-center">
-              <input type="text" placeholder="항목명" className="w-[150px] p-2 rounded-lg border border-blue-200 text-xs font-bold outline-none" lang="ko" value={tempData.item_name} onChange={e => setTempData({...tempData, item_name: e.target.value})} />
-              <input type="number" placeholder="금액" className="w-[150px] p-2 rounded-lg border border-blue-200 text-xs font-bold text-right outline-none" value={tempData.amount} onChange={e => setTempData({...tempData, amount: e.target.value})} />
-              <label className="flex items-center gap-1.5 cursor-pointer bg-white px-3 py-2 rounded-lg border border-blue-200">
+              <input type="text" placeholder="항목명" className="w-[120px] p-2 rounded-lg border border-blue-200 text-xs font-bold outline-none" lang="ko" value={tempData.item_name} onChange={e => setTempData({...tempData, item_name: e.target.value})} />
+              <input type="number" placeholder="금액" className="w-[120px] p-2 rounded-lg border border-blue-200 text-xs font-bold text-right outline-none" value={tempData.amount} onChange={e => setTempData({...tempData, amount: e.target.value})} />
+              <label className="flex items-center gap-1 cursor-pointer bg-white px-2 py-2 rounded-lg border border-blue-200 shrink-0">
                 <input type="checkbox" checked={tempData.is_card} onChange={e => setTempData({...tempData, is_card: e.target.checked})} className="w-3.5 h-3.5" />
-                <span className="text-[10px] font-black text-slate-500 uppercase">Card</span>
+                <span className="text-[9px] font-black text-slate-500 uppercase tracking-tighter">Card</span>
               </label>
             </div>
-            {/* 다음 줄: 비고, 저장, 취소 */}
+            {/* 다음 줄: 비고(Flex), 저장/취소 버튼 */}
             <div className="flex gap-2">
-              <input type="text" placeholder="상세 비고 내용 입력" className="flex-1 p-2 rounded-lg border border-blue-200 text-xs font-bold outline-none" lang="ko" value={tempData.remarks} onChange={e => setTempData({...tempData, remarks: e.target.value})} />
-              <button onClick={handleSave} className="px-6 bg-blue-600 text-white py-2 rounded-lg font-black text-xs shadow-sm active:scale-95">저장</button>
-              <button onClick={cancelEdit} className="px-4 bg-slate-200 text-slate-500 py-2 rounded-lg font-black text-xs">취소</button>
+              <input type="text" placeholder="비고 입력" className="flex-1 min-w-0 p-2 rounded-lg border border-blue-200 text-xs font-bold outline-none" lang="ko" value={tempData.remarks} onChange={e => setTempData({...tempData, remarks: e.target.value})} />
+              <button onClick={handleSave} className="px-5 bg-blue-600 text-white py-2 rounded-lg font-black text-xs shadow-sm active:scale-95 shrink-0">저장</button>
+              <button onClick={cancelEdit} className="px-3 bg-slate-200 text-slate-500 py-2 rounded-lg font-black text-xs shrink-0">X</button>
             </div>
           </div>
         )}
