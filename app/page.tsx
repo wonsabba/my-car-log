@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "../utils/supabase";
+import Link from "next/link";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<"fuel" | "maint">("fuel");
@@ -175,6 +176,10 @@ export default function Home() {
                 GV80</h1>
               <span className={`text-[14px] font-black cursor-pointer uppercase ${activeTab === 'maint' ? 'text-blue-600' : 'text-slate-300'}`} onClick={() => {setActiveTab("maint"); resetForm();}}>Maintenance</span>
             </div>
+            {/* [추가]: 가계부로 이동하는 메뉴 링크 */}
+  <Link href="/home" className="text-[14px] font-black text-slate-300 hover:text-green-600 transition-colors ml-2 uppercase">
+    🏠 Home
+  </Link>
             <button onClick={handleLogout} className="text-[10px] font-bold text-slate-400 hover:text-red-500 transition-colors">LOGOUT</button>
           </div>
 
