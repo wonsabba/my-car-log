@@ -172,8 +172,7 @@ export default function Home() {
         <div className="p-4 overflow-y-auto">
           <div className="flex justify-between items-center mb-4">
             <div className="flex items-baseline gap-2">
-              <h1 className={`text-xl font-black cursor-pointer tracking-tighter ${activeTab === 'fuel' ? 'text-slate-800' : 'text-slate-300'}`} onClick={() => {setActiveTab("fuel"); resetForm();}}><img src="/GV80.jpg" alt="GV80 Icon" className="w-6 h-6 inline-block mr-1 -mt-1 rounded-md" />
-                GV80</h1>
+              <h1 className={`text-xl font-black cursor-pointer tracking-tighter ${activeTab === 'fuel' ? 'text-slate-800' : 'text-slate-300'}`} onClick={() => {setActiveTab("fuel"); resetForm();}}><img src="/GV80.jpg" alt="GV80 Icon" className="w-6 h-6 inline-block mr-1 -mt-1 rounded-md" />GV80</h1>
               <span className={`text-[14px] font-black cursor-pointer uppercase ${activeTab === 'maint' ? 'text-blue-600' : 'text-slate-300'}`} onClick={() => {setActiveTab("maint"); resetForm();}}>Maintenance</span>
             </div>
             {/* [추가]: 가계부로 이동하는 메뉴 링크 */}
