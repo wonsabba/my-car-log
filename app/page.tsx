@@ -240,7 +240,7 @@ export default function Home() {
               {activeTab === 'fuel' ? (
                 <>
                   <div className="flex-1 text-center pr-2">주유일자</div>
-                  <div className="w-[45px] text-center pr-4 shrink-0">회사</div>
+                  <div className="w-[45px] text-center pr-5 shrink-0">회사</div>
                   <div className="w-[55px] text-center pr-1 shrink-0">단가(원)</div>
                   <div className="w-[55px] text-center pr-0 shrink-0 border-r border-slate-300">주유량(L)</div>
                   <div className="w-[75px] text-center pr-1 shrink-1">주유액(원)</div>
@@ -249,7 +249,7 @@ export default function Home() {
               ) : (
                 <>
                   <div className="w-[90px] text-center shrink-0">정비일자</div>
-                  <div className="w-[90px] text-right pr-6 shrink-0 border-r border-slate-300 bg-slate-100">금액(원)</div>
+                  <div className="w-[90px] text-right pr-4 shrink-0 border-r border-slate-300 bg-slate-100">금액(원)</div>
                   <div className="flex-1 text-center px-2">정비내역 / 업체 / 메모</div>
                   <div className="w-[50px] text-right pr-3 shrink-0">주행거리</div>
                 </>
