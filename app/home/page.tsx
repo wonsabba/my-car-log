@@ -145,25 +145,25 @@ export default function HouseholdLedger() {
       {/* 푸터 영역: p-4 py-2 pb-1로 조절하여 하단 공백 최소화 */}
       <footer className="absolute bottom-0 left-0 right-0 bg-slate-900 text-white p-4 py-2 pb-1 space-y-1 z-30 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] rounded-t-[2.5rem] border-t border-slate-700">
         <div className="flex items-center">
-          <div className={`${colWidths.item} text-center text-[10px] font-black text-slate-500 tracking-tighter`}>Card Total</div>
+          <div className={`${colWidths.item} text-center text-[10px] font-black text-slate-400 tracking-tighter`}>Card Total</div>
           <div className={`${colWidths.amount} text-right ${colWidths.spacer} font-black text-sm border-r border-slate-700 text-blue-400`}>{totalCard.toLocaleString()}</div>
-          <div className="flex-1 pl-4 text-[10px] text-slate-600 font-bold uppercase tracking-tight">카드종합</div>
+          <div className="flex-1 pl-4 text-[10px] text-slate-500 font-bold uppercase tracking-tight">카드종합</div>
         </div>
 
         <div className="flex items-center">
-          <div className={`${colWidths.item} text-center text-[10px] font-black text-slate-500 tracking-tighter`}>Cash Total</div>
+          <div className={`${colWidths.item} text-center text-[10px] font-black text-slate-400 tracking-tighter`}>Cash Total</div>
           <div className={`${colWidths.amount} text-right ${colWidths.spacer} font-black text-sm border-r border-slate-700 text-emerald-400`}>{totalCash.toLocaleString()}</div>
-          <div className="flex-1 pl-4 text-[10px] text-slate-600 font-bold uppercase tracking-tight">일반종합</div>
+          <div className="flex-1 pl-4 text-[10px] text-slate-500 font-bold uppercase tracking-tight">일반종합</div>
         </div>
 
         <div className="flex items-center border-t border-slate-800 pt-0.5 mt-0.5">
-          <div className={`${colWidths.item} text-center text-[10px] font-black text-slate-400 uppercase`}>Total</div>
+          <div className={`${colWidths.item} text-center text-[10px] font-black text-slate-300 uppercase`}>Total</div>
           <div className={`${colWidths.amount} text-right ${colWidths.spacer} font-black text-sm border-r border-slate-700 text-white`}>{totalSpent.toLocaleString()}</div>
           <div className="flex-1 pl-4 text-[10px] text-slate-500 font-black italic">사용금액</div>
         </div>
 
         <div className="flex items-center">
-          <div className={`${colWidths.item} text-center text-[11px] font-black text-slate-400 uppercase`}>Budget</div>
+          <div className={`${colWidths.item} text-center text-[11px] font-black text-slate-300 uppercase`}>Budget</div>
           <div className={`${colWidths.amount} text-right ${colWidths.spacer} border-r border-slate-700`}>
             {editMode === "budget" ? (
               <input autoFocus type="number" className="w-full text-right font-black text-lg bg-slate-800 text-orange-400 outline-none rounded" value={tempBudget} onChange={(e) => setTempBudget(e.target.value)} onBlur={() => { if(tempBudget) setBudget(Number(tempBudget)); setEditMode(null); }} onKeyDown={(e) => e.key === 'Enter' && (setBudget(Number(tempBudget)), setEditMode(null))} />
@@ -181,13 +181,13 @@ export default function HouseholdLedger() {
               {remaining.toLocaleString()}
             </span>
           </div>
-          <div className="flex-1 pl-3 text-[12px] font-black text-slate-600 uppercase tracking-widest">
+          <div className="flex-1 pl-3 text-[12px] font-black text-slate-300 uppercase tracking-widest">
             최종잔액
           </div>
         </div>
 
         {/* 성함 영역: pt-1 pb-1 mt-1로 최소 여백 설정 */}
-        <div className="pt-5 pb-3 flex flex-col items-center opacity-50 select-none border-t border-slate-800/50 mt-1">
+        <div className="pt-8 pb-8 flex flex-col items-center opacity-50 select-none border-t border-slate-800/50 mt-1">
           <div className="text-[9px] font-black tracking-[0.4em] text-slate-400 ">Designed for BRANDON</div>
           <div className="text-[8px] font-bold tracking-[0.2em] text-slate-500 mt-0.5 italic">EST. 1994 DONGSEO UNIV. DEVELOPER</div>
         </div>
