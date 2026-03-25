@@ -207,7 +207,7 @@ export default function HouseholdLedger() {
           </div>
         </div>
 
-        <div className="pt-8 pb-7 flex flex-col items-center opacity-50 select-none border-t border-slate-800/50 mt-1">
+        <div className="pt-8 pb-8 flex flex-col items-center opacity-50 select-none border-t border-slate-800/50 mt-1">
           <div className="text-[9px] font-black tracking-[0.4em] text-slate-400 ">Designed for BRANDON</div>
           <div className="text-[8px] font-bold tracking-[0.2em] text-slate-500 mt-0.5 italic">EST. 1994 DONGSEO UNIV. DEVELOPER</div>
         </div>
