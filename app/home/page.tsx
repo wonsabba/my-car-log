@@ -110,7 +110,8 @@ export default function HouseholdLedger() {
 
         <div className="bg-slate-50 px-4 py-2.5 flex text-[11px] font-black text-slate-500 border-b border-slate-200 sticky top-0 z-10 uppercase tracking-widest">
           <div className={`${colWidths.item} shrink-0 text-center`}>항목</div>
-          <div className={`${colWidths.amount} text-right ${colWidths.spacer} shrink-0 border-r border-slate-200 bg-slate-100/50`}>사용금액</div>
+          {/* 헤더 '사용금액'을 중앙(text-center)으로 수정 */}
+          <div className={`${colWidths.amount} text-right ${colWidths.spacer} pr-[35px] shrink-0 border-r border-slate-200 bg-slate-100/50`}>사용금액</div>
           <div className="flex-1 text-center px-4">비고</div>
         </div>
 
@@ -118,19 +119,18 @@ export default function HouseholdLedger() {
           {logs.map((log) => {
             const isEditing = editingId === log.id;
             return (
-              <div key={log.id} className={`flex items-center px-4 py-[12px] hover:bg-slate-50 transition-colors ${isEditing ? 'bg-yellow-50' : ''}`}
+              <div key={log.id} className={`flex items-left px-4 py-[12px] hover:bg-slate-50 transition-colors ${isEditing ? 'bg-yellow-50' : ''}`}
                 onDoubleClick={() => { setEditingId(log.id); setEditMode("all"); setTempData({ item_name: log.item_name, amount: log.amount.toString(), remarks: log.remarks || "", is_card: log.is_card }); }}>
                 
-                {/* 1. 항목명: 더블 클릭 시 상세 수정 (editMode === "all" 일 때만 활성화) */}
-                <div className={`${colWidths.item} shrink-0 font-black text-sm text-center ${log.is_card ? 'text-blue-700' : 'text-slate-900'}`}>
+                {/* 항목 내용: 왼쪽(text-left) 정렬 및 들여쓰기(pl-4) 추가 */}
+                <div className={`${colWidths.item} shrink-0 font-black text-sm text-left pl-4 ${log.is_card ? 'text-blue-700' : 'text-slate-900'}`}>
                   {isEditing && editMode === "all" ? (
-                    <input className="w-full text-center outline-none bg-transparent border-b border-blue-400" value={tempData.item_name} onChange={e => setTempData({...tempData, item_name: e.target.value})} />
+                    <input className="w-full text-left outline-none bg-transparent border-b border-blue-400" value={tempData.item_name} onChange={e => setTempData({...tempData, item_name: e.target.value})} />
                   ) : (
                     log.item_name
                   )}
                 </div>
 
-                {/* 2. 금액: 클릭 시 단독 수정 가능 (선배님 최애 기능 복구) */}
                 <div className={`${colWidths.amount} shrink-0 text-right ${colWidths.spacer} border-r border-slate-100 font-black text-sm`}>
                   {isEditing ? (
                     <input autoFocus type="number" className="w-full text-right outline-none bg-transparent" value={tempData.amount} onChange={e => setTempData({...tempData, amount: e.target.value})} onKeyDown={e => e.key === 'Enter' && handleSave()} />
@@ -146,10 +146,9 @@ export default function HouseholdLedger() {
                   )}
                 </div>
                 
-                {/* 3. 비고: 더블 클릭 시 상세 수정 */}
                 <div className="flex-1 px-5 flex items-center justify-between min-w-0">
                   {isEditing && editMode === "all" ? (
-                    <div className="flex-1 flex gap-2 items-center">
+                    <div className="flex-1 flex gap-2 items-left">
                       <input className="flex-1 text-xs font-bold border-b-2 border-blue-400 outline-none bg-transparent" value={tempData.remarks} onChange={e => setTempData({...tempData, remarks: e.target.value})} />
                       <button onClick={handleSave} className="text-[11px] font-black text-blue-600">SAVE</button>
                       <button onClick={() => handleDelete(log.id)} className="text-[11px] font-black text-red-600 ml-1">DEL</button>
