@@ -301,8 +301,8 @@ export default function Home() {
                 <div className="flex-1 text-[14px] font-black text-slate-400 text-center tracking-tighter pr-2 leading-none">Total</div>
                 <div className="w-[45px] shrink-0"></div><div className="w-[55px] shrink-0"></div>
                 <div className="w-[55px] shrink-0 text-orange-400 text-sm font-black text-right pr-2 border-r border-slate-700 tracking-tight">{Number(totalVolume.toFixed(1)).toLocaleString(undefined, { minimumFractionDigits: 1 })}</div>
-                <div className="w-[75px] shrink-0 text-sm font-black text-white text-right pr-2 tracking-tight">{totalAmount.toLocaleString()}</div>
-                <div className="w-[70px] shrink-0 pr-3"></div>
+                <div className="w-[45px] shrink-0 text-sm font-black text-white text-right pr-2 tracking-tight"></div>
+                <div className="w-[110px] shrink-0 pr-3">{totalAmount.toLocaleString()}</div>
               </>
             ) : (
               <>
