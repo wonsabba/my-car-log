@@ -186,7 +186,7 @@ export default function HouseholdLedger() {
         </div>
 
         {/* [확장]: 하단 여백 높이 키우고 선배님 이름 배치 */}
-        <div className="pt-8 pb-4 flex flex-col items-center opacity-30 select-none border-t border-slate-800/50 mt-4">
+        <div className="pt-5 pb-0 flex flex-col items-center opacity-30 select-none border-t border-slate-800/50 mt-4">
           <div className="text-[9px] font-black tracking-[0.4em] text-slate-400 uppercase">Designed for BRANDON</div>
           <div className="text-[8px] font-bold tracking-[0.2em] text-slate-500 mt-1 italic">EST. 1994 DONGSEO UNIV. DEVELOPER</div>
         </div>
