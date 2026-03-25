@@ -320,7 +320,7 @@ export default function Home() {
             )}
           </div>
 
-          <div className="bg-slate-800 pt-8 pb-10 flex flex-col items-center select-none border-t border-slate-800/50 shrink-0">
+          <div className="bg-slate-800 pt-10 pb-10 flex flex-col items-center select-none border-t border-slate-800/50 shrink-0">
             <div className="text-[9px] font-black tracking-[0.4em] text-slate-500 opacity-70">Designed By Brandon</div>
           </div>
 
