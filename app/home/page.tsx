@@ -76,13 +76,13 @@ export default function HouseholdLedger() {
     <div className="flex flex-col h-screen bg-white max-w-[760px] mx-auto border-x border-slate-200 font-sans relative shadow-2xl overflow-hidden">
       {toast && <div className="fixed top-5 left-1/2 -translate-x-1/2 z-50 px-6 py-2 rounded-full shadow-xl bg-slate-800 text-white font-bold text-xs">{toast.msg}</div>}
 
-      <header className="p-4 border-b border-slate-100 flex justify-between items-center bg-white sticky top-0 z-20 shrink-0">
+      <header className="p-2 border-b border-slate-100 flex justify-between items-center bg-white sticky top-0 z-20 shrink-0">
         <div className="flex items-center gap-4">
-          <Link href="/" className="text-slate-300 hover:text-slate-800 font-black text-2xl tracking-tighter transition-colors">
-            <img src="/GV80.jpg" alt="GV80 Icon" className="w-6 h-6 inline-block mr-1 -mt-1 rounded-md" />
+          <Link href="/" className="text-slate-300 hover:text-slate-800 font-black text-1xl tracking-tighter transition-colors">
+            <img src="/GV80.jpg" alt="GV80 Icon" className="w-5 h-5 inline-block mr-1 -mt-1 rounded-md" />
             GV80
           </Link>
-          <h1 className="text-2xl font-black text-blue-600 tracking-tighter">🏠 HOME</h1>
+          <h1 className="text-1xl font-black text-blue-600 tracking-tighter">🏠 HOME</h1>
         </div>
         <button onClick={() => { cancelEdit(); setIsAdding(true); }} className="bg-slate-900 text-white px-4 py-2 rounded-xl text-xs font-black shadow-lg active:scale-95 transition-all">
           [+] 신규 항목
@@ -207,7 +207,7 @@ export default function HouseholdLedger() {
           </div>
         </div>
 
-        <div className="pt-8 pb-8 flex flex-col items-center opacity-50 select-none border-t border-slate-800/50 mt-1">
+        <div className="pt-7 pb-7 flex flex-col items-center opacity-50 select-none border-t border-slate-800/50 mt-1">
           <div className="text-[9px] font-black tracking-[0.4em] text-slate-400 ">Designed for BRANDON</div>
           <div className="text-[8px] font-bold tracking-[0.2em] text-slate-500 mt-0.5 italic">EST. 1994 DONGSEO UNIV. DEVELOPER</div>
         </div>
