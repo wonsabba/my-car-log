@@ -33,7 +33,7 @@ export default function Home() {
     memo: ""
   });
 
-  // ✅ [기능 복구] 주유금액 자동 계산 로직
+  // ✅ [기능 유지] 주유금액 자동 계산
   useEffect(() => {
     if (activeTab === "fuel") {
       const price = Number(formData.unit_price_krw);
@@ -90,6 +90,27 @@ export default function Home() {
     }
   };
 
+  const downloadExcel = () => {
+    if (activeTab === "fuel") {
+      if (logs.length === 0) return showToast("데이터가 없습니다.", "error");
+      const headers = ["주유일자", "주유회사", "단가(원)", "주유량(L)", "주유액(원)", "누적주행거리(Km)"];
+      const csvContent = logs.map(log => [log.refuel_date, brandConfig[log.brand]?.name || "미지정", log.unit_price_krw, log.fuel_volume_l, log.amount_krw, log.distance_km].join(",")).join("\n");
+      const BOM = "\uFEFF"; 
+      const blob = new Blob([BOM + headers.join(",") + "\n" + csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a"); link.setAttribute("href", url); link.setAttribute("download", `주유내역_${new Date().toISOString().split('T')[0]}.csv`); link.click();
+    } else {
+      if (maintLogs.length === 0) return showToast("데이터가 없습니다.", "error");
+      const headers = ["정비일자", "정비회사", "정비내역", "정비금액", "주행거리(km)", "메모"];
+      const csvContent = maintLogs.map(log => [log.maint_date, log.company, log.content, log.amount_krw, log.odometer_km, log.memo].join(",")).join("\n");
+      const BOM = "\uFEFF"; 
+      const blob = new Blob([BOM + headers.join(",") + "\n" + csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a"); link.setAttribute("href", url); link.setAttribute("download", `정비내역_${new Date().toISOString().split('T')[0]}.csv`); link.click();
+    }
+    showToast("📊 엑셀 다운로드 완료");
+  };
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (activeTab === "fuel") {
@@ -119,7 +140,6 @@ export default function Home() {
     setMaintFormData({ maint_date: new Date().toISOString().split('T')[0], company: "", content: "", amount_krw: "", odometer_km: "", memo: "" });
   };
 
-  // ✅ [기능 복구] 삭제 기능 로직
   const handleDelete = async () => {
     if (!editingId) return;
     if (confirm("정말로 삭제하시겠습니까?")) {
@@ -142,7 +162,7 @@ export default function Home() {
   if (!session) return (<div className="p-10 font-bold text-white bg-[#0f172a] h-screen">Login Required...</div>);
 
   return (
-    <div className="flex flex-col md:flex-row h-screen bg-[#0f172a] max-w-6xl mx-auto overflow-hidden border-x border-slate-800 font-sans text-slate-100">
+    <div className="flex flex-col md:flex-row h-screen bg-[#0f172a] max-w-6xl mx-auto overflow-hidden border-x border-slate-800 font-sans text-slate-300">
       {toast && <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 px-6 py-2 rounded-full shadow-xl bg-blue-600 text-white font-bold text-xs shrink-0">{toast.msg}</div>}
 
       <header className="w-full md:w-[340px] bg-[#1e293b] z-20 border-b md:border-b-0 md:border-r border-slate-800 flex flex-col shrink-0">
@@ -196,7 +216,6 @@ export default function Home() {
                   </div>
                 </>
               )}
-              {/* ✅ [기능 복구] 삭제/취소 버튼 영역 */}
               {editingId && (
                 <div className="grid grid-cols-2 gap-2 pt-1">
                   <button type="button" onClick={handleDelete} className="py-2 bg-red-950/30 text-red-400 border border-red-900 rounded-xl font-bold text-xs active:scale-95">삭제</button>
@@ -214,8 +233,29 @@ export default function Home() {
             <div className="px-5 py-4 flex justify-between items-center bg-[#0f172a]">
               <div className="flex items-center gap-2">
                 <h2 className="text-lg font-black text-white tracking-tight leading-none uppercase">{activeTab === 'fuel' ? '주유 내역' : '정비 내역'}</h2>
+                {/* ✅ [변경] 엑셀 아이콘 컬러화: grayscale 제거 */}
+                <button onClick={downloadExcel} className="p-1 hover:bg-slate-800 rounded-md transition-all active:scale-90" title="엑셀 다운로드">
+                  <span className="text-lg block hover:scale-125 transition-transform">📊</span>
+                </button>
               </div>
-              <span className="bg-slate-800 text-white text-[10px] px-2 py-0.5 rounded-md font-bold shrink-0">{activeTab === 'fuel' ? logs.length : maintLogs.length}건</span>
+              
+              {/* ✅ [변경] 건수 자리 -> 종합 지표로 변경 */}
+              <div className="flex gap-3 items-center">
+                {activeTab === 'fuel' ? (
+                  <>
+                    <span className="text-[14px] font-black bg-blue-900/50 text-blue-300 px-2 py-1 rounded-md border border-blue-800/50 uppercase tracking-tighter">
+                      총주유량 : {Number(totalVolume.toFixed(1)).toLocaleString()}L
+                    </span>
+                    <span className="text-[14px] font-black bg-orange-900/50 text-orange-400 px-2 py-1 rounded-md border border-orange-800/50 uppercase tracking-tighter">
+                      총주유액 : {totalAmount.toLocaleString()}
+                    </span>
+                  </>
+                ) : (
+                  <span className="text-[14px] font-black bg-orange-900/50 text-orange-400 px-2 py-1 rounded-md border border-orange-800/50 uppercase tracking-tighter">
+                    총금액 : ₩{totalMaintAmount.toLocaleString()}
+                  </span>
+                )}
+              </div>
             </div>
             
             <div className="bg-[#1e293b]/50 px-3 py-2 flex items-center border-t border-slate-800 text-[10px] font-black text-blue-200 tracking-tight whitespace-nowrap uppercase">
@@ -272,23 +312,7 @@ export default function Home() {
             })}
           </div>
 
-          <div className="sticky bottom-0 bg-[#1e293b] text-white px-3 py-3 flex items-center shadow-[0_-4px_15px_rgba(0,0,0,0.3)] z-10 shrink-0 font-bold whitespace-nowrap border-t border-slate-700">
-            {activeTab === 'fuel' ? (
-              <>
-                <div className="flex-1 text-[14px] font-black text-slate-300 text-center tracking-tighter pr-2 leading-none uppercase">TOTAL</div>
-                <div className="w-[45px] shrink-0"></div><div className="w-[55px] shrink-0"></div>
-                <div className="w-[55px] shrink-0 text-orange-400 text-sm font-black text-right pr-2 border-r border-slate-700 tracking-tight">{Number(totalVolume.toFixed(1)).toLocaleString(undefined, { minimumFractionDigits: 1 })}</div>
-                <div className="w-[45px] shrink-0 pr-2"></div>
-                <div className="w-[110px] shrink-0 pr-3 text-blue-300 text-right font-black">{totalAmount.toLocaleString()}</div>
-              </>
-            ) : (
-              <>
-                <div className="w-[90px] text-[14px] font-black text-slate-300 text-center tracking-tighter leading-none uppercase">TOTAL</div>
-                <div className="w-[90px] text-sm font-black text-orange-400 text-right pr-4 border-r border-slate-700 tracking-tight">{totalMaintAmount.toLocaleString()}</div>
-                <div className="flex-1 text-center text-[12px] text-blue-200 font-bold tracking-widest italic pr-12 italic uppercase">Brandon GV80</div>
-              </>
-            )}
-          </div>
+
         </div>
       </main>
 
