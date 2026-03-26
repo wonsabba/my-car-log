@@ -6,7 +6,7 @@ import Link from "next/link";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<"fuel" | "maint">("fuel");
-  const [isDarkMode, setIsDarkMode] = useState(true); 
+  const [isDarkMode, setIsDarkMode] = useState(true); // ✅ 테마 상태 추가 (기본 다크)
   const [logs, setLogs] = useState<any[]>([]);
   const [maintLogs, setMaintLogs] = useState<any[]>([]);
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -34,6 +34,7 @@ export default function Home() {
     memo: ""
   });
 
+  // ✅ [기능 유지] 주유금액 자동 계산
   useEffect(() => {
     if (activeTab === "fuel") {
       const price = Number(formData.unit_price_krw);
@@ -140,6 +141,7 @@ export default function Home() {
     setMaintFormData({ maint_date: new Date().toISOString().split('T')[0], company: "", content: "", amount_krw: "", odometer_km: "", memo: "" });
   };
 
+  // ✅ [기능 유지] 삭제 로직
   const handleDelete = async () => {
     if (!editingId) return;
     if (confirm("정말로 삭제하시겠습니까?")) {
@@ -187,6 +189,7 @@ export default function Home() {
               <Link href="/home" className={`text-[14px] font-black transition-colors ml-2 uppercase ${isDarkMode ? 'text-slate-300 hover:text-emerald-400' : 'text-slate-400 hover:text-blue-600'}`}>🏠 Home</Link>
             </div>
             
+            {/* ✅ [추가] 테마 스위칭 버튼 및 로그아웃 */}
             <div className="flex items-center gap-3">
               <button onClick={() => setIsDarkMode(!isDarkMode)} className={`text-[10px] font-bold px-2 py-1 rounded-md transition-all ${isDarkMode ? 'bg-[#334155] text-blue-300 hover:bg-[#475569]' : 'bg-slate-100 text-blue-600 hover:bg-slate-200'}`}>
                 {isDarkMode ? 'LIGHT' : 'DARK'}
@@ -247,7 +250,7 @@ export default function Home() {
       </header>
 
       <main className={`flex-1 flex flex-col min-h-0 relative overflow-x-auto transition-colors duration-300 ${isDarkMode ? 'bg-[#0f172a]' : 'bg-white'}`}>
-        <div className="min-w-[480px] flex flex-col h-full shrink-0"> {/* ✅ 최소 너비를 정비내역 기준에 맞춰 상향 조정 */}
+        <div className="min-w-[360px] flex flex-col h-full shrink-0">
           <div className={`sticky top-0 backdrop-blur-md z-10 border-b shrink-0 ${isDarkMode ? 'bg-[#0f172a]/90 border-slate-800' : 'bg-white/95 border-slate-100'}`}>
             <div className="px-5 py-4 flex justify-between items-center">
               <div className="flex gap-3 items-center">
@@ -271,24 +274,22 @@ export default function Home() {
               </button>
             </div>
             
-            {/* ✅ 헤더 컬럼 너비를 두 탭이 조화롭도록 고정 수치로 조정 */}
             <div className={`px-3 py-2 flex items-center border-t text-[10px] font-black tracking-tight whitespace-nowrap  ${isDarkMode ? 'bg-[#1e293b]/50 border-slate-800 text-blue-200' : 'bg-slate-50 border-slate-200 text-slate-500'}`}>
               {activeTab === 'fuel' ? (
                 <>
-                  <div className="w-[90px] text-center shrink-0">주유일자</div>
-                  <div className="w-[60px] text-center shrink-0">회사</div>
-                  <div className="w-[70px] text-right pr-2 shrink-0">단가 (원)</div>
-                  <div className="w-[70px] text-right pr-2 shrink-0">주유량 (L)</div>
-                  <div className="w-[90px] text-right pr-2 shrink-0">주유액 (원)</div>
-                  <div className="flex-1 text-center">주행거리 (Km)</div> {/* ✅ 남는 공간을 차지하게 하여 전체 폭 유지 */}
-                  <div className="w-[70px] text-right pr-3 shrink-0">누적거리</div>
+                  <div className="flex-1 text-center pr-2">주유일자</div>
+                  <div className="w-[45px] text-center pr-5 shrink-0">회사</div>
+                  <div className="w-[55px] text-center pr-1 shrink-0">단가 (원)</div>
+                  <div className="w-[55px] text-center pr-0 shrink-0 border-slate-700">주유량 (L)</div>
+                  <div className="w-[75px] text-center pr-0 shrink-1">주유액 (원)</div>
+                  <div className="w-[70px] text-center pr-0 shrink-1">주행거리</div>
                 </>
               ) : (
                 <>
                   <div className="w-[90px] text-center shrink-0">정비일자</div>
-                  <div className="w-[90px] text-right pr-2 shrink-0">정비금액 (원)</div>
+                  <div className="w-[90px] text-right pr-1 shrink-0">정비금액 (원)</div>
                   <div className="flex-1 text-center px-2">정비내역 / 업체 / 메모</div>
-                  <div className="w-[70px] text-right pr-3 shrink-0">누적거리</div>
+                  <div className="w-[50px] text-center pr-3 shrink-0">누적거리</div>
                 </>
               )}
             </div>
@@ -304,13 +305,12 @@ export default function Home() {
                 <div key={log.id} onDoubleClick={() => startEdit(log)} className={`flex items-center px-4 py-4 cursor-pointer transition-colors whitespace-nowrap ${editingId === log.id ? (isDarkMode ? 'bg-orange-950/20 ring-1 ring-inset ring-orange-900/50' : 'bg-orange-50 ring-1 ring-inset ring-orange-200') : (isDarkMode ? 'hover:bg-slate-900' : 'hover:bg-slate-50')}`}>
                   {activeTab === 'fuel' ? (
                     <>
-                      <div className={`w-[90px] shrink-0 text-sm font-black text-center tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-950'}`}>{log.refuel_date}</div>
-                      <div className={`w-[60px] shrink-0 text-sm font-black text-center tracking-tighter ${brandConfig[log.brand]?.color || "text-slate-950"}`}>{brandConfig[log.brand]?.name.split(' ')[0] || "-"}</div>
-                      <div className={`w-[70px] shrink-0 text-sm font-bold text-right pr-2 tracking-tighter ${isDarkMode ? 'text-slate-300' : 'text-slate-600'}`}>{log.unit_price_krw.toLocaleString()}</div>
-                      <div className={`w-[70px] shrink-0 text-sm font-bold text-right pr-2 tracking-tighter ${isDarkMode ? 'text-slate-300' : 'text-slate-600'}`}>{log.fuel_volume_l.toLocaleString()}</div>
-                      <div className={`w-[90px] shrink-0 text-sm font-black text-right pr-2 tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-950'}`}>{log.amount_krw.toLocaleString()}</div>
-                      <div className={`flex-1 text-sm font-black text-center tracking-tighter ${isDarkMode ? 'text-blue-400' : 'text-blue-700'}`}>{tripVal > 0 ? tripVal.toLocaleString() : "-"}</div>
-                      <div className={`w-[70px] shrink-0 text-sm font-black text-right pr-1 tracking-tighter ${isDarkMode ? 'text-slate-300' : 'text-slate-900'}`}>{log.distance_km?.toLocaleString()}</div>
+                      <div className={`flex-1 text-sm font-black text-center tracking-tighter pr-2 ${isDarkMode ? 'text-white' : 'text-slate-950'}`}>{log.refuel_date}</div>
+                      <div className={`w-[45px] shrink-0 text-sm font-black text-center tracking-tighter ${brandConfig[log.brand]?.color || "text-slate-950"}`}>{brandConfig[log.brand]?.name.split(' ')[0] || "-"}</div>
+                      <div className={`w-[55px] shrink-0 text-sm font-bold text-right pr-2 tracking-tighter ${isDarkMode ? 'text-slate-300' : 'text-slate-600'}`}>{log.unit_price_krw.toLocaleString()}</div>
+                      <div className={`w-[55px] shrink-0 text-sm font-bold text-right pr-2 tracking-tighter ${isDarkMode ? 'text-slate-300 border-slate-700' : 'text-slate-600 border-slate-100'}`}>{log.fuel_volume_l.toLocaleString()}</div>
+                      <div className={`w-[75px] shrink-0 text-sm font-black text-right pr-1 tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-950'}`}>{log.amount_krw.toLocaleString()}</div>
+                      <div className={`w-[70px] shrink-0 text-sm font-black text-right pr-1 tracking-tighter ${isDarkMode ? 'text-blue-400' : 'text-blue-700'}`}>{tripVal > 0 ? tripVal.toLocaleString() : "-"}</div>
                     </>
                   ) : (
                     <>
@@ -323,13 +323,15 @@ export default function Home() {
                           {log.memo && <span className={`${isDarkMode ? 'text-slate-400' : 'text-blue-400'} ml-1`}>| {log.memo}</span>}
                         </div>
                       </div>
-                      <div className={`w-[70px] shrink-0 text-sm font-black text-right pr-1 tracking-tighter ${isDarkMode ? 'text-slate-300' : 'text-slate-900'}`}>{log.odometer_km?.toLocaleString()}</div>
+                      <div className={`w-[50px] shrink-0 text-sm font-black text-right pr-1 tracking-tighter ${isDarkMode ? 'text-slate-300' : 'text-slate-900'}`}>{log.odometer_km?.toLocaleString()}</div>
                     </>
                   )}
                 </div>
               );
             })}
           </div>
+
+
         </div>
       </main>
 
