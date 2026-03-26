@@ -260,12 +260,12 @@ export default function Home() {
                       총 주유량 : {Number(totalVolume.toFixed(1)).toLocaleString()}L
                     </span>
                     <span className={`text-[14px] font-black px-2 py-1 rounded-md border uppercase tracking-tighter ${isDarkMode ? 'bg-orange-900/50 text-orange-500 border-orange-800/50' : 'bg-orange-50 text-orange-600 border-orange-100'}`}>
-                      총 주유금액 : ₩{totalAmount.toLocaleString()}
+                      총 주유금액 : {totalAmount.toLocaleString()} 원
                     </span>
                   </>
                 ) : (
                   <span className={`text-[14px] font-black px-2 py-1 rounded-md border uppercase tracking-tighter ${isDarkMode ? 'bg-orange-900/50 text-orange-400 border-orange-800/50' : 'bg-orange-50 text-orange-700 border-orange-100'}`}>
-                    총 정비금액 : ₩{totalMaintAmount.toLocaleString()}
+                    총 정비금액 : {totalMaintAmount.toLocaleString()} 원
                   </span>
                 )}
               </div>
@@ -280,14 +280,14 @@ export default function Home() {
                   <div className="flex-1 text-center pr-2">주유일자</div>
                   <div className="w-[45px] text-center pr-5 shrink-0">회사</div>
                   <div className="w-[55px] text-center pr-1 shrink-0">단가 (원)</div>
-                  <div className="w-[55px] text-center pr-0 shrink-0 border-r border-slate-700">주유량 (L)</div>
-                  <div className={`w-[75px] text-center pr-1 shrink-1 ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>주유액 (원)</div>
+                  <div className="w-[55px] text-center pr-0 shrink-0 border-slate-700">주유량 (L)</div>
+                  <div className="w-[75px] text-center pr-0 shrink-1">주유액 (원)</div>
                   <div className="w-[70px] text-center pr-0 shrink-1">주행거리 (Km)</div>
                 </>
               ) : (
                 <>
                   <div className="w-[90px] text-center shrink-0">정비일자</div>
-                  <div className={`w-[90px] text-right pr-4 shrink-0 border-r border-slate-700 ${isDarkMode ? 'text-emerald-400' : 'text-emerald-600'}`}>정비금액 (원)</div>
+                  <div className="w-[90px] text-right pr-1 shrink-0">정비금액 (원)</div>
                   <div className="flex-1 text-center px-2">정비내역 / 업체 / 메모</div>
                   <div className="w-[50px] text-center pr-3 shrink-0">누적거리</div>
                 </>
@@ -308,18 +308,18 @@ export default function Home() {
                       <div className={`flex-1 text-sm font-black text-center tracking-tighter pr-2 ${isDarkMode ? 'text-white' : 'text-slate-950'}`}>{log.refuel_date}</div>
                       <div className={`w-[45px] shrink-0 text-sm font-black text-center tracking-tighter ${brandConfig[log.brand]?.color || "text-slate-950"}`}>{brandConfig[log.brand]?.name.split(' ')[0] || "-"}</div>
                       <div className={`w-[55px] shrink-0 text-sm font-bold text-right pr-2 tracking-tighter ${isDarkMode ? 'text-slate-300' : 'text-slate-600'}`}>{log.unit_price_krw.toLocaleString()}</div>
-                      <div className={`w-[55px] shrink-0 text-sm font-bold text-right pr-2 border-r tracking-tighter ${isDarkMode ? 'text-slate-300 border-slate-700' : 'text-slate-600 border-slate-100'}`}>{log.fuel_volume_l.toLocaleString()}</div>
+                      <div className={`w-[55px] shrink-0 text-sm font-bold text-right pr-2 tracking-tighter ${isDarkMode ? 'text-slate-300 border-slate-700' : 'text-slate-600 border-slate-100'}`}>{log.fuel_volume_l.toLocaleString()}</div>
                       <div className={`w-[75px] shrink-0 text-sm font-black text-right pr-1 tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-950'}`}>{log.amount_krw.toLocaleString()}</div>
                       <div className={`w-[70px] shrink-0 text-sm font-black text-right pr-1 tracking-tighter ${isDarkMode ? 'text-blue-400' : 'text-blue-700'}`}>{tripVal > 0 ? tripVal.toLocaleString() : "-"}</div>
                     </>
                   ) : (
                     <>
                       <div className={`w-[90px] shrink-0 text-[13px] font-black text-center tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-950'}`}>{log.maint_date}</div>
-                      <div className={`w-[90px] shrink-0 text-sm font-black text-right pr-2 border-r py-1 tracking-tight ${isDarkMode ? 'text-emerald-400 border-slate-800 bg-slate-900/30' : 'text-emerald-600 border-slate-100 bg-slate-50/50'}`}>{log.amount_krw.toLocaleString()}</div>
+                      <div className={`w-[90px] shrink-0 text-sm font-black text-right pr-2 py-1 tracking-tight ${isDarkMode ? 'text-emerald-400 border-slate-800 bg-slate-900/30' : 'text-emerald-600 border-slate-100 bg-slate-50/50'}`}>{log.amount_krw.toLocaleString()}</div>
                       <div className="flex-1 px-3 py-1 overflow-hidden whitespace-normal break-all">
                         <div className={`text-sm font-black leading-tight mb-1 ${isDarkMode ? 'text-slate-100' : 'text-slate-900'}`}>{log.content}</div>
                         <div className="text-[10px] font-bold leading-tight">
-                          <span className={`${isDarkMode ? 'text-blue-200' : 'text-slate-500'} uppercase`}>{log.company}</span>
+                          <span className={`${isDarkMode ? 'text-blue-400' : 'text-slate-500'} uppercase`}>{log.company}</span>
                           {log.memo && <span className={`${isDarkMode ? 'text-slate-400' : 'text-blue-400'} ml-1`}>| {log.memo}</span>}
                         </div>
                       </div>
@@ -331,23 +331,7 @@ export default function Home() {
             })}
           </div>
 
-          <div className={`sticky bottom-0 px-3 py-3 flex items-center shadow-[0_-4px_15px_rgba(0,0,0,0.3)] z-10 shrink-0 font-bold whitespace-nowrap border-t ${isDarkMode ? 'bg-[#1e293b] text-white border-slate-700' : 'bg-slate-900 text-white border-slate-700'}`}>
-            {activeTab === 'fuel' ? (
-              <>
-                <div className="flex-1 text-[14px] font-black text-slate-400 text-center tracking-tighter pr-2 leading-none uppercase">TOTAL</div>
-                <div className="w-[45px] shrink-0"></div><div className="w-[55px] shrink-0"></div>
-                <div className="w-[55px] shrink-0 text-orange-400 text-sm font-black text-right pr-2 border-r border-slate-700 tracking-tight">{Number(totalVolume.toFixed(1)).toLocaleString(undefined, { minimumFractionDigits: 1 })}</div>
-                <div className="w-[45px] shrink-0 pr-2"></div>
-                <div className="w-[110px] shrink-0 pr-3 text-blue-300 text-right font-black">{totalAmount.toLocaleString()}</div>
-              </>
-            ) : (
-              <>
-                <div className="w-[90px] text-[14px] font-black text-slate-400 text-center tracking-tighter leading-none uppercase">TOTAL</div>
-                <div className="w-[90px] text-sm font-black text-orange-400 text-right pr-4 border-r border-slate-700 tracking-tight">{totalMaintAmount.toLocaleString()}</div>
-                <div className="flex-1 text-center text-[12px] text-blue-200 font-bold tracking-widest italic pr-12 italic uppercase">Brandon GV80</div>
-              </>
-            )}
-          </div>
+
         </div>
       </main>
 
