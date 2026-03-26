@@ -274,7 +274,7 @@ export default function Home() {
               </button>
             </div>
             
-            <div className={`px-3 py-2 flex items-center border-t text-[10px] font-black tracking-tight whitespace-nowrap uppercase ${isDarkMode ? 'bg-[#1e293b]/50 border-slate-800 text-blue-200' : 'bg-slate-50 border-slate-200 text-slate-500'}`}>
+            <div className={`px-3 py-2 flex items-center border-t text-[10px] font-black tracking-tight whitespace-nowrap  ${isDarkMode ? 'bg-[#1e293b]/50 border-slate-800 text-blue-200' : 'bg-slate-50 border-slate-200 text-slate-500'}`}>
               {activeTab === 'fuel' ? (
                 <>
                   <div className="flex-1 text-center pr-2">주유일자</div>
@@ -287,9 +287,9 @@ export default function Home() {
               ) : (
                 <>
                   <div className="w-[90px] text-center shrink-0">정비일자</div>
-                  <div className={`w-[90px] text-right pr-4 shrink-0 border-r border-slate-700 ${isDarkMode ? 'text-emerald-400' : 'text-emerald-600'}`}>금액 (원)</div>
+                  <div className={`w-[90px] text-right pr-4 shrink-0 border-r border-slate-700 ${isDarkMode ? 'text-emerald-400' : 'text-emerald-600'}`}>정비금액 (원)</div>
                   <div className="flex-1 text-center px-2">정비내역 / 업체 / 메모</div>
-                  <div className="w-[50px] text-center pr-3 shrink-0">주행거리</div>
+                  <div className="w-[50px] text-center pr-3 shrink-0">누적거리</div>
                 </>
               )}
             </div>
