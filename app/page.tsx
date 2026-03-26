@@ -231,31 +231,31 @@ export default function Home() {
         <div className="min-w-[360px] flex flex-col h-full shrink-0">
           <div className="sticky top-0 bg-[#0f172a]/90 backdrop-blur-md z-10 border-b border-slate-800 shrink-0">
             <div className="px-5 py-4 flex justify-between items-center bg-[#0f172a]">
+              {/* ✅ [변경] 건수 자리 -> 종합 지표로 변경 */}
+              <div className="flex gap-3 items-center">
+                {activeTab === 'fuel' ? (
+                  <>
+                    <span className="text-[14px] font-black bg-blue-900/50 text-blue-300 px-2 py-1 rounded-md border border-blue-800/50 uppercase tracking-tighter">
+                      총주유량 : {Number(totalVolume.toFixed(1)).toLocaleString()} L
+                    </span>
+                    <span className="text-[14px] font-black bg-orange-900/50 text-orange-400 px-2 py-1 rounded-md border border-orange-800/50 uppercase tracking-tighter">
+                      총주유액 : {totalAmount.toLocaleString()} 원
+                    </span>
+                  </>
+                ) : (
+                  <span className="text-[14px] font-black bg-orange-900/50 text-orange-400 px-2 py-1 rounded-md border border-orange-800/50 uppercase tracking-tighter">
+                    총금액 : {totalMaintAmount.toLocaleString()} 원
+                  </span>
+                )}
+              </div>
               <div className="flex items-center gap-2">
-                <h2 className="text-lg font-black text-white tracking-tight leading-none uppercase">{activeTab === 'fuel' ? '주유 내역' : '정비 내역'}</h2>
                 {/* ✅ [변경] 엑셀 아이콘 컬러화: grayscale 제거 */}
                 <button onClick={downloadExcel} className="p-1 hover:bg-slate-800 rounded-md transition-all active:scale-90" title="엑셀 다운로드">
                   <span className="text-lg block hover:scale-125 transition-transform">📊</span>
                 </button>
               </div>
               
-              {/* ✅ [변경] 건수 자리 -> 종합 지표로 변경 */}
-              <div className="flex gap-3 items-center">
-                {activeTab === 'fuel' ? (
-                  <>
-                    <span className="text-[14px] font-black bg-blue-900/50 text-blue-300 px-2 py-1 rounded-md border border-blue-800/50 uppercase tracking-tighter">
-                      총주유량 : {Number(totalVolume.toFixed(1)).toLocaleString()}L
-                    </span>
-                    <span className="text-[14px] font-black bg-orange-900/50 text-orange-400 px-2 py-1 rounded-md border border-orange-800/50 uppercase tracking-tighter">
-                      총주유액 : {totalAmount.toLocaleString()}
-                    </span>
-                  </>
-                ) : (
-                  <span className="text-[14px] font-black bg-orange-900/50 text-orange-400 px-2 py-1 rounded-md border border-orange-800/50 uppercase tracking-tighter">
-                    총금액 : ₩{totalMaintAmount.toLocaleString()}
-                  </span>
-                )}
-              </div>
+              
             </div>
             
             <div className="bg-[#1e293b]/50 px-3 py-2 flex items-center border-t border-slate-800 text-[10px] font-black text-blue-200 tracking-tight whitespace-nowrap uppercase">
