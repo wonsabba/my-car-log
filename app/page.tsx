@@ -51,7 +51,7 @@ export default function Home() {
   const brandConfig: { [key: string]: { name: string; color: string } } = {
     "1": { name: "SK Enclean", color: "text-red-400" },
     "2": { name: "GS Caltex", color: "text-emerald-400" },
-    "3": { name: "알뜰주유소", color: "text-orange-400" }
+    "3": { name: "알뜰 주유소", color: "text-orange-400" }
   };
 
   const showToast = (msg: string, type: "success" | "error" = "success") => {
@@ -200,15 +200,15 @@ export default function Home() {
                 <>
                   <div className="grid grid-cols-2 gap-3">
                     <div><label className="text-[11px] font-bold text-slate-300 ml-1 mb-1 block uppercase">주유일자</label><input type="date" className="p-2 bg-[#1e293b] border border-slate-700 rounded-xl w-full text-sm font-bold text-white outline-none" value={formData.refuel_date} onChange={(e) => setFormData({...formData, refuel_date: e.target.value})} required /></div>
-                    <div><label className="text-[11px] font-bold text-slate-300 ml-1 mb-1 block uppercase">주유회사</label><select className="p-2 bg-[#1e293b] border border-slate-700 rounded-xl w-full text-sm font-bold text-white outline-none" value={formData.brand} onChange={(e) => setFormData({...formData, brand: e.target.value})}><option value="1">SK Enclean</option><option value="2">GS Caltex</option><option value="3">알뜰주유소</option></select></div>
+                    <div><label className="text-[11px] font-bold text-slate-300 ml-1 mb-1 block uppercase">주유회사</label><select className="p-2 bg-[#1e293b] border border-slate-700 rounded-xl w-full text-sm font-bold text-white outline-none" value={formData.brand} onChange={(e) => setFormData({...formData, brand: e.target.value})}><option value="1">SK Enclean</option><option value="2">GS Caltex</option><option value="3">알뜰 주유소</option></select></div>
                   </div>
                   <div className="grid grid-cols-3 gap-2">
-                    <div><label className="text-[11px] font-bold text-slate-300 ml-1 mb-1 block uppercase">단가</label><input type="number" className="p-2 bg-[#1e293b] border border-slate-700 rounded-xl w-full text-sm text-right font-bold text-white outline-none" value={formData.unit_price_krw} onChange={(e) => setFormData({...formData, unit_price_krw: e.target.value})} required /></div>
-                    <div><label className="text-[11px] font-bold text-slate-300 ml-1 mb-1 block uppercase">주유량(L)</label><input type="number" step="0.01" className="p-2 bg-[#1e293b] border border-slate-700 rounded-xl w-full text-sm text-right font-bold text-white outline-none" value={formData.fuel_volume_l} onChange={(e) => setFormData({...formData, fuel_volume_l: e.target.value})} required /></div>
-                    <div><label className="text-[11px] font-black text-blue-300 ml-1 mb-1 block uppercase">주유금액</label><input type="number" className="p-2 border-2 border-blue-900 rounded-xl w-full text-sm font-black text-right bg-[#0f172a] text-blue-300 outline-none" value={formData.amount_krw} onChange={(e) => setFormData({...formData, amount_krw: e.target.value})} required /></div>
+                    <div><label className="text-[11px] font-bold text-slate-300 ml-1 mb-1 block uppercase">단가 (원)</label><input type="number" className="p-2 bg-[#1e293b] border border-slate-700 rounded-xl w-full text-sm text-right font-bold text-white outline-none" value={formData.unit_price_krw} onChange={(e) => setFormData({...formData, unit_price_krw: e.target.value})} required /></div>
+                    <div><label className="text-[11px] font-bold text-slate-300 ml-1 mb-1 block uppercase">주유량 (L)</label><input type="number" step="0.01" className="p-2 bg-[#1e293b] border border-slate-700 rounded-xl w-full text-sm text-right font-bold text-white outline-none" value={formData.fuel_volume_l} onChange={(e) => setFormData({...formData, fuel_volume_l: e.target.value})} required /></div>
+                    <div><label className="text-[11px] font-black text-blue-300 ml-1 mb-1 block uppercase">주유금액 (원)</label><input type="number" className="p-2 border-2 border-blue-900 rounded-xl w-full text-sm font-black text-right bg-[#0f172a] text-blue-300 outline-none" value={formData.amount_krw} onChange={(e) => setFormData({...formData, amount_krw: e.target.value})} required /></div>
                   </div>
                   <div className="grid grid-cols-3 gap-2 items-end">
-                    <div className="col-span-1"><label className="text-[11px] font-bold text-slate-300 ml-1 mb-1 block uppercase">주행거리</label><input type="number" className="p-2 bg-[#1e293b] border border-slate-700 rounded-xl w-full text-sm font-bold text-emerald-300 text-right outline-none" value={formData.distance_km} onChange={(e) => setFormData({...formData, distance_km: e.target.value})} required /></div>
+                    <div className="col-span-1"><label className="text-[11px] font-bold text-slate-300 ml-1 mb-1 block ">주행거리 (Km)</label><input type="number" className="p-2 bg-[#1e293b] border border-slate-700 rounded-xl w-full text-sm font-bold text-emerald-300 text-right outline-none" value={formData.distance_km} onChange={(e) => setFormData({...formData, distance_km: e.target.value})} required /></div>
                     <button type="submit" className={`col-span-2 py-2 rounded-xl font-black text-white shadow-md active:scale-95 transition-all ${editingId ? 'bg-orange-600' : 'bg-blue-600'}`}>{editingId ? "수정" : "저장"}</button>
                   </div>
                 </>
@@ -220,8 +220,8 @@ export default function Home() {
                   </div>
                   <div><label className="text-[11px] font-bold text-slate-300 ml-1 mb-1 block uppercase">정비내역</label><input type="text" maxLength={100} className="p-2 bg-[#1e293b] border border-slate-700 rounded-xl w-full text-sm font-bold text-white outline-none" value={maintFormData.content} onChange={(e) => setMaintFormData({...maintFormData, content: e.target.value})} required /></div>
                   <div className="grid grid-cols-2 gap-3">
-                    <div><label className="text-[11px] font-bold text-slate-300 ml-1 mb-1 block uppercase">금액(원)</label><input type="number" className="p-2 bg-[#1e293b] border border-slate-700 rounded-xl w-full text-sm text-right font-bold text-white outline-none" value={maintFormData.amount_krw} onChange={(e) => setMaintFormData({...maintFormData, amount_krw: e.target.value})} required /></div>
-                    <div><label className="text-[11px] font-bold text-slate-300 ml-1 mb-1 block uppercase">주행거리</label><input type="number" className="p-2 bg-[#1e293b] border border-slate-700 rounded-xl w-full text-sm font-bold text-emerald-300 text-right outline-none" value={maintFormData.odometer_km} onChange={(e) => setMaintFormData({...maintFormData, odometer_km: e.target.value})} required /></div>
+                    <div><label className="text-[11px] font-bold text-slate-300 ml-1 mb-1 block uppercase">금액 (원)</label><input type="number" className="p-2 bg-[#1e293b] border border-slate-700 rounded-xl w-full text-sm text-right font-bold text-white outline-none" value={maintFormData.amount_krw} onChange={(e) => setMaintFormData({...maintFormData, amount_krw: e.target.value})} required /></div>
+                    <div><label className="text-[11px] font-bold text-slate-300 ml-1 mb-1 block ">주행거리 (Km)</label><input type="number" className="p-2 bg-[#1e293b] border border-slate-700 rounded-xl w-full text-sm font-bold text-emerald-300 text-right outline-none" value={maintFormData.odometer_km} onChange={(e) => setMaintFormData({...maintFormData, odometer_km: e.target.value})} required /></div>
                   </div>
                   <div className="flex gap-2 items-end">
                     <div className="flex-1"><label className="text-[11px] font-bold text-slate-300 ml-1 mb-1 block uppercase">메모</label><input type="text" maxLength={100} className="p-2 bg-[#1e293b] border border-slate-700 rounded-xl w-full text-sm font-bold text-white outline-none" value={maintFormData.memo} onChange={(e) => setMaintFormData({...maintFormData, memo: e.target.value})} /></div>
@@ -244,49 +244,46 @@ export default function Home() {
         <div className="min-w-[360px] flex flex-col h-full shrink-0">
           <div className="sticky top-0 bg-[#0f172a]/90 backdrop-blur-md z-10 border-b border-slate-800 shrink-0">
             <div className="px-5 py-4 flex justify-between items-center bg-[#0f172a]">
-              {/* ✅ [변경] 건수 자리 -> 종합 지표로 변경 */}
               <div className="flex gap-3 items-center">
                 {activeTab === 'fuel' ? (
                   <>
-                    <span className="text-[14px] font-black bg-blue-900/50 text-blue-300 px-2 py-1 rounded-md border border-blue-800/50 uppercase tracking-tighter">
-                      총주유량 : {Number(totalVolume.toFixed(1)).toLocaleString()} L
+                    <span className="text-[14px] font-black bg-blue-600/50 text-blue-200 px-2 py-1 rounded-md border border-blue-800/50 uppercase tracking-tighter">
+                      총 주유량 : {Number(totalVolume.toFixed(1)).toLocaleString()} L
                     </span>
-                    <span className="text-[14px] font-black bg-orange-900/50 text-orange-400 px-2 py-1 rounded-md border border-orange-800/50 uppercase tracking-tighter">
-                      총주유액 : {totalAmount.toLocaleString()} 원
+                    <span className="text-[14px] font-black bg-orange-900/50 text-orange-500 px-2 py-1 rounded-md border border-orange-800/50 uppercase tracking-tighter">
+                      총 주유금액 : {totalAmount.toLocaleString()} 원
                     </span>
                   </>
                 ) : (
                   <span className="text-[14px] font-black bg-orange-900/50 text-orange-400 px-2 py-1 rounded-md border border-orange-800/50 uppercase tracking-tighter">
-                    총금액 : {totalMaintAmount.toLocaleString()} 원
+                    총 정비금액 : {totalMaintAmount.toLocaleString()} 원
                   </span>
                 )}
               </div>
               <div className="flex items-center gap-2">
-                {/* ✅ [변경] 엑셀 아이콘 컬러화: grayscale 제거 */}
                 <button onClick={downloadExcel} className="p-1 hover:bg-slate-800 rounded-md transition-all active:scale-90" title="엑셀 다운로드">
                   <span className="text-lg block hover:scale-125 transition-transform">📊</span>
                 </button>
               </div>
-              
-              
             </div>
             
-            <div className="bg-[#1e293b]/50 px-3 py-2 flex items-center border-t border-slate-800 text-[10px] font-black text-blue-200 tracking-tight whitespace-nowrap uppercase">
+            {/* ✅ [수정] 헤더 글자색을 text-white로 변경하고 기존 레이아웃 유지 */}
+            <div className="bg-[#1e293b]/50 px-3 py-2 flex items-center border-t border-slate-800 text-[10px] font-black text-white tracking-tight whitespace-nowrap">
               {activeTab === 'fuel' ? (
                 <>
                   <div className="flex-1 text-center pr-2">주유일자</div>
                   <div className="w-[45px] text-center pr-5 shrink-0">회사</div>
-                  <div className="w-[55px] text-center pr-1 shrink-0">단가(원)</div>
-                  <div className="w-[55px] text-center pr-0 shrink-0 border-r border-slate-700">주유량(L)</div>
-                  <div className="w-[75px] text-center pr-1 shrink-1 text-blue-400">주유액(원)</div>
+                  <div className="w-[55px] text-center pr-1 shrink-0">단가 (원)</div>
+                  <div className="w-[55px] text-center pr-0 shrink-0 border-r border-slate-700">주유량 (L)</div>
+                  <div className="w-[75px] text-center pr-1 shrink-1">주유액 (원)</div>
                   <div className="w-[70px] text-center pr-0 shrink-1">Trip(km)</div>
                 </>
               ) : (
                 <>
                   <div className="w-[90px] text-center shrink-0">정비일자</div>
-                  <div className="w-[90px] text-right pr-4 shrink-0 border-r border-slate-700 text-emerald-400">금액(원)</div>
-                  <div className="flex-1 text-center px-2">정비내역 / 업체 / 메모</div>
-                  <div className="w-[50px] text-right pr-3 shrink-0">주행거리</div>
+                  <div className="w-[90px] text-right pr-4 shrink-0 border-r border-slate-700 text-emerald-400">금액 (원)</div>
+                  <div className="flex-1 text-center shrink-0">정비내역 / 업체 / 메모</div>
+                  <div className="w-[50px] text-right pr-4 shrink-0">주행거리</div>
                 </>
               )}
             </div>
@@ -307,7 +304,7 @@ export default function Home() {
                       <div className="w-[55px] shrink-0 text-sm font-bold text-slate-300 text-right pr-2 tracking-tighter">{log.unit_price_krw.toLocaleString()}</div>
                       <div className="w-[55px] shrink-0 text-sm font-bold text-slate-300 text-right pr-2 border-r border-slate-700 tracking-tighter">{log.fuel_volume_l.toLocaleString()}</div>
                       <div className="w-[75px] shrink-0 text-sm font-black text-white text-right pr-1 tracking-tighter">{log.amount_krw.toLocaleString()}</div>
-                      <div className="w-[70px] shrink-0 text-sm font-black text-blue-400 text-right pr-1 tracking-tighter">{tripVal > 0 ? tripVal.toLocaleString() : "-"}</div>
+                      <div className="w-[70px] shrink-0 text-sm font-black text-blue-500 text-right pr-1 tracking-tighter">{tripVal > 0 ? tripVal.toLocaleString() : "-"}</div>
                     </>
                   ) : (
                     <>
@@ -315,17 +312,18 @@ export default function Home() {
                       <div className="w-[90px] shrink-0 text-sm font-black text-emerald-400 text-right pr-2 border-r border-slate-800 bg-slate-900/30 py-1 tracking-tight">{log.amount_krw.toLocaleString()}</div>
                       <div className="flex-1 px-3 py-1 overflow-hidden whitespace-normal break-all">
                         <div className="text-sm font-black text-slate-100 leading-tight mb-1">{log.content}</div>
-                        <div className="text-[10px] font-bold leading-tight"><span className="text-blue-200 uppercase">{log.company}</span>{log.memo && <span className="text-slate-400 ml-1">| {log.memo}</span>}</div>
+                        <div className="text-[10px] font-bold leading-tight">
+                          <span className="text-cyan-300">{log.company}</span>
+                          {log.memo && <span className="text-slate-300 ml-1">| {log.memo}</span>}
+                        </div>
                       </div>
-                      <div className="w-[50px] shrink-0 text-sm font-black text-slate-300 text-right pr-1 tracking-tighter">{log.odometer_km?.toLocaleString()}</div>
+                      <div className="w-[50px] shrink-0 text-sm font-black text-blue-400 text-right pr-1 tracking-tighter">{log.odometer_km?.toLocaleString()}</div>
                     </>
                   )}
                 </div>
               );
             })}
           </div>
-
-
         </div>
       </main>
 
