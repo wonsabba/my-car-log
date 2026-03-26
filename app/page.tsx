@@ -159,7 +159,20 @@ export default function Home() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  if (!session) return (<div className="p-10 font-bold text-white bg-[#0f172a] h-screen">Login Required...</div>);
+  if (!session) {
+  return (
+    <div className="flex items-center justify-center h-screen bg-[#0a1122] font-sans p-6 text-slate-300">
+      <div className="w-full max-w-sm bg-[#111c3a] p-8 rounded-3xl shadow-2xl border border-[#1e2e56]">
+        <h1 className="text-2xl font-black text-white mb-6 text-center tracking-tighter italic">BRANDON CAR</h1>
+        <form onSubmit={handleLogin} className="space-y-4">
+          <input type="email" placeholder="Email" className="w-full p-4 bg-[#1e2e56] border border-[#2a3f75] rounded-2xl outline-none font-bold text-white focus:border-blue-500 placeholder-[#5c72a8]" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <input type="password" placeholder="Password" className="w-full p-4 bg-[#1e2e56] border border-[#2a3f75] rounded-2xl outline-none font-bold text-white focus:border-blue-500 placeholder-[#5c72a8]" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <button type="submit" className="w-full py-4 bg-blue-600 text-white rounded-2xl font-black text-lg active:scale-95 transition-all">LOGIN</button>
+        </form>
+      </div>
+    </div>
+  );
+}
 
   return (
     <div className="flex flex-col md:flex-row h-screen bg-[#0f172a] max-w-6xl mx-auto overflow-hidden border-x border-slate-800 font-sans text-slate-300">
