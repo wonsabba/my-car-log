@@ -282,7 +282,7 @@ export default function Home() {
                   <div className="w-[55px] text-center pr-1 shrink-0">단가 (원)</div>
                   <div className="w-[55px] text-center pr-0 shrink-0 border-slate-700">주유량 (L)</div>
                   <div className="w-[75px] text-center pr-0 shrink-1">주유액 (원)</div>
-                  <div className="w-[70px] text-center pr-0 shrink-1">주행거리 (Km)</div>
+                  <div className="w-[70px] text-center pr-0 shrink-1">주행거리</div>
                 </>
               ) : (
                 <>
