@@ -315,9 +315,6 @@ export default function Home() {
                     <span className={`text-[14px] font-black px-2 py-1 rounded-md border uppercase tracking-tighter ${isDarkMode ? 'bg-orange-900/50 text-orange-500 border-orange-800/50' : 'bg-orange-50 text-orange-600 border-orange-100'}`}>
                       총 주유금액 : {totalAmount.toLocaleString()} 원
                     </span>
-                    <button onClick={() => setIsMonthlyModalOpen(true)} className={`text-[11px] font-black px-2 py-1 rounded-md transition-all active:scale-95 ${isDarkMode ? 'bg-slate-700 text-white hover:bg-slate-600' : 'bg-slate-200 text-slate-700 hover:bg-slate-300'}`}>
-                      월별 보기
-                    </button>
                   </>
                 ) : (
                   <span className={`text-[14px] font-black px-2 py-1 rounded-md border uppercase tracking-tighter ${isDarkMode ? 'bg-orange-900/50 text-orange-400 border-orange-800/50' : 'bg-orange-50 text-orange-700 border-orange-100'}`}>
@@ -325,6 +322,9 @@ export default function Home() {
                   </span>
                 )}
               </div>
+              <button onClick={() => setIsMonthlyModalOpen(true)} className={`p-1 rounded-md transition-all active:scale-90 ${isDarkMode ? 'hover:bg-slate-800' : 'hover:bg-slate-100'}`} title="월별 보기">
+                      <span className="text-lg block hover:scale-125 transition-transform">📅</span>
+                    </button>
               <button onClick={downloadExcel} className={`p-1 rounded-md transition-all active:scale-90 ${isDarkMode ? 'hover:bg-slate-800' : 'hover:bg-slate-100'}`} title="엑셀 다운로드">
                 <span className="text-lg block hover:scale-125 transition-transform">📊</span>
               </button>
