@@ -279,11 +279,11 @@ export default function Home() {
                 <>
                   {/* 사이즈 맞춤 수정 부분 */}
                   <div className="w-[90px] text-center shrink-0">주유일자</div>
-                  <div className="w-[45px] text-center pr-1 shrink-0">회사</div>
-                  <div className="w-[50px] text-center shrink-0">단가 (원)</div>
-                  <div className="w-[50px] text-center shrink-0 border-slate-700">주유량 (L)</div>
-                  <div className="flex-1 text-center pr-2">주유액 (원)</div>
-                  <div className="w-[50px] text-center shrink-0">주행거리</div>
+                  <div className="w-[60px] text-center pr-0 shrink-0">회사</div>
+                  <div className="w-[70px] text-right shrink-0">단가 (원)</div>
+                  <div className="w-[70px] text-right shrink-0 border-slate-700">주유량 (L)</div>
+                  <div className="flex-1 text-right pr-4">주유액 (원)</div>
+                  <div className="w-[80px] text-center shrink-0">주행거리</div>
                 </>
               ) : (
                 <>
@@ -308,11 +308,11 @@ export default function Home() {
                     <>
                       {/* 사이즈 맞춤 수정 부분 */}
                       <div className={`w-[90px] shrink-0 text-[13px] font-black text-center tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-950'}`}>{log.refuel_date}</div>
-                      <div className={`w-[45px] shrink-0 text-sm font-black text-center tracking-tighter ${brandConfig[log.brand]?.color || "text-slate-950"}`}>{brandConfig[log.brand]?.name.split(' ')[0] || "-"}</div>
-                      <div className={`w-[50px] shrink-0 text-sm font-bold text-right pr-1 tracking-tighter ${isDarkMode ? 'text-slate-300' : 'text-slate-600'}`}>{log.unit_price_krw.toLocaleString()}</div>
-                      <div className={`w-[50px] shrink-0 text-sm font-bold text-right pr-1 tracking-tighter ${isDarkMode ? 'text-slate-300 border-slate-700' : 'text-slate-600 border-slate-100'}`}>{log.fuel_volume_l.toLocaleString()}</div>
+                      <div className={`w-[60px] shrink-0 text-sm font-black text-center tracking-tighter ${brandConfig[log.brand]?.color || "text-slate-950"}`}>{brandConfig[log.brand]?.name.split(' ')[0] || "-"}</div>
+                      <div className={`w-[70px] shrink-0 text-sm font-bold text-right pr-1 tracking-tighter ${isDarkMode ? 'text-slate-300' : 'text-slate-600'}`}>{log.unit_price_krw.toLocaleString()}</div>
+                      <div className={`w-[70px] shrink-0 text-sm font-bold text-right pr-1 tracking-tighter ${isDarkMode ? 'text-slate-300 border-slate-700' : 'text-slate-600 border-slate-100'}`}>{log.fuel_volume_l.toLocaleString()}</div>
                       <div className={`flex-1 text-sm font-black text-right pr-2 tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-950'}`}>{log.amount_krw.toLocaleString()}</div>
-                      <div className={`w-[50px] shrink-0 text-sm font-black text-right pr-1 tracking-tighter ${isDarkMode ? 'text-blue-400' : 'text-blue-700'}`}>{tripVal > 0 ? tripVal.toLocaleString() : "-"}</div>
+                      <div className={`w-[80px] shrink-0 text-sm font-black text-right pr-1 tracking-tighter ${isDarkMode ? 'text-blue-400' : 'text-blue-700'}`}>{tripVal > 0 ? tripVal.toLocaleString() : "-"}</div>
                     </>
                   ) : (
                     <>
