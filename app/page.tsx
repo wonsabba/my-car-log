@@ -12,9 +12,13 @@ export default function Home() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [toast, setToast] = useState<{ msg: string; type: "success" | "error" } | null>(null);
   
-  // ✅ 월별 모달 상태 추가
+  // ✅ 월별 팝업 상태
   const [isMonthlyModalOpen, setIsMonthlyModalOpen] = useState(false);
   
+  // 🚀 예쁜 커스텀 모달 상태 추가 (Alert 및 Confirm 대용)
+  const [alertModal, setAlertModal] = useState<{ isOpen: boolean; msg: string; type?: "info" | "error" }>({ isOpen: false, msg: "" });
+  const [confirmModal, setConfirmModal] = useState<{ isOpen: boolean; msg: string; onConfirm: () => void }>({ isOpen: false, msg: "", onConfirm: () => {} });
+
   const [session, setSession] = useState<any>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -52,13 +56,11 @@ export default function Home() {
   const totalVolume = logs.reduce((acc, cur) => acc + (Number(cur.fuel_volume_l) || 0), 0);
   const totalMaintAmount = maintLogs.reduce((acc, cur) => acc + (Number(cur.amount_krw) || 0), 0);
 
-  // ✅ 월별 주유액 계산 로직
   const monthlyFuelTotals = logs.reduce((acc, log) => {
-    const month = log.refuel_date.substring(0, 7); // YYYY-MM 추출
+    const month = log.refuel_date.substring(0, 7);
     acc[month] = (acc[month] || 0) + (Number(log.amount_krw) || 0);
     return acc;
   }, {} as Record<string, number>);
-  // 최신 월이 위로 오도록 내림차순 정렬
   const sortedFuelMonths = Object.keys(monthlyFuelTotals).sort((a, b) => b.localeCompare(a));
 
   const brandConfig: { [key: string]: { name: string; color: string } } = {
@@ -72,10 +74,15 @@ export default function Home() {
     setTimeout(() => setToast(null), 3000);
   };
 
+  // 🚀 예쁜 Alert 호출용 헬퍼 함수
+  const showAlert = (msg: string, type: "info" | "error" = "info") => {
+    setAlertModal({ isOpen: true, msg, type });
+  };
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) showToast("로그인 실패: " + error.message, "error");
+    if (error) showAlert("로그인 실패: " + error.message, "error"); // alert 대체
     else showToast("환영합니다!");
   };
 
@@ -105,7 +112,7 @@ export default function Home() {
 
   const downloadExcel = () => {
     if (activeTab === "fuel") {
-      if (logs.length === 0) return showToast("데이터가 없습니다.", "error");
+      if (logs.length === 0) return showAlert("다운로드할 데이터가 없습니다.", "error"); // alert 대체
       const headers = ["주유일자", "주유회사", "단가(원)", "주유량(L)", "주유액(원)", "누적주행거리(Km)"];
       const csvContent = logs.map(log => [log.refuel_date, brandConfig[log.brand]?.name || "미지정", log.unit_price_krw, log.fuel_volume_l, log.amount_krw, log.distance_km].join(",")).join("\n");
       const BOM = "\uFEFF"; 
@@ -113,7 +120,7 @@ export default function Home() {
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a"); link.setAttribute("href", url); link.setAttribute("download", `주유내역_${new Date().toISOString().split('T')[0]}.csv`); link.click();
     } else {
-      if (maintLogs.length === 0) return showToast("데이터가 없습니다.", "error");
+      if (maintLogs.length === 0) return showAlert("다운로드할 데이터가 없습니다.", "error"); // alert 대체
       const headers = ["정비일자", "정비회사", "정비내역", "정비금액", "주행거리(km)", "메모"];
       const csvContent = maintLogs.map(log => [log.maint_date, log.company, log.content, log.amount_krw, log.odometer_km, log.memo].join(",")).join("\n");
       const BOM = "\uFEFF"; 
@@ -124,9 +131,8 @@ export default function Home() {
     showToast("📊 엑셀 다운로드 완료");
   };
 
-  // ✅ [추가] 월별 주유액 전용 엑셀 다운로드 함수
   const downloadMonthlyExcel = () => {
-    if (sortedFuelMonths.length === 0) return showToast("데이터가 없습니다.", "error");
+    if (sortedFuelMonths.length === 0) return showAlert("다운로드할 데이터가 없습니다.", "error"); // alert 대체
     const headers = ["월", "주유금액(원)"];
     const csvContent = sortedFuelMonths.map(month => [month, monthlyFuelTotals[month]].join(",")).join("\n");
     const BOM = "\uFEFF"; 
@@ -165,13 +171,19 @@ export default function Home() {
     setMaintFormData({ maint_date: new Date().toISOString().split('T')[0], company: "", content: "", amount_krw: "", odometer_km: "", memo: "" });
   };
 
-  const handleDelete = async () => {
+  // 🚀 예쁜 Confirm 삭제 로직
+  const handleDelete = () => {
     if (!editingId) return;
-    if (confirm("정말로 삭제하시겠습니까?")) {
-      const table = activeTab === "fuel" ? "fuel_logs" : "maintenance_logs";
-      const { error } = await supabase.from(table).delete().eq("id", editingId);
-      if (!error) { showToast("🗑️ 삭제 완료"); resetForm(); fetchLogs(); }
-    }
+    setConfirmModal({
+      isOpen: true,
+      msg: "정말로 이 내역을 삭제하시겠습니까?",
+      onConfirm: async () => {
+        const table = activeTab === "fuel" ? "fuel_logs" : "maintenance_logs";
+        const { error } = await supabase.from(table).delete().eq("id", editingId);
+        if (!error) { showToast("🗑️ 삭제 완료"); resetForm(); fetchLogs(); }
+        setConfirmModal({ isOpen: false, msg: "", onConfirm: () => {} }); // 확인 후 모달 닫기
+      }
+    });
   };
 
   const startEdit = (log: any) => {
@@ -195,6 +207,23 @@ export default function Home() {
             <button type="submit" className="w-full py-4 bg-blue-600 text-white rounded-2xl font-black text-lg active:scale-95 transition-all">LOGIN</button>
           </form>
         </div>
+        
+        {/* 🚀 로그인 화면용 Alert 모달 */}
+        {alertModal.isOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+            <div className={`w-full max-w-xs rounded-3xl shadow-2xl overflow-hidden flex flex-col ${isDarkMode ? 'bg-[#111c3a] border-[#1e2e56] border' : 'bg-white border-slate-200 border'}`}>
+              <div className="p-6 text-center mt-2">
+                <div className={`text-3xl mb-3 ${alertModal.type === 'error' ? 'text-red-500' : 'text-blue-500'}`}>
+                  {alertModal.type === 'error' ? '⚠️' : 'ℹ️'}
+                </div>
+                <p className={`text-sm font-bold leading-relaxed ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>{alertModal.msg}</p>
+              </div>
+              <div className="p-4 pt-0">
+                <button onClick={() => setAlertModal({ isOpen: false, msg: "" })} className={`w-full py-3 rounded-xl font-black text-sm transition-all active:scale-95 ${isDarkMode ? 'bg-slate-800 text-white hover:bg-slate-700' : 'bg-slate-100 text-slate-800 hover:bg-slate-200'}`}>확인</button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
@@ -203,20 +232,50 @@ export default function Home() {
     <div className={`flex flex-col md:flex-row h-screen max-w-6xl mx-auto overflow-hidden border-x font-sans transition-colors duration-300 ${isDarkMode ? 'bg-[#0f172a] text-slate-100 border-slate-800' : 'bg-slate-50 text-slate-800 border-slate-200'}`}>
       {toast && <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 px-6 py-2 rounded-full shadow-xl bg-blue-600 text-white font-bold text-xs shrink-0">{toast.msg}</div>}
 
-      {/* ✅ 월별 보기 팝업 (모달) */}
+      {/* 🚀 예쁜 Alert 팝업 (경고창 대체) */}
+      {alertModal.isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+          <div className={`w-full max-w-xs rounded-3xl shadow-2xl overflow-hidden flex flex-col ${isDarkMode ? 'bg-[#111c3a] border-[#1e2e56] border' : 'bg-white border-slate-200 border'}`}>
+            <div className="p-6 text-center mt-2">
+              <div className={`text-3xl mb-3 ${alertModal.type === 'error' ? 'text-red-500' : 'text-blue-500'}`}>
+                {alertModal.type === 'error' ? '⚠️' : 'ℹ️'}
+              </div>
+              <p className={`text-sm font-bold leading-relaxed ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>{alertModal.msg}</p>
+            </div>
+            <div className="p-4 pt-0">
+              <button onClick={() => setAlertModal({ isOpen: false, msg: "" })} className={`w-full py-3 rounded-xl font-black text-sm transition-all active:scale-95 ${isDarkMode ? 'bg-slate-800 text-white hover:bg-slate-700' : 'bg-slate-100 text-slate-800 hover:bg-slate-200'}`}>확인</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 🚀 예쁜 Confirm 팝업 (삭제 확인창 대체) */}
+      {confirmModal.isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+          <div className={`w-full max-w-xs rounded-3xl shadow-2xl overflow-hidden flex flex-col ${isDarkMode ? 'bg-[#111c3a] border-[#1e2e56] border' : 'bg-white border-slate-200 border'}`}>
+            <div className="p-6 text-center mt-2">
+              <div className="text-3xl mb-3 text-red-500">🗑️</div>
+              <p className={`text-sm font-bold leading-relaxed ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>{confirmModal.msg}</p>
+            </div>
+            <div className="flex p-4 gap-3 pt-0">
+              <button onClick={() => setConfirmModal({ isOpen: false, msg: "", onConfirm: () => {} })} className={`flex-1 py-3 rounded-xl font-bold text-sm transition-all active:scale-95 ${isDarkMode ? 'bg-slate-800 text-slate-300 hover:bg-slate-700' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}>취소</button>
+              <button onClick={confirmModal.onConfirm} className="flex-1 py-3 rounded-xl font-bold text-sm bg-red-600 text-white hover:bg-red-700 transition-all active:scale-95">삭제</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 📅 월별 보기 팝업 (모달) */}
       {isMonthlyModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
           <div className={`w-full max-w-sm rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[80vh] ${isDarkMode ? 'bg-[#111c3a] border-[#1e2e56] border' : 'bg-white border-slate-200 border'}`}>
             <div className={`p-5 border-b flex justify-between items-center ${isDarkMode ? 'border-slate-700' : 'border-slate-100'}`}>
-              
-              {/* ✅ [추가] 모달창 타이틀 옆에 엑셀 다운로드 버튼 삽입 */}
               <div className="flex items-center gap-2">
                 <h2 className={`text-lg font-black tracking-tight ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>월별 주유액</h2>
                 <button onClick={downloadMonthlyExcel} className={`p-1 rounded-md transition-all active:scale-90 ${isDarkMode ? 'hover:bg-slate-800' : 'hover:bg-slate-100'}`} title="월별 엑셀 다운로드">
                   <span className="text-lg block hover:scale-125 transition-transform">📊</span>
                 </button>
               </div>
-
               <button onClick={() => setIsMonthlyModalOpen(false)} className={`text-sm font-bold active:scale-95 ${isDarkMode ? 'text-slate-400 hover:text-white' : 'text-slate-500 hover:text-slate-800'}`}>닫기 ✕</button>
             </div>
             <div className="p-5 overflow-y-auto custom-scrollbar flex-1 space-y-3">
@@ -283,7 +342,7 @@ export default function Home() {
                   <div><label className={`text-[11px] font-bold ml-1 mb-1 block uppercase ${isDarkMode ? 'text-slate-300' : 'text-slate-500'}`}>정비내역</label><input type="text" maxLength={100} className={`p-2 border rounded-xl w-full text-sm font-bold outline-none ${isDarkMode ? 'bg-[#1e293b] border-slate-700 text-white' : 'bg-white border-slate-200 text-slate-800'}`} value={maintFormData.content} onChange={(e) => setMaintFormData({...maintFormData, content: e.target.value})} required /></div>
                   <div className="grid grid-cols-2 gap-3">
                     <div><label className={`text-[11px] font-bold ml-1 mb-1 block uppercase ${isDarkMode ? 'text-slate-300' : 'text-slate-500'}`}>금액 (원)</label><input type="number" className={`p-2 border rounded-xl w-full text-sm text-right font-bold outline-none ${isDarkMode ? 'bg-[#1e293b] border-slate-700 text-white' : 'bg-white border-slate-200 text-slate-800'}`} value={maintFormData.amount_krw} onChange={(e) => setMaintFormData({...maintFormData, amount_krw: e.target.value})} required /></div>
-                    <div><label className={`text-[11px] font-bold ml-1 mb-1 block  ${isDarkMode ? 'text-slate-300' : 'text-slate-500'}`}>누적거리 (Km)</label><input type="number" className={`p-2 border rounded-xl w-full text-sm font-bold text-emerald-400 text-right outline-none ${isDarkMode ? 'bg-[#1e293b] border-slate-700' : 'bg-white border-slate-200 text-emerald-600'}`} value={maintFormData.odometer_km} onChange={(e) => setMaintFormData({...maintFormData, odometer_km: e.target.value})} required /></div>
+                    <div><label className={`text-[11px] font-bold ml-1 mb-1 block  ${isDarkMode ? 'text-slate-300' : 'text-slate-500'}`}>누적거리 (Km)</label><input type="number" className={`p-2 border rounded-xl w-full text-sm font-bold text-emerald-400 text-right outline-none ${isDarkMode ? 'bg-[#1e293b] border-slate-700' : 'bg-white border-slate-200 text-emerald-600'}`} value={maintFormData.odometer_km} onChange={(e) => setMaintFormData({...maintFormData, odometer_km: e.target.value})} required /></div>
                   </div>
                   <div className="flex gap-2 items-end">
                     <div className="flex-1"><label className={`text-[11px] font-bold ml-1 mb-1 block uppercase ${isDarkMode ? 'text-slate-300' : 'text-slate-500'}`}>메모</label><input type="text" maxLength={100} className={`p-2 border rounded-xl w-full text-sm font-bold outline-none ${isDarkMode ? 'bg-[#1e293b] border-slate-700 text-white' : 'bg-white border-slate-200 text-slate-800'}`} value={maintFormData.memo} onChange={(e) => setMaintFormData({...maintFormData, memo: e.target.value})} /></div>
@@ -293,6 +352,7 @@ export default function Home() {
               )}
               {editingId && (
                 <div className="grid grid-cols-2 gap-2 pt-1">
+                  {/* 🚀 삭제 버튼을 누르면 기본 confirm 대신 예쁜 팝업을 호출하도록 변경 */}
                   <button type="button" onClick={handleDelete} className="py-2 bg-red-950/30 text-red-400 border border-red-900 rounded-xl font-bold text-xs active:scale-95">삭제</button>
                   <button type="button" onClick={resetForm} className={`py-2 rounded-xl font-bold text-xs active:scale-95 ${isDarkMode ? 'bg-slate-800 text-slate-300' : 'bg-slate-100 text-slate-500'}`}>취소</button>
                 </div>
@@ -315,6 +375,9 @@ export default function Home() {
                     <span className={`text-[14px] font-black px-2 py-1 rounded-md border uppercase tracking-tighter ${isDarkMode ? 'bg-orange-900/50 text-orange-500 border-orange-800/50' : 'bg-orange-50 text-orange-600 border-orange-100'}`}>
                       총 주유금액 : {totalAmount.toLocaleString()} 원
                     </span>
+                    <button onClick={() => setIsMonthlyModalOpen(true)} className={`p-1 rounded-md transition-all active:scale-90 ${isDarkMode ? 'hover:bg-slate-800' : 'hover:bg-slate-100'}`} title="월별 보기">
+                      <span className="text-lg block hover:scale-125 transition-transform">📅</span>
+                    </button>
                   </>
                 ) : (
                   <span className={`text-[14px] font-black px-2 py-1 rounded-md border uppercase tracking-tighter ${isDarkMode ? 'bg-orange-900/50 text-orange-400 border-orange-800/50' : 'bg-orange-50 text-orange-700 border-orange-100'}`}>
@@ -322,15 +385,12 @@ export default function Home() {
                   </span>
                 )}
               </div>
-              <button onClick={() => setIsMonthlyModalOpen(true)} className={`p-1 rounded-md transition-all active:scale-90 ${isDarkMode ? 'hover:bg-slate-800' : 'hover:bg-slate-100'}`} title="월별 보기">
-                      <span className="text-lg block hover:scale-125 transition-transform">📅</span>
-                    </button>
               <button onClick={downloadExcel} className={`p-1 rounded-md transition-all active:scale-90 ${isDarkMode ? 'hover:bg-slate-800' : 'hover:bg-slate-100'}`} title="엑셀 다운로드">
                 <span className="text-lg block hover:scale-125 transition-transform">📊</span>
               </button>
             </div>
             
-            <div className={`px-3 py-2 flex items-center border-t text-[10px] font-black tracking-tight whitespace-nowrap  ${isDarkMode ? 'bg-[#1e293b]/50 border-slate-800 text-blue-200' : 'bg-slate-50 border-slate-200 text-slate-500'}`}>
+            <div className={`px-3 py-2 flex items-center border-t text-[10px] font-black tracking-tight whitespace-nowrap  ${isDarkMode ? 'bg-[#1e293b]/50 border-slate-800 text-blue-200' : 'bg-slate-50 border-slate-200 text-slate-500'}`}>
               {activeTab === 'fuel' ? (
                 <>
                   <div className="w-[22%] text-center pr-2 shrink-0">주유일자</div>
