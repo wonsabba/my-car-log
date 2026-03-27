@@ -274,23 +274,23 @@ export default function Home() {
               </button>
             </div>
             
+            {/* ✅ [비율 변경] px나 flex-1 대신 w-[XX%] 사용으로 두 탭 모두 합이 100%가 되도록 고정 */}
             <div className={`px-3 py-2 flex items-center border-t text-[10px] font-black tracking-tight whitespace-nowrap  ${isDarkMode ? 'bg-[#1e293b]/50 border-slate-800 text-blue-200' : 'bg-slate-50 border-slate-200 text-slate-500'}`}>
               {activeTab === 'fuel' ? (
                 <>
-                  {/* 사이즈 맞춤 수정 부분 */}
-                  <div className="w-[90px] text-center shrink-0">주유일자</div>
-                  <div className="w-[40px] text-center pr-0 shrink-0">회사</div>
-                  <div className="w-[65px] text-right shrink-0">단가 (원)</div>
-                  <div className="w-[65px] text-right shrink-0 border-slate-700">주유량 (L)</div>
-                  <div className="flex-1 text-right pr-4">주유액 (원)</div>
-                  <div className="w-[65px] text-center shrink-0">주행거리</div>
+                  <div className="w-[22%] text-center pr-2 shrink-0">주유일자</div>
+                  <div className="w-[12%] text-center pr-5 shrink-0">회사</div>
+                  <div className="w-[15%] text-center pr-1 shrink-0">단가 (원)</div>
+                  <div className="w-[15%] text-center pr-0 shrink-0 border-slate-700">주유량 (L)</div>
+                  <div className="w-[20%] text-center pr-0 shrink-0">주유액 (원)</div>
+                  <div className="w-[16%] text-center pr-0 shrink-0">주행거리</div>
                 </>
               ) : (
                 <>
-                  <div className="w-[90px] text-center shrink-0">정비일자</div>
-                  <div className="w-[90px] text-right pr-1 shrink-0">정비금액 (원)</div>
-                  <div className="flex-1 text-center px-2">정비내역 / 업체 / 메모</div>
-                  <div className="w-[50px] text-center pr-3 shrink-0">누적거리</div>
+                  <div className="w-[22%] text-center shrink-0">정비일자</div>
+                  <div className="w-[22%] text-right pr-1 shrink-0">정비금액 (원)</div>
+                  <div className="w-[40%] text-center px-2 shrink-0">정비내역 / 업체 / 메모</div>
+                  <div className="w-[16%] text-center pr-3 shrink-0">누적거리</div>
                 </>
               )}
             </div>
@@ -306,26 +306,26 @@ export default function Home() {
                 <div key={log.id} onDoubleClick={() => startEdit(log)} className={`flex items-center px-4 py-4 cursor-pointer transition-colors whitespace-nowrap ${editingId === log.id ? (isDarkMode ? 'bg-orange-950/20 ring-1 ring-inset ring-orange-900/50' : 'bg-orange-50 ring-1 ring-inset ring-orange-200') : (isDarkMode ? 'hover:bg-slate-900' : 'hover:bg-slate-50')}`}>
                   {activeTab === 'fuel' ? (
                     <>
-                      {/* 사이즈 맞춤 수정 부분 */}
-                      <div className={`w-[90px] shrink-0 text-[13px] font-black text-center tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-950'}`}>{log.refuel_date}</div>
-                      <div className={`w-[40px] shrink-0 text-sm font-black text-center tracking-tighter ${brandConfig[log.brand]?.color || "text-slate-950"}`}>{brandConfig[log.brand]?.name.split(' ')[0] || "-"}</div>
-                      <div className={`w-[65px] shrink-0 text-sm font-bold text-right pr-1 tracking-tighter ${isDarkMode ? 'text-slate-300' : 'text-slate-600'}`}>{log.unit_price_krw.toLocaleString()}</div>
-                      <div className={`w-[65px] shrink-0 text-sm font-bold text-right pr-1 tracking-tighter ${isDarkMode ? 'text-slate-300 border-slate-700' : 'text-slate-600 border-slate-100'}`}>{log.fuel_volume_l.toLocaleString()}</div>
-                      <div className={`flex-1 text-sm font-black text-right pr-2 tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-950'}`}>{log.amount_krw.toLocaleString()}</div>
-                      <div className={`w-[65px] shrink-0 text-sm font-black text-right pr-1 tracking-tighter ${isDarkMode ? 'text-blue-400' : 'text-blue-700'}`}>{tripVal > 0 ? tripVal.toLocaleString() : "-"}</div>
+                      {/* ✅ [비율 변경] 데이터 목록도 헤더와 완벽히 동일한 백분율(%) 비율로 매칭 */}
+                      <div className={`w-[22%] shrink-0 text-sm font-black text-center tracking-tighter pr-2 ${isDarkMode ? 'text-white' : 'text-slate-950'}`}>{log.refuel_date}</div>
+                      <div className={`w-[12%] shrink-0 text-sm font-black text-center tracking-tighter ${brandConfig[log.brand]?.color || "text-slate-950"}`}>{brandConfig[log.brand]?.name.split(' ')[0] || "-"}</div>
+                      <div className={`w-[15%] shrink-0 text-sm font-bold text-right pr-1 tracking-tighter ${isDarkMode ? 'text-slate-300' : 'text-slate-600'}`}>{log.unit_price_krw.toLocaleString()}</div>
+                      <div className={`w-[15%] shrink-0 text-sm font-bold text-right pr-1 tracking-tighter ${isDarkMode ? 'text-slate-300 border-slate-700' : 'text-slate-600 border-slate-100'}`}>{log.fuel_volume_l.toLocaleString()}</div>
+                      <div className={`w-[20%] shrink-0 text-sm font-black text-right pr-1 tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-950'}`}>{log.amount_krw.toLocaleString()}</div>
+                      <div className={`w-[16%] shrink-0 text-sm font-black text-right pr-1 tracking-tighter ${isDarkMode ? 'text-blue-400' : 'text-blue-700'}`}>{tripVal > 0 ? tripVal.toLocaleString() : "-"}</div>
                     </>
                   ) : (
                     <>
-                      <div className={`w-[90px] shrink-0 text-[13px] font-black text-center tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-950'}`}>{log.maint_date}</div>
-                      <div className={`w-[90px] shrink-0 text-sm font-black text-right pr-2 py-1 tracking-tight ${isDarkMode ? 'text-emerald-400 border-slate-800 bg-slate-900/30' : 'text-emerald-600 border-slate-100 bg-slate-50/50'}`}>{log.amount_krw.toLocaleString()}</div>
-                      <div className="flex-1 px-3 py-1 overflow-hidden whitespace-normal break-all">
+                      <div className={`w-[22%] shrink-0 text-[13px] font-black text-center tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-950'}`}>{log.maint_date}</div>
+                      <div className={`w-[22%] shrink-0 text-sm font-black text-right pr-2 py-1 tracking-tight ${isDarkMode ? 'text-emerald-400 border-slate-800 bg-slate-900/30' : 'text-emerald-600 border-slate-100 bg-slate-50/50'}`}>{log.amount_krw.toLocaleString()}</div>
+                      <div className="w-[40%] shrink-0 px-3 py-1 overflow-hidden whitespace-normal break-all">
                         <div className={`text-sm font-black leading-tight mb-1 ${isDarkMode ? 'text-slate-100' : 'text-slate-900'}`}>{log.content}</div>
                         <div className="text-[10px] font-bold leading-tight">
                           <span className={`${isDarkMode ? 'text-blue-400' : 'text-slate-500'} uppercase`}>{log.company}</span>
                           {log.memo && <span className={`${isDarkMode ? 'text-slate-400' : 'text-blue-400'} ml-1`}>| {log.memo}</span>}
                         </div>
                       </div>
-                      <div className={`w-[50px] shrink-0 text-sm font-black text-right pr-1 tracking-tighter ${isDarkMode ? 'text-slate-300' : 'text-slate-900'}`}>{log.odometer_km?.toLocaleString()}</div>
+                      <div className={`w-[16%] shrink-0 text-sm font-black text-right pr-1 tracking-tighter ${isDarkMode ? 'text-slate-300' : 'text-slate-900'}`}>{log.odometer_km?.toLocaleString()}</div>
                     </>
                   )}
                 </div>
