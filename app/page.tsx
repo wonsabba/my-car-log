@@ -277,12 +277,13 @@ export default function Home() {
             <div className={`px-3 py-2 flex items-center border-t text-[10px] font-black tracking-tight whitespace-nowrap  ${isDarkMode ? 'bg-[#1e293b]/50 border-slate-800 text-blue-200' : 'bg-slate-50 border-slate-200 text-slate-500'}`}>
               {activeTab === 'fuel' ? (
                 <>
-                  <div className="flex-1 text-center pr-2">주유일자</div>
-                  <div className="w-[45px] text-center pr-5 shrink-0">회사</div>
-                  <div className="w-[55px] text-center pr-1 shrink-0">단가 (원)</div>
-                  <div className="w-[55px] text-center pr-0 shrink-0 border-slate-700">주유량 (L)</div>
-                  <div className="w-[75px] text-center pr-0 shrink-1">주유액 (원)</div>
-                  <div className="w-[70px] text-center pr-0 shrink-1">주행거리</div>
+                  {/* 사이즈 맞춤 수정 부분 */}
+                  <div className="w-[90px] text-center shrink-0">주유일자</div>
+                  <div className="w-[45px] text-center pr-1 shrink-0">회사</div>
+                  <div className="w-[50px] text-center shrink-0">단가 (원)</div>
+                  <div className="w-[50px] text-center shrink-0 border-slate-700">주유량 (L)</div>
+                  <div className="flex-1 text-center pr-2">주유액 (원)</div>
+                  <div className="w-[50px] text-center shrink-0">주행거리</div>
                 </>
               ) : (
                 <>
@@ -305,12 +306,13 @@ export default function Home() {
                 <div key={log.id} onDoubleClick={() => startEdit(log)} className={`flex items-center px-4 py-4 cursor-pointer transition-colors whitespace-nowrap ${editingId === log.id ? (isDarkMode ? 'bg-orange-950/20 ring-1 ring-inset ring-orange-900/50' : 'bg-orange-50 ring-1 ring-inset ring-orange-200') : (isDarkMode ? 'hover:bg-slate-900' : 'hover:bg-slate-50')}`}>
                   {activeTab === 'fuel' ? (
                     <>
-                      <div className={`flex-1 text-sm font-black text-center tracking-tighter pr-2 ${isDarkMode ? 'text-white' : 'text-slate-950'}`}>{log.refuel_date}</div>
+                      {/* 사이즈 맞춤 수정 부분 */}
+                      <div className={`w-[90px] shrink-0 text-[13px] font-black text-center tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-950'}`}>{log.refuel_date}</div>
                       <div className={`w-[45px] shrink-0 text-sm font-black text-center tracking-tighter ${brandConfig[log.brand]?.color || "text-slate-950"}`}>{brandConfig[log.brand]?.name.split(' ')[0] || "-"}</div>
-                      <div className={`w-[55px] shrink-0 text-sm font-bold text-right pr-2 tracking-tighter ${isDarkMode ? 'text-slate-300' : 'text-slate-600'}`}>{log.unit_price_krw.toLocaleString()}</div>
-                      <div className={`w-[55px] shrink-0 text-sm font-bold text-right pr-2 tracking-tighter ${isDarkMode ? 'text-slate-300 border-slate-700' : 'text-slate-600 border-slate-100'}`}>{log.fuel_volume_l.toLocaleString()}</div>
-                      <div className={`w-[75px] shrink-0 text-sm font-black text-right pr-1 tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-950'}`}>{log.amount_krw.toLocaleString()}</div>
-                      <div className={`w-[70px] shrink-0 text-sm font-black text-right pr-1 tracking-tighter ${isDarkMode ? 'text-blue-400' : 'text-blue-700'}`}>{tripVal > 0 ? tripVal.toLocaleString() : "-"}</div>
+                      <div className={`w-[50px] shrink-0 text-sm font-bold text-right pr-1 tracking-tighter ${isDarkMode ? 'text-slate-300' : 'text-slate-600'}`}>{log.unit_price_krw.toLocaleString()}</div>
+                      <div className={`w-[50px] shrink-0 text-sm font-bold text-right pr-1 tracking-tighter ${isDarkMode ? 'text-slate-300 border-slate-700' : 'text-slate-600 border-slate-100'}`}>{log.fuel_volume_l.toLocaleString()}</div>
+                      <div className={`flex-1 text-sm font-black text-right pr-2 tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-950'}`}>{log.amount_krw.toLocaleString()}</div>
+                      <div className={`w-[50px] shrink-0 text-sm font-black text-right pr-1 tracking-tighter ${isDarkMode ? 'text-blue-400' : 'text-blue-700'}`}>{tripVal > 0 ? tripVal.toLocaleString() : "-"}</div>
                     </>
                   ) : (
                     <>
@@ -330,7 +332,6 @@ export default function Home() {
               );
             })}
           </div>
-
 
         </div>
       </main>
