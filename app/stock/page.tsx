@@ -105,7 +105,7 @@ export default function StockPage() {
             <h1 className="text-xl font-black italic tracking-tighter text-blue-500">Stock</h1>
             {/* ✅ 홈 링크와 GV80 차계부 링크 추가 */}
             <div className="flex gap-1 ml-1">
-              <Link href="/home" className="text-[12px] font-black opacity-40 hover:opacity-100 transition-opacity" title="홈내역으로">🏠</Link>
+              <Link href="/home" className="text-[16px] font-black opacity-40 hover:opacity-100 transition-opacity" title="홈내역으로">🏠</Link>
               <Link href="/" className="text-slate-300 hover:text-slate-800 font-black text-1xl tracking-tighter transition-colors">
                 <img src="/GV80.jpg" alt="GV80 Icon" className="w-5 h-5 inline-block mr-1 -mt-1 rounded-md " title="차계부로"/></Link>
             </div>

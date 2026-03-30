@@ -123,7 +123,7 @@ export default function HouseholdLedger() {
             <img src="/GV80.jpg" alt="GV80 Icon" className="w-5 h-5 inline-block mr-1 -mt-1 rounded-md" />
             GV80
           </Link>
-          <h1 className="text-1xl font-black text-blue-600 tracking-tighter">🏠 HOME</h1>
+          <h1 className="text-1xl font-black text-blue-600 tracking-tighter uppercase">🏠 House</h1>
         </div>
         <div className="flex gap-2">
           <button onClick={handleReset} className="bg-slate-900 text-white px-4 py-2 rounded-xl text-xs font-black shadow-lg active:scale-95 transition-all">
