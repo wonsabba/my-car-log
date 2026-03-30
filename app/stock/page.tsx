@@ -145,7 +145,6 @@ export default function StockPage() {
             <input type="number" placeholder="금액" className={`p-2 rounded-lg text-[13px] font-black outline-none border ${isDarkMode ? 'bg-slate-800 border-blue-900 text-blue-400' : 'bg-blue-50 border-blue-200 text-blue-700 placeholder-blue-300'}`} value={formData.total_amount} onChange={e => setFormData({...formData, total_amount: e.target.value})} />
           </div>
 
-          {/* ✅ 버튼 가로 배치 최적화 */}
           <div className="flex gap-1.5">
             <textarea className={`flex-1 p-2 rounded-lg text-[13px] font-bold outline-none h-[42px] resize-none border ${isDarkMode ? 'bg-[#1e293b] border-slate-600 text-white' : 'bg-white border-slate-300 text-slate-800'} ${phColor}`} value={formData.memo} onChange={e => setFormData({...formData, memo: e.target.value})} placeholder="메모" />
             <div className={`flex gap-1 ${editingId ? 'w-[120px]' : 'w-[60px]'} transition-all`}>
@@ -165,25 +164,35 @@ export default function StockPage() {
       <main className="flex-1 overflow-y-auto p-3 custom-scrollbar">
         <div className="flex flex-col gap-2 w-full">
           {logs.map(log => (
-            <div key={log.id} onDoubleClick={() => startEdit(log)} className={`flex items-center px-4 py-3 rounded-2xl border transition-all cursor-pointer ${editingId === log.id ? 'border-orange-500 ring-2 ring-orange-500/20 bg-orange-500/5' : (isDarkMode ? 'bg-[#1e293b] border-slate-800 hover:bg-slate-900' : 'bg-white border-slate-200 shadow-sm hover:bg-slate-50')}`}>
-              <div style={{ width: '17%' }} className="text-[13px] font-black opacity-70 tracking-tighter">{log.trade_date.replace(/-/g, '.')}</div>
+            <div key={log.id} onDoubleClick={() => startEdit(log)} className={`flex items-start px-4 py-3 rounded-2xl border transition-all cursor-pointer ${editingId === log.id ? 'border-orange-500 ring-2 ring-orange-500/20 bg-orange-500/5' : (isDarkMode ? 'bg-[#1e293b] border-slate-800 hover:bg-slate-900' : 'bg-white border-slate-200 shadow-sm hover:bg-slate-50')}`}>
+              {/* 1. 일자 (17%) */}
+              <div style={{ width: '17%' }} className="text-[12px] font-black opacity-70 tracking-tighter mt-1">{log.trade_date.replace(/-/g, '.').slice(5)}</div>
+              
+              {/* 2. 종목 및 메모 (39%) - whitespace-nowrap 제거 및 break-words 추가 */}
               <div style={{ width: '39%' }} className="px-2">
                 <div className="font-black text-[14px] tracking-tight truncate">{log.stock_name}</div>
-                <div className="text-[12px] opacity-60 truncate font-medium">{log.memo || '-'}</div>
+                {/* ✅ 메모 줄바꿈 처리 로직 */}
+                <div className="text-[11px] opacity-60 font-medium break-words leading-tight mt-0.5">{log.memo || '-'}</div>
               </div>
-              <div style={{ width: '9%' }} className="text-center">
-                <span className={`text-[13px] font-black px-1 py-0.5 rounded ${log.trade_type === 'BUY' ? 'bg-red-500/10 text-red-500' : 'bg-blue-500/10 text-blue-500'}`}>{log.trade_type}</span>
+
+              {/* 3. 구분 (9%) */}
+              <div style={{ width: '9%' }} className="text-center mt-1">
+                <span className={`text-[13px] font-black px-1 py-0.5 rounded ${log.trade_type === 'BUY' ? 'bg-red-500/10 text-red-500' : 'bg-blue-500/10 text-blue-500'}`}>{log.trade_type === 'BUY' ? '매수' : '매도'}</span>
               </div>
+
+              {/* 4. 거래상세 및 수익 (30%) */}
               <div style={{ width: '30%' }} className="text-right">
                 <div className="text-[14px] font-black tracking-tight">{log.total_amount.toLocaleString()}원</div>
-                <div className="text-[13px] font-bold opacity-60">{log.quantity}주 · {log.unit_price.toLocaleString()}원</div>
+                <div className="text-[11px] font-bold opacity-60">{log.quantity}주 · {log.unit_price.toLocaleString()}원</div>
                 {log.profit !== 0 && (
-                  <div className={`text-[14px] font-black mt-0.5 ${log.profit > 0 ? 'text-emerald-500' : 'text-red-400'}`}>
+                  <div className={`text-[12px] font-black mt-0.5 ${log.profit > 0 ? 'text-emerald-500' : 'text-red-400'}`}>
                     {log.profit > 0 ? '+' : ''}{log.profit.toLocaleString()}
                   </div>
                 )}
               </div>
-              <div style={{ width: '5%' }} className="flex justify-end">
+
+              {/* 5. 삭제 버튼 (5%) */}
+              <div style={{ width: '5%' }} className="flex justify-end mt-1">
                 <button onClick={(e) => { e.stopPropagation(); handleDelete(log.id); }} className="opacity-20 hover:opacity-100 hover:text-red-500 transition-opacity text-xs">✕</button>
               </div>
             </div>
