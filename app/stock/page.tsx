@@ -196,24 +196,25 @@ export default function StockPage() {
           </div>
           
           <div className="flex gap-1">
-            <input type="text" placeholder="종목명" className={`flex-[2] p-2 rounded-lg text-[13px] font-bold outline-none border ${phColor}`} value={formData.stock_name} onChange={e => setFormData({...formData, stock_name: e.target.value})} required />
-            <input type="text" placeholder="코드" className={`flex-1 p-2 rounded-lg text-[13px] font-bold outline-none border ${phColor}`} value={formData.stock_code} onChange={e => setFormData({...formData, stock_code: e.target.value})} />
+            <input type="text" placeholder="종목명" className={`flex-[2] p-2 rounded-lg text-[13px] font-bold outline-none border ${isDarkMode ? 'bg-[#1e293b] border-slate-600 text-white' : 'bg-white border-slate-300'}`} value={formData.stock_name} onChange={e => setFormData({...formData, stock_name: e.target.value})} required />
+            {/* ✅ 모바일 기본 스타일 초기화 적용 */}
+            <input type="text" placeholder="코드" className={`flex-1 p-2 rounded-lg text-[13px] font-bold outline-none border appearance-none -webkit-appearance-none ${isDarkMode ? 'bg-[#1e293b] border-slate-600 text-white' : 'bg-white border-slate-300 text-slate-800'} ${phColor}`} value={formData.stock_code} onChange={e => setFormData({...formData, stock_code: e.target.value})} />
           </div>
           
           <div className="grid grid-cols-3 gap-1.5">
-            <input type="number" placeholder="수량" className={`p-2 rounded-lg text-[13px] font-bold outline-none border ${phColor}`} value={formData.quantity} onChange={e => setFormData({...formData, quantity: e.target.value})} required />
-            <input type="number" placeholder="단가" className={`p-2 rounded-lg text-[13px] font-bold outline-none border ${phColor}`} value={formData.unit_price} onChange={e => setFormData({...formData, unit_price: e.target.value})} required />
-            <input type="number" placeholder="수수료" className={`p-2 rounded-lg text-[13px] font-bold outline-none border ${phColor}`} value={formData.fee} onChange={e => setFormData({...formData, fee: e.target.value})} />
+            <input type="number" placeholder="수량" className={`p-2 rounded-lg text-[13px] font-bold outline-none border ${isDarkMode ? 'bg-[#1e293b] border-slate-600 text-white' : 'bg-white border-slate-300'}`} value={formData.quantity} onChange={e => setFormData({...formData, quantity: e.target.value})} required />
+            <input type="number" placeholder="단가" className={`p-2 rounded-lg text-[13px] font-bold outline-none border ${isDarkMode ? 'bg-[#1e293b] border-slate-600 text-white' : 'bg-white border-slate-300'}`} value={formData.unit_price} onChange={e => setFormData({...formData, unit_price: e.target.value})} required />
+            <input type="number" placeholder="수수료" className={`p-2 rounded-lg text-[13px] font-bold outline-none border ${isDarkMode ? 'bg-[#1e293b] border-slate-600 text-white' : 'bg-white border-slate-300'}`} value={formData.fee} onChange={e => setFormData({...formData, fee: e.target.value})} />
           </div>
 
           <div className="grid grid-cols-3 gap-1.5">
-            <input type="number" placeholder="세금" className={`p-2 rounded-lg text-[13px] font-bold outline-none border ${phColor}`} value={formData.tax} onChange={e => setFormData({...formData, tax: e.target.value})} />
-            <input type="number" placeholder="수익금액" className={`p-2 rounded-lg text-[13px] font-bold outline-none border ${phColor}`} value={formData.profit} onChange={e => setFormData({...formData, profit: e.target.value})} />
+            <input type="number" placeholder="세금" className={`p-2 rounded-lg text-[13px] font-bold outline-none border ${isDarkMode ? 'bg-[#1e293b] border-slate-600 text-white' : 'bg-white border-slate-300'}`} value={formData.tax} onChange={e => setFormData({...formData, tax: e.target.value})} />
+            <input type="number" placeholder="수익금액" className={`p-2 rounded-lg text-[13px] font-bold outline-none border ${isDarkMode ? 'bg-[#1e293b] border-slate-600 text-white' : 'bg-white border-slate-300'}`} value={formData.profit} onChange={e => setFormData({...formData, profit: e.target.value})} />
             <input type="number" placeholder="금액" className="p-2 rounded-lg text-[13px] font-black outline-none border bg-blue-50 text-blue-700" value={formData.total_amount} onChange={e => setFormData({...formData, total_amount: e.target.value})} />
           </div>
 
           <div className="flex gap-1.5">
-            <textarea className={`flex-1 p-2 rounded-lg text-[13px] font-bold outline-none h-[42px] resize-none border ${phColor}`} value={formData.memo} onChange={e => setFormData({...formData, memo: e.target.value})} placeholder="메모" />
+            <textarea className={`flex-1 p-2 rounded-lg text-[13px] font-bold outline-none h-[42px] resize-none border ${isDarkMode ? 'bg-[#1e293b] border-slate-600 text-white' : 'bg-white border-slate-300'}`} value={formData.memo} onChange={e => setFormData({...formData, memo: e.target.value})} placeholder="메모" />
             <div className={`flex gap-1 ${editingId ? 'w-[110px]' : 'w-[55px]'} transition-all`}>
               <button type="submit" className={`flex-1 rounded-lg font-black text-white text-[13px] shadow-lg active:scale-95 ${editingId ? 'bg-orange-600' : (formData.trade_type === 'BUY' ? 'bg-red-600' : 'bg-blue-600')}`}>
                 {editingId ? "수정" : "저장"}
