@@ -12,8 +12,6 @@ export default function StockPage() {
   const [session, setSession] = useState<any>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null);
-  
-  // 실시간 시세 저장용
   const [currentPrices, setCurrentPrices] = useState<Record<string, number>>({});
 
   const [formData, setFormData] = useState({
@@ -32,17 +30,14 @@ export default function StockPage() {
 
   const phColor = isDarkMode ? "placeholder-slate-400" : "placeholder-slate-500";
 
-  // ✅ 2번 기능: 종목 클릭 시 네이버 검색/금융 상세창 열기
   const openExternalFinance = (e: React.MouseEvent, name: string, code?: string) => {
     e.stopPropagation();
-    // 코드가 있으면 바로 종목 페이지로, 없으면 검색결과로 보냅니다.
     const url = code 
       ? `https://finance.naver.com/item/main.naver?code=${code}`
       : `https://search.naver.com/search.naver?query=${encodeURIComponent(name + " 주식 시세")}`;
     window.open(url, "_blank");
   };
 
-  // ✅ 1번 기능: API 호출 시세 조회 함수
   const fetchRealTimePrice = async (e: React.MouseEvent, code: string, name: string) => {
     e.stopPropagation();
     if (!code) { showToast("종목코드를 입력해주세요.", "error"); return; }
@@ -50,7 +45,6 @@ export default function StockPage() {
     showToast(`${name} 시세 조회 중...`);
     try {
       const ticker = code.length === 6 ? (code.startsWith('0') ? `${code}.KS` : `${code}.KQ`) : code;
-      
       const res = await fetch(`/api/stock?ticker=${ticker}`);
       const data = await res.json();
       
@@ -179,24 +173,20 @@ export default function StockPage() {
               <button type="button" onClick={() => setFormData({...formData, trade_type: 'SELL'})} className={`flex-1 py-1 rounded-md text-[11px] font-black transition-all ${formData.trade_type === 'SELL' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-400'}`}>매도</button>
             </div>
           </div>
-          
           <div className="flex gap-1">
-            <input type="text" placeholder="종목명" className={`flex-[2] p-2 rounded-lg text-[13px] font-bold outline-none border ${isDarkMode ? 'bg-[#1e293b] border-slate-700 text-white' : 'bg-white border-slate-300 text-slate-800'} ${phColor}`} value={formData.stock_name} onChange={e => setFormData({...formData, stock_name: e.target.value})} required />
-            <input type="text" placeholder="코드" className={`flex-1 p-2 rounded-lg text-[13px] font-bold outline-none border ${isDarkMode ? 'bg-[#1e293b] border-slate-700 text-white' : 'bg-white border-slate-300 text-slate-800'} ${phColor}`} value={formData.stock_code} onChange={e => setFormData({...formData, stock_code: e.target.value})} />
+            <input type="text" placeholder="종목명" className={`flex-[2] p-2 rounded-lg text-[13px] font-bold outline-none border ${isDarkMode ? 'bg-[#1e293b] border-slate-600 text-white' : 'bg-white border-slate-300 text-slate-800'} ${phColor}`} value={formData.stock_name} onChange={e => setFormData({...formData, stock_name: e.target.value})} required />
+            <input type="text" placeholder="코드" className={`flex-1 p-2 rounded-lg text-[13px] font-bold outline-none border ${isDarkMode ? 'bg-[#1e293b] border-slate-600 text-white' : 'bg-white border-slate-300 text-slate-800'} ${phColor}`} value={formData.stock_code} onChange={e => setFormData({...formData, stock_code: e.target.value})} />
           </div>
-          
           <div className="grid grid-cols-3 gap-1.5">
             <input type="number" placeholder="수량" className={`p-2 rounded-lg text-[13px] font-bold outline-none border ${isDarkMode ? 'bg-[#1e293b] border-slate-600 text-white' : 'bg-white border-slate-300 text-slate-800'} ${phColor}`} value={formData.quantity} onChange={e => setFormData({...formData, quantity: e.target.value})} required />
             <input type="number" placeholder="단가" className={`p-2 rounded-lg text-[13px] font-bold outline-none border ${isDarkMode ? 'bg-[#1e293b] border-slate-600 text-white' : 'bg-white border-slate-300 text-slate-800'} ${phColor}`} value={formData.unit_price} onChange={e => setFormData({...formData, unit_price: e.target.value})} required />
             <input type="number" placeholder="수수료" className={`p-2 rounded-lg text-[13px] font-bold outline-none border ${isDarkMode ? 'bg-[#1e293b] border-slate-600 text-white' : 'bg-white border-slate-300 text-slate-800'} ${phColor}`} value={formData.fee} onChange={e => setFormData({...formData, fee: e.target.value})} />
           </div>
-
           <div className="grid grid-cols-3 gap-1.5">
-            <input type="number" placeholder="세금" className={`p-2 rounded-lg text-[13px] font-bold outline-none border ${isDarkMode ? 'bg-[#1e293b] border-slate-600 text-white' : 'bg-white border-slate-300 text-slate-800'} ${phColor}`} value={formData.tax} onChange={e => setFormData({...formData, tax: e.target.value})} />
+            <input type="number" placeholder="세금" className={`p-2 rounded-lg text-[13px] font-bold outline-none border ${isDarkMode ? 'bg-[#1e293b] border-slate-700 text-white' : 'bg-white border-slate-300 text-slate-800'} ${phColor}`} value={formData.tax} onChange={e => setFormData({...formData, tax: e.target.value})} />
             <input type="number" placeholder="수익금액" className={`p-2 rounded-lg text-[13px] font-bold outline-none border ${isDarkMode ? 'bg-[#1e293b] border-slate-700 text-emerald-400' : 'bg-white border-slate-300 text-emerald-600'} ${phColor}`} value={formData.profit} onChange={e => setFormData({...formData, profit: e.target.value})} />
             <input type="number" placeholder="금액" className={`p-2 rounded-lg text-[13px] font-black outline-none border ${isDarkMode ? 'bg-slate-800 border-blue-900 text-blue-400 placeholder-blue-300' : 'bg-blue-50 border-blue-200 text-blue-700 placeholder-blue-300'}`} value={formData.total_amount} onChange={e => setFormData({...formData, total_amount: e.target.value})} />
           </div>
-
           <div className="flex gap-1.5">
             <textarea className={`flex-1 p-2 rounded-lg text-[13px] font-bold outline-none h-[42px] resize-none border ${isDarkMode ? 'bg-[#1e293b] border-slate-600 text-white' : 'bg-white border-slate-300 text-slate-800'} ${phColor}`} value={formData.memo} onChange={e => setFormData({...formData, memo: e.target.value})} placeholder="메모" />
             <div className={`flex gap-1 ${editingId ? 'w-[120px]' : 'w-[60px]'} transition-all`}>
@@ -215,31 +205,41 @@ export default function StockPage() {
 
             return (
               <div key={log.id} onDoubleClick={() => startEdit(log)} className={`flex items-start px-4 py-3 rounded-2xl border transition-all cursor-pointer ${editingId === log.id ? 'border-orange-500 ring-2 ring-orange-500/20 bg-orange-500/5' : (isDarkMode ? 'bg-[#1e293b] border-slate-800 hover:bg-slate-900' : 'bg-white border-slate-200 shadow-sm hover:bg-slate-50')}`}>
-                <div style={{ width: '14%' }} className="flex flex-col text-center mt-1"><span className="text-[12px] font-bold opacity-60 leading-none">{log.trade_date.substring(0, 4)}</span><span className="text-[12px] font-black opacity-70 tracking-tighter">{log.trade_date.substring(5).replace('-', '.')}</span></div>
                 
-                <div style={{ width: '41%' }} className="px-2">
+                {/* ✅ 1. 날짜 및 코드 영역 (14%) - 가로폭 고정 및 세로 배치 */}
+                <div style={{ width: '14%' }} className="flex flex-col text-center mt-0.5 shrink-0 overflow-hidden">
+                  <span className="text-[12px] font-bold opacity-60 leading-none">{log.trade_date.substring(0, 4)}</span>
+                  <span className="text-[12px] font-black opacity-70 tracking-tighter mt-0.5">{log.trade_date.substring(5).replace('-', '.')}</span>
+                  {/* ✅ 코드를 날짜 아래로 이동하여 가로 공간 확보 */}
+                  {log.stock_code && (
+                    <span className="text-[9px] font-bold mt-1 px-1 py-0.5 rounded bg-slate-100 dark:bg-slate-800 opacity-60 truncate">
+                      {log.stock_code}
+                    </span>
+                  )}
+                </div>
+                
+                {/* 2. 종목 및 메모 (41%) - 코드 분리로 가로폭 확보, break-words 적용 */}
+                <div style={{ width: '41%' }} className="px-2 shrink-0">
                   <div className="flex items-center gap-1">
-                    {/* ✅ 종목명 클릭 시 네이버 연동 (2번 기능) */}
                     <div 
                       onClick={(e) => openExternalFinance(e, log.stock_name, log.stock_code)}
                       className="font-black text-[14px] tracking-tight truncate text-blue-600 hover:underline cursor-help"
                     >
                       {log.stock_name}
                     </div>
-                    {/* ✅ 돋보기 클릭 시 실시간 시세 조회 (1번 기능) */}
                     {log.stock_code && (
                       <button onClick={(e) => fetchRealTimePrice(e, log.stock_code, log.stock_name)} className="text-[10px] opacity-30 hover:opacity-100 p-0.5">🔍</button>
                     )}
                   </div>
-                  <div className="text-[11px] opacity-60 font-medium break-words leading-tight mt-0.5">
-                    {log.stock_code && <span className="text-[9px] mr-1 opacity-50">[{log.stock_code}]</span>}
+                  {/* ✅ 메모 전용 영역: 무조건 줄바꿈 처리 */}
+                  <div className="text-[11px] opacity-60 font-medium break-words leading-tight mt-1">
                     {log.memo || '-'}
                   </div>
                 </div>
 
-                <div style={{ width: '10%' }} className="text-center mt-1.5"><span className={`text-[12px] font-black px-1.5 py-0.5 rounded ${log.trade_type === 'BUY' ? 'bg-red-500/10 text-red-500' : 'bg-blue-500/10 text-blue-500'}`}>{log.trade_type === 'BUY' ? '매수' : '매도'}</span></div>
+                <div style={{ width: '10%' }} className="text-center mt-1.5 shrink-0"><span className={`text-[12px] font-black px-1.5 py-0.5 rounded ${log.trade_type === 'BUY' ? 'bg-red-500/10 text-red-500' : 'bg-blue-500/10 text-blue-500'}`}>{log.trade_type === 'BUY' ? '매수' : '매도'}</span></div>
 
-                <div style={{ width: '30%' }} className="text-right">
+                <div style={{ width: '30%' }} className="text-right shrink-0">
                   <div className="text-[15px] font-black tracking-tight">{log.total_amount.toLocaleString()}원</div>
                   <div className="text-[13px] font-bold opacity-60">{log.quantity}주 · {log.unit_price.toLocaleString()}원</div>
                   {log.profit !== 0 ? (
@@ -251,7 +251,7 @@ export default function StockPage() {
                   )}
                 </div>
 
-                <div style={{ width: '5%' }} className="flex justify-end mt-1.5"><button onClick={(e) => { e.stopPropagation(); openDeleteModal(log.id); }} className="opacity-40 hover:opacity-100 hover:text-red-500 transition-opacity text-xs">✕</button></div>
+                <div style={{ width: '5%' }} className="flex justify-end mt-1.5 shrink-0"><button onClick={(e) => { e.stopPropagation(); openDeleteModal(log.id); }} className="opacity-40 hover:opacity-100 hover:text-red-500 transition-opacity text-xs">✕</button></div>
               </div>
             );
           })}
