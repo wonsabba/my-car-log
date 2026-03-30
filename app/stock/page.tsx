@@ -65,8 +65,10 @@ export default function StockPage() {
     window.open(url, "_blank");
   };
 
-  const fetchRealTimePrice = async (e: React.MouseEvent, code: string, name: string) => {
+  const fetchRealTimePrice = async (e: React.MouseEvent, log: any) => {
     e.stopPropagation();
+    const code = log.stock_code;
+    const name = log.stock_name;
     if (!code) { showToast("종목코드를 입력해주세요.", "error"); return; }
     showToast(`${name} 시세 조회 중...`);
     try {
@@ -74,8 +76,20 @@ export default function StockPage() {
       const res = await fetch(`/api/stock?ticker=${ticker}`);
       const data = await res.json();
       if (data.price) {
-        setCurrentPrices(prev => ({ ...prev, [code]: data.price }));
-        showToast(`${name}: ${data.price.toLocaleString()}원 반영!`);
+        const currentPrice = Number(data.price);
+        setCurrentPrices(prev => ({ ...prev, [code]: currentPrice }));
+
+        const boughtQty = Number(log.quantity) || 0;
+        const boughtUnit = Number(log.unit_price) || 0;
+        const investedTotal = Number(log.total_amount) || (boughtQty * boughtUnit);
+        const currentTotal = boughtQty * currentPrice;
+
+        const priceGainPercent = boughtUnit > 0 ? ((currentPrice - boughtUnit) / boughtUnit) * 100 : 0;
+        const investedGain = currentTotal - investedTotal;
+        const investedGainPercent = investedTotal > 0 ? (investedGain / investedTotal) * 100 : 0;
+
+        const gainSymbol = investedGain >= 0 ? '+' : '-';
+        showToast(`${name}: ${currentPrice.toLocaleString()}원 (시세 ${priceGainPercent.toFixed(2)}%, 투자 대비 ${gainSymbol}${Math.abs(investedGain).toLocaleString()}원 / ${Math.abs(investedGainPercent).toFixed(2)}%)`, investedGain >= 0 ? 'success' : 'error');
       } else throw new Error();
     } catch (e) {
       showToast("시세 조회 실패", "error");
@@ -214,8 +228,8 @@ export default function StockPage() {
       </header>
 
       <main className="flex-1 flex flex-col min-h-0 min-w-0">
-        <div className="p-3 border-b border-dashed border-slate-300 dark:border-slate-700">
-          <div className="text-sm font-black">총 수익 :<span className={`ml-2 ${totalProfit >= 0 ? 'text-orange-500' : 'text-blue-600'}`}>{totalProfit.toLocaleString()}원</span></div>
+        <div className="p-1 border-b border-dashed border-slate-300 dark:border-slate-700">
+          <div className="text-sm font-black"><span className="inline-block ml-4">총 수익 :</span><span className={`ml-1 ${totalProfit >= 0 ? 'text-orange-500' : 'text-blue-600'}`}>{totalProfit.toLocaleString()}원</span></div>
         </div>
         <div className="flex-1 overflow-y-auto p-3 custom-scrollbar">
           <div className="flex flex-col gap-2 w-full">
@@ -233,7 +247,7 @@ export default function StockPage() {
                   <div style={{ width: '40%' }} className="px-2 min-w-0 flex-1">
                     <div className="flex items-center gap-1 overflow-hidden">
                       <div onClick={(e) => openExternalFinance(e, log.stock_name, log.stock_code)} className="font-black text-[16px] tracking-tight truncate text-blue-600 hover:underline">{log.stock_name}</div>
-                      {log.stock_code && <button onClick={(e) => fetchRealTimePrice(e, log.stock_code, log.stock_name)} className="text-[12px] opacity-50 p-0.5">🔍</button>}
+                      {log.stock_code && <button onClick={(e) => fetchRealTimePrice(e, log)} className="text-[12px] opacity-50 p-0.5">🔍</button>}
                     </div>
                     <div className="text-[12px] opacity-70 font-medium break-words leading-tight mt-0.5">{log.memo || '-'}</div>
                   </div>
@@ -245,10 +259,27 @@ export default function StockPage() {
                   <div style={{ width: '30%' }} className="text-right shrink-0">
                     <div className="text-[15px] font-black tracking-tight">{log.total_amount.toLocaleString()}원</div>
                     <div className="text-[14px] font-bold opacity-70">{log.quantity}주 / {log.unit_price.toLocaleString()}</div>
-                    {log.profit !== 0 ? (
-                      <div className={`text-[16px] font-black mt-0.5 ${log.profit > 0 ? 'text-red-500' : 'text-blue-400'}`}>{log.profit > 0 ? '+' : ''}{log.profit.toLocaleString()}</div>
-                    ) : liveProfitRate && (
-                      <div className={`text-[15px] font-black mt-0.5 px-1.5 py-0.5 rounded bg-slate-50 inline-block ${Number(liveProfitRate) > 0 ? 'text-red-600' : 'text-blue-600'}`}>L {liveProfitRate}%</div>
+                    {log.profit > 0 ? (
+                      <div className="text-[16px] font-black mt-0.5 text-red-500">{log.profit > 0 ? '+' : ''}{log.profit.toLocaleString()}</div>
+                    ) : null}
+                    {currentPrice > 0 && (
+                      (() => {
+                        const boughtQty = Number(log.quantity) || 0;
+                        const boughtUnit = Number(log.unit_price) || 0;
+                        const investedTotal = Number(log.total_amount) || (boughtQty * boughtUnit);
+                        const currentTotal = boughtQty * currentPrice;
+                        const profitDiff = currentTotal - investedTotal;
+                        const profitDiffPct = investedTotal > 0 ? (profitDiff / investedTotal) * 100 : 0;
+                        const profitClass = profitDiff >= 0 ? 'text-orange-500' : 'text-blue-500';
+                        return (
+                          <div className="mt-1 text-[11px] leading-tight text-right text-slate-500">
+                            【현재액】{currentTotal.toLocaleString()}원
+                            <br />
+                            【차이】<span className={profitClass}>{profitDiff >= 0 ? '+' : ''}{profitDiff.toLocaleString()}원
+                            <br />({profitDiffPct.toFixed(2)}%)</span>
+                          </div>
+                        );
+                      })()
                     )}
                   </div>
 
