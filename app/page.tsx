@@ -176,7 +176,7 @@ export default function Home() {
     if (!editingId) return;
     setConfirmModal({
       isOpen: true,
-      msg: "정말로 이 내역을 삭제하시겠습니까?",
+      msg: "내역을 삭제하시겠습니까?",
       onConfirm: async () => {
         const table = activeTab === "fuel" ? "fuel_logs" : "maintenance_logs";
         const { error } = await supabase.from(table).delete().eq("id", editingId);
