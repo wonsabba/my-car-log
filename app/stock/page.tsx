@@ -10,8 +10,11 @@ export default function StockPage() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [toast, setToast] = useState<{ msg: string; type: "success" | "error" } | null>(null);
   const [session, setSession] = useState<any>(null);
+
+  // ✅ 삭제 관련 상태 (이 부분이 있어야 에러가 안 납니다)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [deleteTargetId, setDeleteTargetId] = useState<number | null>(null);
+  
   const [currentPrices, setCurrentPrices] = useState<Record<string, number>>({});
 
   const [formData, setFormData] = useState({
@@ -29,6 +32,30 @@ export default function StockPage() {
   });
 
   const phColor = isDarkMode ? "placeholder-slate-400" : "placeholder-slate-500";
+  
+  // ✅ 모든 입력창 스타일 통일 변수
+  const inputBaseStyle = `p-2 rounded-lg text-[13px] font-bold outline-none border transition-all ${
+    isDarkMode ? 'bg-[#1e293b] border-slate-700 text-white' : 'bg-white border-slate-300 text-slate-800'
+  }`;
+
+  // ✅ 삭제 모달 열기 함수 (에러 해결 핵심)
+  const openDeleteModal = (id: number) => {
+    setDeleteTargetId(id);
+    setIsDeleteModalOpen(true);
+  };
+
+  // ✅ 삭제 확정 함수
+  const confirmDelete = async () => {
+    if (!deleteTargetId) return;
+    const { error } = await supabase.from("stock_logs").delete().eq("id", deleteTargetId);
+    if (!error) {
+      showToast("삭제 완료");
+      fetchLogs();
+      if (editingId === deleteTargetId) resetForm();
+    }
+    setIsDeleteModalOpen(false);
+    setDeleteTargetId(null);
+  };
 
   const openExternalFinance = (e: React.MouseEvent, name: string, code?: string) => {
     e.stopPropagation();
@@ -113,21 +140,13 @@ export default function StockPage() {
     setFormData({ trade_date: new Date().toISOString().split('T')[0], stock_name: "", stock_code: "", trade_type: "BUY", quantity: "", unit_price: "", fee: "", tax: "", total_amount: "", profit: "", memo: "" });
   };
 
-  const openDeleteModal = (id: number) => { setDeleteTargetId(id); setIsDeleteModalOpen(true); };
-
-  const confirmDelete = async () => {
-    if (!deleteTargetId) return;
-    const { error } = await supabase.from("stock_logs").delete().eq("id", deleteTargetId);
-    if (!error) { showToast("삭제 완료"); fetchLogs(); if (editingId === deleteTargetId) resetForm(); }
-    setIsDeleteModalOpen(false); setDeleteTargetId(null);
-  };
-
   if (!session) return <div className="p-10 text-white font-black bg-[#0f172a] h-screen text-center">LOGIN REQUIRED...</div>;
 
   return (
     <div className={`flex flex-col md:flex-row h-screen w-full mx-auto overflow-hidden font-sans transition-colors ${isDarkMode ? 'bg-[#0f172a] text-slate-100' : 'bg-slate-50 text-slate-800'}`}>
       {toast && <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-[110] px-6 py-2 rounded-full bg-blue-600 text-white font-bold text-xs shrink-0">{toast.msg}</div>}
 
+      {/* ✅ 커스텀 삭제 모달 UI */}
       {isDeleteModalOpen && (
         <div className="fixed inset-0 z-[120] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
           <div className={`w-full max-w-xs rounded-3xl shadow-2xl overflow-hidden flex flex-col ${isDarkMode ? 'bg-[#111c3a] border-[#1e2e56] border' : 'bg-white border-slate-200 border'}`}>
@@ -156,38 +175,37 @@ export default function StockPage() {
 
         <form onSubmit={handleSave} className={`space-y-2 p-3 rounded-2xl border transition-all ${editingId ? 'bg-orange-950/10 border-orange-800' : (isDarkMode ? 'bg-[#0f172a]/50 border-slate-700' : 'bg-slate-100 border-slate-200')}`}>
           <div className="grid grid-cols-2 gap-1">
-            <input type="date" className={`p-2 rounded-lg text-[13px] font-bold outline-none border ${isDarkMode ? 'bg-[#1e293b] border-slate-700 text-white' : 'bg-white border-slate-300'}`} value={formData.trade_date} onChange={e => setFormData({...formData, trade_date: e.target.value})} required />
+            <input type="date" className={inputBaseStyle} value={formData.trade_date} onChange={e => setFormData({...formData, trade_date: e.target.value})} required />
             <div className={`flex p-0.5 rounded-lg border ${isDarkMode ? 'bg-[#1e293b] border-slate-700' : 'bg-white border-slate-300'}`}>
               <button type="button" onClick={() => setFormData({...formData, trade_type: 'BUY'})} className={`flex-1 py-1 rounded-md text-[11px] font-black ${formData.trade_type === 'BUY' ? 'bg-red-600 text-white shadow-sm' : 'text-slate-400'}`}>매수</button>
               <button type="button" onClick={() => setFormData({...formData, trade_type: 'SELL'})} className={`flex-1 py-1 rounded-md text-[11px] font-black ${formData.trade_type === 'SELL' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-400'}`}>매도</button>
             </div>
           </div>
           
-          {/* ✅ [범인 해결] flex 간격과 고정 너비 설정을 완전히 초기화하고 grid로 안전하게 변경 */}
           <div className="grid grid-cols-4 gap-1">
-            <input type="text" placeholder="종목명" className={`col-span-3 p-2 rounded-lg text-[13px] font-bold outline-none border ${isDarkMode ? 'bg-[#1e293b] border-slate-600 text-white' : 'bg-white border-slate-300'} ${phColor}`} value={formData.stock_name} onChange={e => setFormData({...formData, stock_name: e.target.value})} required />
-            <input type="text" placeholder="코드" className={`col-span-1 p-2 rounded-lg text-[13px] font-bold outline-none border ${isDarkMode ? 'bg-[#1e293b] border-slate-600 text-white' : 'bg-white border-slate-300'} ${phColor}`} value={formData.stock_code} onChange={e => setFormData({...formData, stock_code: e.target.value})} />
+            <input type="text" placeholder="종목명" className={`col-span-3 ${inputBaseStyle} ${phColor}`} value={formData.stock_name} onChange={e => setFormData({...formData, stock_name: e.target.value})} required />
+            <input type="text" placeholder="코드" className={`col-span-1 ${inputBaseStyle} ${phColor}`} value={formData.stock_code} onChange={e => setFormData({...formData, stock_code: e.target.value})} />
           </div>
           
           <div className="grid grid-cols-3 gap-1.5">
-            <input type="number" placeholder="수량" className={`p-2 rounded-lg text-[13px] font-bold outline-none border ${phColor}`} value={formData.quantity} onChange={e => setFormData({...formData, quantity: e.target.value})} required />
-            <input type="number" placeholder="단가" className={`p-2 rounded-lg text-[13px] font-bold outline-none border ${phColor}`} value={formData.unit_price} onChange={e => setFormData({...formData, unit_price: e.target.value})} required />
-            <input type="number" placeholder="수수료" className={`p-2 rounded-lg text-[13px] font-bold outline-none border ${phColor}`} value={formData.fee} onChange={e => setFormData({...formData, fee: e.target.value})} />
+            <input type="number" placeholder="수량" className={`${inputBaseStyle} ${phColor}`} value={formData.quantity} onChange={e => setFormData({...formData, quantity: e.target.value})} required />
+            <input type="number" placeholder="단가" className={`${inputBaseStyle} ${phColor}`} value={formData.unit_price} onChange={e => setFormData({...formData, unit_price: e.target.value})} required />
+            <input type="number" placeholder="수수료" className={`${inputBaseStyle} ${phColor}`} value={formData.fee} onChange={e => setFormData({...formData, fee: e.target.value})} />
           </div>
 
           <div className="grid grid-cols-3 gap-1.5">
-            <input type="number" placeholder="세금" className={`p-2 rounded-lg text-[13px] font-bold outline-none border ${phColor}`} value={formData.tax} onChange={e => setFormData({...formData, tax: e.target.value})} />
-            <input type="number" placeholder="수익금액" className={`p-2 rounded-lg text-[13px] font-bold outline-none border ${phColor}`} value={formData.profit} onChange={e => setFormData({...formData, profit: e.target.value})} />
-            <input type="number" placeholder="금액" className="p-2 rounded-lg text-[13px] font-black outline-none border bg-blue-50 text-blue-700" value={formData.total_amount} onChange={e => setFormData({...formData, total_amount: e.target.value})} />
+            <input type="number" placeholder="세금" className={`${inputBaseStyle} ${phColor}`} value={formData.tax} onChange={e => setFormData({...formData, tax: e.target.value})} />
+            <input type="number" placeholder="수익금액" className={`${inputBaseStyle} ${phColor}`} value={formData.profit} onChange={e => setFormData({...formData, profit: e.target.value})} />
+            <input type="number" placeholder="금액" className="p-2 rounded-lg text-[13px] font-black outline-none border bg-blue-50 text-blue-700 border-blue-200" value={formData.total_amount} onChange={e => setFormData({...formData, total_amount: e.target.value})} />
           </div>
 
           <div className="flex gap-1.5">
-            <textarea className={`flex-1 p-2 rounded-lg text-[13px] font-bold outline-none h-[42px] resize-none border ${phColor}`} value={formData.memo} onChange={e => setFormData({...formData, memo: e.target.value})} placeholder="메모" />
+            <textarea className={`flex-1 h-[42px] resize-none ${inputBaseStyle} ${phColor}`} value={formData.memo} onChange={e => setFormData({...formData, memo: e.target.value})} placeholder="메모" />
             <div className={`flex gap-1 ${editingId ? 'w-[100px]' : 'w-[50px]'} transition-all`}>
               <button type="submit" className={`flex-1 rounded-lg font-black text-white text-[13px] shadow-lg active:scale-95 ${editingId ? 'bg-orange-600' : (formData.trade_type === 'BUY' ? 'bg-red-600' : 'bg-blue-600')}`}>
                 {editingId ? "수정" : "저장"}
               </button>
-              {editingId && <button type="button" onClick={resetForm} className="flex-1 rounded-lg font-black text-[11px] border">취소</button>}
+              {editingId && <button type="button" onClick={resetForm} className="flex-1 rounded-lg font-black text-[11px] border border-slate-300">취소</button>}
             </div>
           </div>
         </form>
@@ -203,7 +221,7 @@ export default function StockPage() {
                 <div key={log.id} onDoubleClick={() => startEdit(log)} className={`flex items-start p-3 rounded-2xl border transition-all cursor-pointer w-full ${editingId === log.id ? 'border-orange-500 bg-orange-50/10' : (isDarkMode ? 'bg-[#1e293b] border-slate-800' : 'bg-white shadow-sm border-slate-200')}`}>
                   <div style={{ width: '15%' }} className="flex flex-col text-center mt-1 shrink-0">
                     <span className="text-[11px] font-bold opacity-30 leading-none">{log.trade_date.substring(0, 4)}</span>
-                    <span className="text-[12px] font-black opacity-70 mt-0.5">{log.trade_date.substring(5).replace('-', '.')}</span>
+                    <span className="text-[12px] font-black opacity-70 tracking-tighter mt-0.5">{log.trade_date.substring(5).replace('-', '.')}</span>
                     {log.stock_code && <span className="text-[9px] font-bold mt-1 px-1 py-0.5 rounded bg-slate-100 dark:bg-slate-800 opacity-50 truncate">{log.stock_code}</span>}
                   </div>
                   
