@@ -200,7 +200,7 @@ export default function Home() {
     return (
       <div className={`flex items-center justify-center h-screen font-sans p-6 ${isDarkMode ? 'bg-[#0a1122] text-slate-300' : 'bg-slate-100 text-slate-800'}`}>
         <div className={`w-full max-w-sm p-8 rounded-3xl shadow-2xl border ${isDarkMode ? 'bg-[#111c3a] border-[#1e2e56]' : 'bg-white border-slate-200'}`}>
-          <h1 className={`text-2xl font-black mb-6 text-center tracking-tighter italic ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>BRANDON CAR</h1>
+          <h1 className={`text-2xl font-black mb-6 text-center tracking-tighter italic ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>Brandon CAR</h1>
           <form onSubmit={handleLogin} className="space-y-4">
             <input type="email" placeholder="Email" className={`w-full p-4 border rounded-2xl outline-none font-bold ${isDarkMode ? 'bg-[#1e2e56] border-[#2a3f75] text-white focus:border-blue-500 placeholder-[#5c72a8]' : 'bg-white border-slate-200 text-slate-800 focus:border-blue-600'}`} value={email} onChange={(e) => setEmail(e.target.value)} required />
             <input type="password" placeholder="Password" className={`w-full p-4 border rounded-2xl outline-none font-bold ${isDarkMode ? 'bg-[#1e2e56] border-[#2a3f75] text-white focus:border-blue-500 placeholder-[#5c72a8]' : 'bg-white border-slate-200 text-slate-800 focus:border-blue-600'}`} value={password} onChange={(e) => setPassword(e.target.value)} required />
@@ -299,8 +299,8 @@ export default function Home() {
             <div className="flex items-center gap-2">
               <img src="/GV80.jpg" alt="GV80" className="w-6 h-6 rounded shadow-sm" />
               <h1 className={`text-xl font-black tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>GV80</h1>
-              <Link href="/home" className={`text-[14px] font-black transition-colors ml-2 uppercase ${isDarkMode ? 'text-slate-300 hover:text-emerald-400' : 'text-slate-400 hover:text-blue-600'}`}>🏠H</Link>
-              <Link href="/stock" className={`text-[14px] font-black transition-colors ml-1 uppercase ${isDarkMode ? 'text-slate-300 hover:text-yellow-400' : 'text-slate-400 hover:text-yellow-600'}`}>📈S</Link>
+              <Link href="/home" className={`text-[14px] font-black transition-colors ml-2 uppercase ${isDarkMode ? 'text-slate-300 hover:text-emerald-400' : 'text-slate-400 hover:text-blue-600'}`}>🏠House</Link>
+              <Link href="/stock" className={`text-[14px] font-black transition-colors ml-1 uppercase ${isDarkMode ? 'text-slate-300 hover:text-yellow-400' : 'text-slate-400 hover:text-yellow-600'}`}>📈Stock</Link>
             </div>
             
             <div className="flex items-center gap-3">

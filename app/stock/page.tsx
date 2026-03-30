@@ -102,11 +102,12 @@ export default function StockPage() {
       <header className={`w-full md:w-[340px] border-b md:border-r p-4 flex flex-col shrink-0 ${isDarkMode ? 'bg-[#1e293b] border-slate-800' : 'bg-white border-slate-200'}`}>
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-black italic tracking-tighter text-blue-500">STOCK LOG</h1>
+            <h1 className="text-xl font-black italic tracking-tighter text-blue-500">Stock</h1>
             {/* ✅ 홈 링크와 GV80 차계부 링크 추가 */}
             <div className="flex gap-1 ml-1">
-              <Link href="/home" className="text-[12px] font-black opacity-40 hover:opacity-100 transition-opacity" title="홈으로">🏠</Link>
-              <Link href="/" className="text-[12px] font-black opacity-40 hover:opacity-100 transition-opacity" title="차계부로">🚗</Link>
+              <Link href="/home" className="text-[12px] font-black opacity-40 hover:opacity-100 transition-opacity" title="홈내역으로">🏠</Link>
+              <Link href="/" className="text-slate-300 hover:text-slate-800 font-black text-1xl tracking-tighter transition-colors">
+                <img src="/GV80.jpg" alt="GV80 Icon" className="w-5 h-5 inline-block mr-1 -mt-1 rounded-md " title="차계부로"/></Link>
             </div>
           </div>
           <button onClick={() => setIsDarkMode(!isDarkMode)} className={`text-[9px] font-black px-1.5 py-0.5 rounded border ${isDarkMode ? 'border-slate-600 text-slate-400' : 'border-slate-300 text-slate-500'}`}>
