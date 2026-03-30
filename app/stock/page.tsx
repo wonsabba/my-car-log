@@ -197,7 +197,7 @@ export default function StockPage() {
             <div key={log.id} onDoubleClick={() => startEdit(log)} className={`flex items-start px-4 py-3 rounded-2xl border transition-all cursor-pointer ${editingId === log.id ? 'border-orange-500 ring-2 ring-orange-500/20 bg-orange-500/5' : (isDarkMode ? 'bg-[#1e293b] border-slate-800 hover:bg-slate-900' : 'bg-white border-slate-200 shadow-sm hover:bg-slate-50')}`}>
               
               {/* ✅ 1. 날짜 영역 (17%) - 년도와 월/일을 2줄로 배치 */}
-              <div style={{ width: '15%' }} className="flex flex-col text-center mt-1">
+              <div style={{ width: '14%' }} className="flex flex-col text-center mt-1">
                 <span className="text-[12px] font-bold opacity-60 leading-none">{log.trade_date.substring(0, 4)}</span>
                 <span className="text-[12px] font-black opacity-70 tracking-tighter">{log.trade_date.substring(5).replace('-', '.')}</span>
               </div>
@@ -209,8 +209,8 @@ export default function StockPage() {
               </div>
 
               {/* 3. 구분 (9%) */}
-              <div style={{ width: '9%' }} className="text-center mt-1.5">
-                <span className={`text-[12px] font-black px-1.5 py-0.5 rounded ${log.trade_type === 'BUY' ? 'bg-red-500/10 text-red-500' : 'bg-blue-500/10 text-blue-500'}`}>{log.trade_type === 'BUY' ? '매수' : '매도'}</span>
+              <div style={{ width: '10%' }} className="text-center mt-1.5">
+                <span className={`text-[11px] font-black px-1.5 py-0.5 rounded ${log.trade_type === 'BUY' ? 'bg-red-500/10 text-red-500' : 'bg-blue-500/10 text-blue-500'}`}>{log.trade_type === 'BUY' ? '매수' : '매도'}</span>
               </div>
 
               {/* 4. 거래상세 및 수익 (30%) */}
