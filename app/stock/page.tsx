@@ -241,7 +241,7 @@ export default function StockPage() {
                     <div className="text-[15px] font-black tracking-tight">{log.total_amount.toLocaleString()}원</div>
                     <div className="text-[14px] font-bold opacity-70">{log.quantity}주 / {log.unit_price.toLocaleString()}</div>
                     {log.profit !== 0 ? (
-                      <div className={`text-[16px] font-black mt-0.5 ${log.profit > 0 ? 'text-emerald-500' : 'text-red-400'}`}>{log.profit > 0 ? '+' : ''}{log.profit.toLocaleString()}</div>
+                      <div className={`text-[16px] font-black mt-0.5 ${log.profit > 0 ? 'text-red-500' : 'text-blue-400'}`}>{log.profit > 0 ? '+' : ''}{log.profit.toLocaleString()}</div>
                     ) : liveProfitRate && (
                       <div className={`text-[15px] font-black mt-0.5 px-1.5 py-0.5 rounded bg-slate-50 inline-block ${Number(liveProfitRate) > 0 ? 'text-red-600' : 'text-blue-600'}`}>L {liveProfitRate}%</div>
                     )}
