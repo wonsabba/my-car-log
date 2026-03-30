@@ -215,10 +215,10 @@ export default function StockPage() {
 
               {/* 4. 거래상세 및 수익 (30%) */}
               <div style={{ width: '30%' }} className="text-right">
-                <div className="text-[14px] font-black tracking-tight">{log.total_amount.toLocaleString()}원</div>
-                <div className="text-[11px] font-bold opacity-60">{log.quantity}주 · {log.unit_price.toLocaleString()}원</div>
+                <div className="text-[15px] font-black tracking-tight">{log.total_amount.toLocaleString()}원</div>
+                <div className="text-[13px] font-bold opacity-60">{log.quantity}주 · {log.unit_price.toLocaleString()}원</div>
                 {log.profit !== 0 && (
-                  <div className={`text-[12px] font-black mt-0.5 ${log.profit > 0 ? 'text-emerald-500' : 'text-red-400'}`}>
+                  <div className={`text-[14px] font-black mt-0.5 ${log.profit > 0 ? 'text-emerald-500' : 'text-red-400'}`}>
                     {log.profit > 0 ? '+' : ''}{log.profit.toLocaleString()}
                   </div>
                 )}
@@ -226,7 +226,7 @@ export default function StockPage() {
 
               {/* 5. 삭제 버튼 (5%) */}
               <div style={{ width: '5%' }} className="flex justify-end mt-1.5">
-                <button onClick={(e) => { e.stopPropagation(); openDeleteModal(log.id); }} className="opacity-20 hover:opacity-100 hover:text-red-500 transition-opacity text-xs">✕</button>
+                <button onClick={(e) => { e.stopPropagation(); openDeleteModal(log.id); }} className="opacity-40 hover:opacity-100 hover:text-red-500 transition-opacity text-xs">✕</button>
               </div>
             </div>
           ))}
