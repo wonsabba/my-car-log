@@ -89,7 +89,7 @@ export default function StockPage() {
         const investedGainPercent = investedTotal > 0 ? (investedGain / investedTotal) * 100 : 0;
 
         const gainSymbol = investedGain >= 0 ? '+' : '-';
-        showToast(`${name}: ${currentPrice.toLocaleString()}원\n시세 ${priceGainPercent.toFixed(2)}%\n손익 ${gainSymbol}${Math.abs(investedGain).toLocaleString()}원`, investedGain >= 0 ? 'success' : 'error');
+        showToast(`${name} : ${currentPrice.toLocaleString()}원\n시세 : ${priceGainPercent.toFixed(2)}%\n손익 : ${gainSymbol}${Math.abs(investedGain).toLocaleString()}원`, investedGain >= 0 ? 'success' : 'error');
       } else throw new Error();
     } catch (e) {
       showToast("시세 조회 실패", "error");
