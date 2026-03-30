@@ -227,10 +227,10 @@ export default function StockPage() {
                   
                   <div style={{ width: '40%' }} className="px-2 min-w-0 flex-1">
                     <div className="flex items-center gap-1 overflow-hidden">
-                      <div onClick={(e) => openExternalFinance(e, log.stock_name, log.stock_code)} className="font-black text-[14px] tracking-tight truncate text-blue-600 hover:underline">{log.stock_name}</div>
-                      {log.stock_code && <button onClick={(e) => fetchRealTimePrice(e, log.stock_code, log.stock_name)} className="text-[10px] opacity-30 p-0.5">🔍</button>}
+                      <div onClick={(e) => openExternalFinance(e, log.stock_name, log.stock_code)} className="font-black text-[16px] tracking-tight truncate text-blue-600 hover:underline">{log.stock_name}</div>
+                      {log.stock_code && <button onClick={(e) => fetchRealTimePrice(e, log.stock_code, log.stock_name)} className="text-[12px] opacity-50 p-0.5">🔍</button>}
                     </div>
-                    <div className="text-[12px] opacity-60 font-medium break-words leading-tight mt-0.5">{log.memo || '-'}</div>
+                    <div className="text-[12px] opacity-70 font-medium break-words leading-tight mt-0.5">{log.memo || '-'}</div>
                   </div>
 
                   <div style={{ width: '10%' }} className="text-center mt-1.5 shrink-0">
@@ -239,11 +239,11 @@ export default function StockPage() {
 
                   <div style={{ width: '30%' }} className="text-right shrink-0">
                     <div className="text-[15px] font-black tracking-tight">{log.total_amount.toLocaleString()}원</div>
-                    <div className="text-[13px] font-bold opacity-70">{log.quantity}주·{log.unit_price.toLocaleString()}</div>
+                    <div className="text-[14px] font-bold opacity-70">{log.quantity}주 / {log.unit_price.toLocaleString()}</div>
                     {log.profit !== 0 ? (
-                      <div className={`text-[14px] font-black mt-0.5 ${log.profit > 0 ? 'text-emerald-500' : 'text-red-400'}`}>{log.profit > 0 ? '+' : ''}{log.profit.toLocaleString()}</div>
+                      <div className={`text-[16px] font-black mt-0.5 ${log.profit > 0 ? 'text-emerald-500' : 'text-red-400'}`}>{log.profit > 0 ? '+' : ''}{log.profit.toLocaleString()}</div>
                     ) : liveProfitRate && (
-                      <div className={`text-[13px] font-black mt-0.5 px-1.5 py-0.5 rounded bg-slate-50 inline-block ${Number(liveProfitRate) > 0 ? 'text-red-600' : 'text-blue-600'}`}>L {liveProfitRate}%</div>
+                      <div className={`text-[15px] font-black mt-0.5 px-1.5 py-0.5 rounded bg-slate-50 inline-block ${Number(liveProfitRate) > 0 ? 'text-red-600' : 'text-blue-600'}`}>L {liveProfitRate}%</div>
                     )}
                   </div>
 
