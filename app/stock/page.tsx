@@ -133,7 +133,7 @@ export default function StockPage() {
       </header>
 
       <main className="flex-1 overflow-y-auto p-4 custom-scrollbar">
-        <div className="flex flex-col gap-2 min-w-[500px]">
+        <div className="flex flex-col gap-2 w-full">
           {logs.map(log => (
             <div key={log.id} onDoubleClick={() => startEdit(log)} className={`flex items-center px-4 py-4 rounded-2xl border transition-all cursor-pointer ${editingId === log.id ? 'border-orange-500 ring-2 ring-orange-500/20 bg-orange-500/5' : (isDarkMode ? 'bg-[#1e293b] border-slate-800 hover:bg-slate-800' : 'bg-white border-slate-200 shadow-sm hover:bg-slate-50')}`}>
               <div style={{ width: '15%' }} className="text-[10px] font-black opacity-40">{log.trade_date.replace(/-/g, '.')}</div>
