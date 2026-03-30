@@ -112,9 +112,9 @@ export default function StockPage() {
           <div className="flex items-center gap-2">
             <h1 className="text-xl font-black italic tracking-tighter text-blue-500">Stock</h1>
             <div className="flex gap-1 ml-1">
-              <Link href="/home" className="text-[16px] font-black opacity-40 hover:opacity-100 transition-opacity">🏠</Link>
-              <Link href="/" className="transition-opacity opacity-40 hover:opacity-100">
-                <img src="/GV80.jpg" alt="GV80 Icon" className="w-5 h-5 inline-block mr-1 -mt-1 rounded-md"/></Link>
+              <Link href="/home" className="text-slate-300 hover:text-slate-800 font-black text-1xl tracking-tighter transition-colors">🏠</Link> 
+              <Link href="/" className="text-slate-300 hover:text-slate-800 font-black text-1xl tracking-tighter transition-colors">
+                <img src="/GV80.jpg" alt="GV80 Icon" className="w-5 h-5 inline-block mr-1 -mt-1 rounded-md " title="차계부로"/></Link>
             </div>
           </div>
           <button onClick={() => setIsDarkMode(!isDarkMode)} className={`text-[9px] font-black px-1.5 py-0.5 rounded border ${isDarkMode ? 'border-slate-600 text-slate-400' : 'border-slate-300 text-slate-500'}`}>
@@ -144,11 +144,11 @@ export default function StockPage() {
           {/* ✅ 2열: 세금, 수익, 거래금액 */}
           <div className="grid grid-cols-3 gap-1.5">
             <input type="number" placeholder="세금" className={`p-2 rounded-lg text-[13px] font-bold outline-none border ${isDarkMode ? 'bg-[#1e293b] border-slate-600 text-white' : 'bg-white border-slate-300 text-slate-800'} ${phColor}`} value={formData.tax} onChange={e => setFormData({...formData, tax: e.target.value})} />
-            <input type="number" placeholder="수익액" className={`p-2 rounded-lg text-[13px] font-bold outline-none border ${isDarkMode ? 'bg-[#1e293b] border-slate-700 text-emerald-400' : 'bg-white border-slate-300 text-emerald-600'} ${phColor}`} value={formData.profit} onChange={e => setFormData({...formData, profit: e.target.value})} />
+            <input type="number" placeholder="수익금액" className={`p-2 rounded-lg text-[13px] font-bold outline-none border ${isDarkMode ? 'bg-[#1e293b] border-slate-700 text-emerald-400' : 'bg-white border-slate-300 text-emerald-600'} ${phColor}`} value={formData.profit} onChange={e => setFormData({...formData, profit: e.target.value})} />
             <input type="number" placeholder="금액" className={`p-2 rounded-lg text-[13px] font-black outline-none border ${isDarkMode ? 'bg-slate-800 border-blue-900 text-blue-400' : 'bg-blue-50 border-blue-200 text-blue-700 placeholder-blue-300'}`} value={formData.total_amount} onChange={e => setFormData({...formData, total_amount: e.target.value})} />
           </div>
 
-          <textarea className={`w-full p-2 rounded-lg text-[13px] font-bold outline-none h-12 resize-none border ${isDarkMode ? 'bg-[#1e293b] border-slate-600 text-white' : 'bg-white border-slate-300 text-slate-800'} ${phColor}`} value={formData.memo} onChange={e => setFormData({...formData, memo: e.target.value})} placeholder="간단 메모..." />
+          <textarea className={`w-full p-2 rounded-lg text-[13px] font-bold outline-none h-10 resize-none border ${isDarkMode ? 'bg-[#1e293b] border-slate-600 text-white' : 'bg-white border-slate-300 text-slate-800'} ${phColor}`} value={formData.memo} onChange={e => setFormData({...formData, memo: e.target.value})} placeholder="메모" />
           
           <div className="flex gap-2">
             <button type="submit" className={`flex-1 py-3 rounded-xl font-black text-white shadow-lg active:scale-95 transition-all ${editingId ? 'bg-orange-600' : (formData.trade_type === 'BUY' ? 'bg-red-600' : 'bg-blue-600')}`}>
