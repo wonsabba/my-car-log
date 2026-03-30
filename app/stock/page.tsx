@@ -166,7 +166,7 @@ export default function StockPage() {
           {logs.map(log => (
             <div key={log.id} onDoubleClick={() => startEdit(log)} className={`flex items-start px-4 py-3 rounded-2xl border transition-all cursor-pointer ${editingId === log.id ? 'border-orange-500 ring-2 ring-orange-500/20 bg-orange-500/5' : (isDarkMode ? 'bg-[#1e293b] border-slate-800 hover:bg-slate-900' : 'bg-white border-slate-200 shadow-sm hover:bg-slate-50')}`}>
               {/* 1. 일자 (17%) */}
-              <div style={{ width: '17%' }} className="text-[12px] font-black opacity-70 tracking-tighter mt-1">{log.trade_date.replace(/-/g, '.').slice(5)}</div>
+              <div style={{ width: '17%' }} className="text-[13px] font-black opacity-70 tracking-tighter mt-1">{log.trade_date.replace(/-/g, '.')}</div>
               
               {/* 2. 종목 및 메모 (39%) - whitespace-nowrap 제거 및 break-words 추가 */}
               <div style={{ width: '39%' }} className="px-2">
