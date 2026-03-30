@@ -220,9 +220,9 @@ export default function StockPage() {
               return (
                 <div key={log.id} onDoubleClick={() => startEdit(log)} className={`flex items-start p-3 rounded-2xl border transition-all cursor-pointer w-full ${editingId === log.id ? 'border-orange-500 bg-orange-50/10' : (isDarkMode ? 'bg-[#1e293b] border-slate-800' : 'bg-white shadow-sm border-slate-200')}`}>
                   <div style={{ width: '15%' }} className="flex flex-col text-center mt-1 shrink-0">
-                    <span className="text-[11px] font-bold opacity-30 leading-none">{log.trade_date.substring(0, 4)}</span>
-                    <span className="text-[12px] font-black opacity-70 tracking-tighter mt-0.5">{log.trade_date.substring(5).replace('-', '.')}</span>
-                    {log.stock_code && <span className="text-[9px] font-bold mt-1 px-1 py-0.5 rounded bg-slate-100 dark:bg-slate-800 opacity-50 truncate">{log.stock_code}</span>}
+                    <span className="text-[13px] font-bold opacity-70 leading-none">{log.trade_date.substring(0, 4)}</span>
+                    <span className="text-[14px] font-black opacity-80 tracking-tighter mt-0.5">{log.trade_date.substring(5).replace('-', '.')}</span>
+                    {log.stock_code && <span className="text-[10px] font-bold mt-1 px-1 py-0.5 rounded bg-slate-100 dark:bg-slate-800 opacity-60 truncate">{log.stock_code}</span>}
                   </div>
                   
                   <div style={{ width: '40%' }} className="px-2 min-w-0 flex-1">
@@ -230,20 +230,20 @@ export default function StockPage() {
                       <div onClick={(e) => openExternalFinance(e, log.stock_name, log.stock_code)} className="font-black text-[14px] tracking-tight truncate text-blue-600 hover:underline">{log.stock_name}</div>
                       {log.stock_code && <button onClick={(e) => fetchRealTimePrice(e, log.stock_code, log.stock_name)} className="text-[10px] opacity-30 p-0.5">🔍</button>}
                     </div>
-                    <div className="text-[11px] opacity-60 font-medium break-words leading-tight mt-0.5">{log.memo || '-'}</div>
+                    <div className="text-[12px] opacity-60 font-medium break-words leading-tight mt-0.5">{log.memo || '-'}</div>
                   </div>
 
                   <div style={{ width: '10%' }} className="text-center mt-1.5 shrink-0">
-                    <span className={`text-[11px] font-black px-1.5 py-0.5 rounded ${log.trade_type === 'BUY' ? 'bg-red-500/10 text-red-500' : 'bg-blue-500/10 text-blue-500'}`}>{log.trade_type === 'BUY' ? '매수' : '매도'}</span>
+                    <span className={`text-[12px] font-black px-1.5 py-0.5 rounded ${log.trade_type === 'BUY' ? 'bg-red-500/10 text-red-500' : 'bg-blue-500/10 text-blue-500'}`}>{log.trade_type === 'BUY' ? '매수' : '매도'}</span>
                   </div>
 
                   <div style={{ width: '30%' }} className="text-right shrink-0">
                     <div className="text-[15px] font-black tracking-tight">{log.total_amount.toLocaleString()}원</div>
-                    <div className="text-[12px] font-bold opacity-50">{log.quantity}주·{log.unit_price.toLocaleString()}</div>
+                    <div className="text-[13px] font-bold opacity-70">{log.quantity}주·{log.unit_price.toLocaleString()}</div>
                     {log.profit !== 0 ? (
-                      <div className={`text-[13px] font-black mt-0.5 ${log.profit > 0 ? 'text-emerald-500' : 'text-red-400'}`}>{log.profit > 0 ? '+' : ''}{log.profit.toLocaleString()}</div>
+                      <div className={`text-[14px] font-black mt-0.5 ${log.profit > 0 ? 'text-emerald-500' : 'text-red-400'}`}>{log.profit > 0 ? '+' : ''}{log.profit.toLocaleString()}</div>
                     ) : liveProfitRate && (
-                      <div className={`text-[11px] font-black mt-0.5 px-1.5 py-0.5 rounded bg-slate-50 inline-block ${Number(liveProfitRate) > 0 ? 'text-red-600' : 'text-blue-600'}`}>L {liveProfitRate}%</div>
+                      <div className={`text-[13px] font-black mt-0.5 px-1.5 py-0.5 rounded bg-slate-50 inline-block ${Number(liveProfitRate) > 0 ? 'text-red-600' : 'text-blue-600'}`}>L {liveProfitRate}%</div>
                     )}
                   </div>
 
