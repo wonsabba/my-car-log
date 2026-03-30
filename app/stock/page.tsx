@@ -258,7 +258,7 @@ export default function StockPage() {
 
                   <div style={{ width: '32%' }} className="text-right shrink-0">
                     <div className="text-[15px] font-black tracking-tight">{log.total_amount.toLocaleString()}원</div>
-                    <div className="text-[14px] font-bold opacity-70">{log.quantity}주 / {log.unit_price.toLocaleString()}</div>
+                    <div className="text-[14px] font-bold opacity-70">{log.quantity}주 / {log.unit_price.toLocaleString()}원</div>
                     {log.profit > 0 ? (
                       <div className="text-[16px] font-black mt-0.5 text-red-500">{log.profit > 0 ? '+' : ''}{log.profit.toLocaleString()}</div>
                     ) : null}
