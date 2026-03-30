@@ -272,10 +272,10 @@ export default function StockPage() {
                         const profitDiffPct = investedTotal > 0 ? (profitDiff / investedTotal) * 100 : 0;
                         const profitClass = profitDiff >= 0 ? 'text-orange-600' : 'text-blue-600';
                         return (
-                          <div className="mt-1 text-[12px] leading-tight text-right text-slate-600">
-                            【현재】{currentTotal.toLocaleString()}원
+                          <div className="mt-1 text-[13px] leading-tight text-right text-slate-600">
+                            【현재】{currentTotal.toLocaleString()}
                             <br />
-                            【손익】<span className={profitClass}>{profitDiff >= 0 ? '+' : ''}{profitDiff.toLocaleString()}원
+                            【손익】<span className={profitClass}>{profitDiff >= 0 ? '+' : ''}{profitDiff.toLocaleString()}
                             <br />({profitDiffPct.toFixed(2)}%)</span>
                           </div>
                         );
