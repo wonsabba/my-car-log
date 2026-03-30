@@ -89,7 +89,7 @@ export default function StockPage() {
         const investedGainPercent = investedTotal > 0 ? (investedGain / investedTotal) * 100 : 0;
 
         const gainSymbol = investedGain >= 0 ? '+' : '-';
-        showToast(`${name}: ${currentPrice.toLocaleString()}원 (시세 ${priceGainPercent.toFixed(2)}%, 투자 대비 ${gainSymbol}${Math.abs(investedGain).toLocaleString()}원 / ${Math.abs(investedGainPercent).toFixed(2)}%)`, investedGain >= 0 ? 'success' : 'error');
+        showToast(`${name}: ${currentPrice.toLocaleString()}원\n시세 ${priceGainPercent.toFixed(2)}%\n손익 ${gainSymbol}${Math.abs(investedGain).toLocaleString()}원`, investedGain >= 0 ? 'success' : 'error');
       } else throw new Error();
     } catch (e) {
       showToast("시세 조회 실패", "error");
@@ -160,7 +160,7 @@ export default function StockPage() {
 
   return (
     <div className={`flex flex-col md:flex-row h-screen w-full mx-auto overflow-hidden font-sans transition-colors ${isDarkMode ? 'bg-[#0f172a] text-slate-100' : 'bg-slate-50 text-slate-800'}`}>
-      {toast && <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-[110] px-6 py-2 rounded-full bg-blue-600 text-white font-bold text-xs shrink-0">{toast.msg}</div>}
+      {toast && <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-[110] px-6 py-2 rounded-full bg-blue-600 text-white font-bold text-xs shrink-0 whitespace-pre-line">{toast.msg}</div>}
 
       {/* ✅ 커스텀 삭제 모달 UI */}
       {isDeleteModalOpen && (
