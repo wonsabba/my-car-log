@@ -238,7 +238,7 @@ export default function StockPage() {
               //const liveProfitRate = currentPrice > 0 ? ((currentPrice - log.unit_price) / log.unit_price * 100).toFixed(2) : null;
               return (
                 <div key={log.id} onDoubleClick={() => startEdit(log)} className={`flex items-start p-3 rounded-2xl border transition-all cursor-pointer w-full ${editingId === log.id ? 'border-orange-500 bg-orange-50/10' : (isDarkMode ? (log.trade_type === 'SELL' ? 'bg-slate-700 border-slate-800' : 'bg-[#1e293b] border-slate-800') : (log.trade_type === 'SELL' ? 'bg-slate-200 shadow-sm border-slate-200' : 'bg-white shadow-sm border-slate-200'))}`}>
-                  <div style={{ width: '14%' }} className="flex flex-col text-center mt-1 shrink-0">
+                  <div style={{ width: '13%' }} className="flex flex-col text-center mt-1 shrink-0">
                     <span className="text-[13px] font-bold opacity-70 leading-none">{log.trade_date.substring(0, 4)}</span>
                     <span className="text-[14px] font-black opacity-80 tracking-tighter mt-0.5">{log.trade_date.substring(5).replace('-', '.')}</span>
                     {log.stock_code && <span className="text-[10px] font-bold mt-1 px-1 py-0.5 rounded bg-slate-100 dark:bg-slate-800 opacity-60 truncate">{log.stock_code}</span>}
@@ -256,7 +256,7 @@ export default function StockPage() {
                     <span className={`text-[12px] font-black px-1.5 py-0.5 rounded ${log.trade_type === 'BUY' ? 'bg-red-500/10 text-red-500' : 'bg-blue-500/10 text-blue-500'}`}>{log.trade_type === 'BUY' ? '매수' : '매도'}</span>
                   </div>
 
-                  <div style={{ width: '31%' }} className="text-right shrink-0">
+                  <div style={{ width: '32%' }} className="text-right shrink-0">
                     <div className="text-[15px] font-black tracking-tight">{log.total_amount.toLocaleString()}원</div>
                     <div className="text-[14px] font-bold opacity-70">{log.quantity}주 / {log.unit_price.toLocaleString()}</div>
                     {log.profit > 0 ? (
