@@ -163,8 +163,8 @@ export default function StockPage() {
         <div className="flex flex-col gap-2 w-full">
           {logs.map(log => (
             <div key={log.id} onDoubleClick={() => startEdit(log)} className={`flex items-center px-4 py-3 rounded-2xl border transition-all cursor-pointer ${editingId === log.id ? 'border-orange-500 ring-2 ring-orange-500/20 bg-orange-500/5' : (isDarkMode ? 'bg-[#1e293b] border-slate-800 hover:bg-slate-900' : 'bg-white border-slate-200 shadow-sm hover:bg-slate-50')}`}>
-              <div style={{ width: '16%' }} className="text-[12px] font-black opacity-70 tracking-tighter">{log.trade_date.replace(/-/g, '.')}</div>
-              <div style={{ width: '40%' }} className="px-2">
+              <div style={{ width: '17%' }} className="text-[13px] font-black opacity-70 tracking-tighter">{log.trade_date.replace(/-/g, '.')}</div>
+              <div style={{ width: '39%' }} className="px-2">
                 <div className="font-black text-[14px] tracking-tight truncate">{log.stock_name}</div>
                 <div className="text-[12px] opacity-60 truncate font-medium">{log.memo || '-'}</div>
               </div>
@@ -172,8 +172,8 @@ export default function StockPage() {
                 <span className={`text-[13px] font-black px-1 py-0.5 rounded ${log.trade_type === 'BUY' ? 'bg-red-500/10 text-red-500' : 'bg-blue-500/10 text-blue-500'}`}>{log.trade_type === 'BUY' ? '매수' : '매도'}</span>
               </div>
               <div style={{ width: '30%' }} className="text-right">
-                <div className="text-[13px] font-black tracking-tight">{log.total_amount.toLocaleString()}원</div>
-                <div className="text-[12px] font-bold opacity-60">{log.quantity}주 · {log.unit_price.toLocaleString()}원</div>
+                <div className="text-[14px] font-black tracking-tight">{log.total_amount.toLocaleString()}원</div>
+                <div className="text-[13px] font-bold opacity-60">{log.quantity}주 · {log.unit_price.toLocaleString()}원</div>
                 {log.profit !== 0 && (
                   <div className={`text-[14px] font-black mt-0.5 ${log.profit > 0 ? 'text-emerald-500' : 'text-red-400'}`}>
                     {log.profit > 0 ? '+' : ''}{log.profit.toLocaleString()}
