@@ -198,7 +198,7 @@ export default function HouseholdLedger() {
                       <button onClick={() => handleDelete(log.id)} className="text-[11px] font-black text-red-600 ml-1">DEL</button>
                     </div>
                   ) : (
-                    <div className="text-[12px] font-bold text-slate-400 whitespace-normal break-all leading-snug">{log.remarks || "-"}</div>
+                    <div className="text-[12px] font-bold text-slate-600 whitespace-normal break-all leading-snug">{log.remarks || "-"}</div>
                   )}
                 </div>
               </div>

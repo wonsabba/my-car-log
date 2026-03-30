@@ -140,6 +140,8 @@ export default function StockPage() {
     setFormData({ trade_date: new Date().toISOString().split('T')[0], stock_name: "", stock_code: "", trade_type: "BUY", quantity: "", unit_price: "", fee: "", tax: "", total_amount: "", profit: "", memo: "" });
   };
 
+  const totalProfit = logs.reduce((sum, log) => sum + (Number(log.profit) || 0), 0);
+
   if (!session) return <div className="p-10 text-white font-black bg-[#0f172a] h-screen text-center">LOGIN REQUIRED...</div>;
 
   return (
@@ -212,6 +214,9 @@ export default function StockPage() {
       </header>
 
       <main className="flex-1 flex flex-col min-h-0 min-w-0">
+        <div className="p-3 border-b border-dashed border-slate-300 dark:border-slate-700">
+          <div className="text-sm font-black">총 수익 :<span className={`ml-2 ${totalProfit >= 0 ? 'text-orange-500' : 'text-blue-600'}`}>{totalProfit.toLocaleString()}원</span></div>
+        </div>
         <div className="flex-1 overflow-y-auto p-3 custom-scrollbar">
           <div className="flex flex-col gap-2 w-full">
             {logs.map(log => {
