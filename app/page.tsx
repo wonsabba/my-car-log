@@ -299,8 +299,8 @@ export default function Home() {
             <div className="flex items-center gap-2">
               <img src="/GV80.jpg" alt="GV80" className="w-6 h-6 rounded shadow-sm" />
               <h1 className={`text-xl font-black tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>GV80</h1>
-              <Link href="/home" className={`text-[14px] font-black transition-colors ml-2 uppercase ${isDarkMode ? 'text-slate-300 hover:text-emerald-400' : 'text-slate-400 hover:text-blue-600'}`}>🏠House</Link>
-              <Link href="/stock" className={`text-[14px] font-black transition-colors ml-1 uppercase ${isDarkMode ? 'text-slate-300 hover:text-yellow-400' : 'text-slate-400 hover:text-yellow-600'}`}>📈Stock</Link>
+              <Link href="/home" className={`text-[16px] font-black transition-colors ml-2 uppercase ${isDarkMode ? 'text-slate-300 hover:text-emerald-400' : 'text-slate-400 hover:text-blue-600'}`}>🏠</Link>
+              <Link href="/stock" className={`text-[16px] font-black transition-colors ml-1 uppercase ${isDarkMode ? 'text-slate-300 hover:text-yellow-400' : 'text-slate-400 hover:text-yellow-600'}`}>📈</Link>
             </div>
             
             <div className="flex items-center gap-3">

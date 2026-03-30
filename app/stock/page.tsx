@@ -89,7 +89,7 @@ export default function StockPage() {
       profit: Number(formData.profit),
     };
     const { error } = editingId ? await supabase.from("stock_logs").update(payload).eq("id", editingId) : await supabase.from("stock_logs").insert([payload]);
-    if (!error) { showToast("기록 완료"); resetForm(); fetchLogs(); }
+    if (!error) { showToast("저장 완료"); resetForm(); fetchLogs(); }
   };
 
   const resetForm = () => {
@@ -179,7 +179,7 @@ export default function StockPage() {
             <textarea className={`flex-1 p-2 rounded-lg text-[13px] font-bold outline-none h-[42px] resize-none border ${isDarkMode ? 'bg-[#1e293b] border-slate-600 text-white' : 'bg-white border-slate-300 text-slate-800'} ${phColor}`} value={formData.memo} onChange={e => setFormData({...formData, memo: e.target.value})} placeholder="메모" />
             <div className={`flex gap-1 ${editingId ? 'w-[120px]' : 'w-[60px]'} transition-all`}>
               <button type="submit" className={`flex-1 rounded-lg font-black text-white text-[13px] shadow-lg active:scale-95 transition-all ${editingId ? 'bg-orange-600' : (formData.trade_type === 'BUY' ? 'bg-red-600' : 'bg-blue-600')}`}>
-                {editingId ? "수정" : "기록"}
+                {editingId ? "수정" : "저장"}
               </button>
               {editingId && (
                 <button type="button" onClick={resetForm} className={`flex-1 rounded-lg font-black text-[12px] border ${isDarkMode ? 'border-slate-700 text-slate-400' : 'border-slate-300 text-slate-500'} active:scale-95`}>
@@ -210,7 +210,7 @@ export default function StockPage() {
 
               {/* 3. 구분 (9%) */}
               <div style={{ width: '10%' }} className="text-center mt-1.5">
-                <span className={`text-[11px] font-black px-1.5 py-0.5 rounded ${log.trade_type === 'BUY' ? 'bg-red-500/10 text-red-500' : 'bg-blue-500/10 text-blue-500'}`}>{log.trade_type === 'BUY' ? '매수' : '매도'}</span>
+                <span className={`text-[12px] font-black px-1.5 py-0.5 rounded ${log.trade_type === 'BUY' ? 'bg-red-500/10 text-red-500' : 'bg-blue-500/10 text-blue-500'}`}>{log.trade_type === 'BUY' ? '매수' : '매도'}</span>
               </div>
 
               {/* 4. 거래상세 및 수익 (30%) */}
