@@ -205,7 +205,7 @@ export default function StockPage() {
                 <div className="text-[11px] opacity-60 font-medium break-words leading-tight mt-0.5">{log.memo || '-'}</div>
               </div>
               <div style={{ width: '9%' }} className="text-center mt-1">
-                <span className={`text-[12px] font-black px-1.5 py-0.5 rounded ${log.trade_type === 'BUY' ? 'bg-red-500/10 text-red-500' : 'bg-blue-500/10 text-blue-500'}`}>{log.trade_type === 'BUY' ? '매수' : '매도'}</span>
+                <span className={`text-[11px] font-black px-1.5 py-0.5 rounded ${log.trade_type === 'BUY' ? 'bg-red-500/10 text-red-500' : 'bg-blue-500/10 text-blue-500'}`}>{log.trade_type === 'BUY' ? '매수' : '매도'}</span>
               </div>
               <div style={{ width: '30%' }} className="text-right">
                 <div className="text-[14px] font-black tracking-tight">{log.total_amount.toLocaleString()}원</div>
