@@ -155,10 +155,12 @@ export default function StockPage() {
         <form onSubmit={handleSave} className={`space-y-2 p-3 rounded-2xl border transition-all ${editingId ? 'bg-orange-950/10 border-orange-800' : (isDarkMode ? 'bg-[#0f172a]/50 border-slate-700' : 'bg-slate-100 border-slate-200')}`}>
           <div className="grid grid-cols-2 gap-2">
             <input type="date" className={`p-2 rounded-lg text-[13px] font-bold outline-none border ${isDarkMode ? 'bg-[#1e293b] border-slate-700 text-white' : 'bg-white border-slate-300 text-slate-800'}`} value={formData.trade_date} onChange={e => setFormData({...formData, trade_date: e.target.value})} required />
-            <select className={`p-2 rounded-lg text-[13px] font-bold outline-none border ${isDarkMode ? 'bg-[#1e293b] border-slate-700 text-white' : 'bg-white border-slate-300 text-slate-800'}`} value={formData.trade_type} onChange={e => setFormData({...formData, trade_type: e.target.value})}>
-              <option value="BUY">매수</option>
-              <option value="SELL">매도</option>
-            </select>
+            
+            {/* ✅ 콤보박스를 제거하고 라디오 버튼 형식으로 교체 */}
+            <div className={`flex p-0.5 rounded-lg border ${isDarkMode ? 'bg-[#1e293b] border-slate-700' : 'bg-white border-slate-300'}`}>
+              <button type="button" onClick={() => setFormData({...formData, trade_type: 'BUY'})} className={`flex-1 py-1 rounded-md text-[11px] font-black transition-all ${formData.trade_type === 'BUY' ? 'bg-red-600 text-white shadow-sm' : 'text-slate-400'}`}>매수</button>
+              <button type="button" onClick={() => setFormData({...formData, trade_type: 'SELL'})} className={`flex-1 py-1 rounded-md text-[11px] font-black transition-all ${formData.trade_type === 'SELL' ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-400'}`}>매도</button>
+            </div>
           </div>
           
           <input type="text" placeholder="종목명" className={`w-full p-2 rounded-lg text-[13px] font-bold outline-none border ${isDarkMode ? 'bg-[#1e293b] border-slate-600 text-white' : 'bg-white border-slate-300 text-slate-800'} ${phColor}`} value={formData.stock_name} onChange={e => setFormData({...formData, stock_name: e.target.value})} required />
@@ -195,25 +197,17 @@ export default function StockPage() {
         <div className="flex flex-col gap-2 w-full">
           {logs.map(log => (
             <div key={log.id} onDoubleClick={() => startEdit(log)} className={`flex items-start px-4 py-3 rounded-2xl border transition-all cursor-pointer ${editingId === log.id ? 'border-orange-500 ring-2 ring-orange-500/20 bg-orange-500/5' : (isDarkMode ? 'bg-[#1e293b] border-slate-800 hover:bg-slate-900' : 'bg-white border-slate-200 shadow-sm hover:bg-slate-50')}`}>
-              
-              {/* ✅ 1. 날짜 영역 (17%) - 년도와 월/일을 2줄로 배치 */}
               <div style={{ width: '14%' }} className="flex flex-col text-center mt-1">
                 <span className="text-[12px] font-bold opacity-60 leading-none">{log.trade_date.substring(0, 4)}</span>
                 <span className="text-[12px] font-black opacity-70 tracking-tighter">{log.trade_date.substring(5).replace('-', '.')}</span>
               </div>
-              
-              {/* 2. 종목 및 메모 (39%) */}
               <div style={{ width: '41%' }} className="px-2">
                 <div className="font-black text-[14px] tracking-tight truncate">{log.stock_name}</div>
                 <div className="text-[11px] opacity-60 font-medium break-words leading-tight mt-0.5">{log.memo || '-'}</div>
               </div>
-
-              {/* 3. 구분 (9%) */}
               <div style={{ width: '10%' }} className="text-center mt-1.5">
                 <span className={`text-[12px] font-black px-1.5 py-0.5 rounded ${log.trade_type === 'BUY' ? 'bg-red-500/10 text-red-500' : 'bg-blue-500/10 text-blue-500'}`}>{log.trade_type === 'BUY' ? '매수' : '매도'}</span>
               </div>
-
-              {/* 4. 거래상세 및 수익 (30%) */}
               <div style={{ width: '30%' }} className="text-right">
                 <div className="text-[15px] font-black tracking-tight">{log.total_amount.toLocaleString()}원</div>
                 <div className="text-[13px] font-bold opacity-60">{log.quantity}주 · {log.unit_price.toLocaleString()}원</div>
@@ -223,8 +217,6 @@ export default function StockPage() {
                   </div>
                 )}
               </div>
-
-              {/* 5. 삭제 버튼 (5%) */}
               <div style={{ width: '5%' }} className="flex justify-end mt-1.5">
                 <button onClick={(e) => { e.stopPropagation(); openDeleteModal(log.id); }} className="opacity-40 hover:opacity-100 hover:text-red-500 transition-opacity text-xs">✕</button>
               </div>
