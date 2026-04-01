@@ -7,7 +7,7 @@ import * as XLSX from "xlsx";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<"fuel" | "maint">("fuel");
-  const [isDarkMode, setIsDarkMode] = useState(true); // ✅ 테마 상태 추가 (기본 다크)
+  const [isDarkMode, setIsDarkMode] = useState(false); // ✅ 테마 상태 추가 (기본 다크)
   const [logs, setLogs] = useState<any[]>([]);
   const [maintLogs, setMaintLogs] = useState<any[]>([]);
   const [editingId, setEditingId] = useState<number | null>(null);
