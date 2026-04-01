@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../utils/supabase";
 import Link from "next/link";
+import * as XLSX from "xlsx";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<"fuel" | "maint">("fuel");
@@ -112,33 +113,33 @@ export default function Home() {
 
   const downloadExcel = () => {
     if (activeTab === "fuel") {
-      if (logs.length === 0) return showAlert("다운로드할 데이터가 없습니다.", "error"); // alert 대체
+      if (logs.length === 0) return showAlert("다운로드할 데이터가 없습니다.", "error");
       const headers = ["주유일자", "주유회사", "단가(원)", "주유량(L)", "주유액(원)", "누적주행거리(Km)"];
-      const csvContent = logs.map(log => [log.refuel_date, brandConfig[log.brand]?.name || "미지정", log.unit_price_krw, log.fuel_volume_l, log.amount_krw, log.distance_km].join(",")).join("\n");
-      const BOM = "\uFEFF"; 
-      const blob = new Blob([BOM + headers.join(",") + "\n" + csvContent], { type: "text/csv;charset=utf-8;" });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a"); link.setAttribute("href", url); link.setAttribute("download", `주유내역_${new Date().toISOString().split('T')[0]}.csv`); link.click();
+      const data = logs.map(log => [log.refuel_date, brandConfig[log.brand]?.name || "미지정", log.unit_price_krw, log.fuel_volume_l, log.amount_krw, log.distance_km]);
+      const workbook = XLSX.utils.book_new();
+      const worksheet = XLSX.utils.aoa_to_sheet([headers, ...data]);
+      XLSX.utils.book_append_sheet(workbook, worksheet, "주유내역");
+      XLSX.writeFile(workbook, `주유내역_${new Date().toISOString().split('T')[0]}.xlsx`);
     } else {
-      if (maintLogs.length === 0) return showAlert("다운로드할 데이터가 없습니다.", "error"); // alert 대체
+      if (maintLogs.length === 0) return showAlert("다운로드할 데이터가 없습니다.", "error");
       const headers = ["정비일자", "정비회사", "정비내역", "정비금액", "주행거리(km)", "메모"];
-      const csvContent = maintLogs.map(log => [log.maint_date, log.company, log.content, log.amount_krw, log.odometer_km, log.memo].join(",")).join("\n");
-      const BOM = "\uFEFF"; 
-      const blob = new Blob([BOM + headers.join(",") + "\n" + csvContent], { type: "text/csv;charset=utf-8;" });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a"); link.setAttribute("href", url); link.setAttribute("download", `정비내역_${new Date().toISOString().split('T')[0]}.csv`); link.click();
+      const data = maintLogs.map(log => [log.maint_date, log.company, log.content, log.amount_krw, log.odometer_km, log.memo]);
+      const workbook = XLSX.utils.book_new();
+      const worksheet = XLSX.utils.aoa_to_sheet([headers, ...data]);
+      XLSX.utils.book_append_sheet(workbook, worksheet, "정비내역");
+      XLSX.writeFile(workbook, `정비내역_${new Date().toISOString().split('T')[0]}.xlsx`);
     }
     showToast("📊 엑셀 다운로드 완료");
   };
 
   const downloadMonthlyExcel = () => {
-    if (sortedFuelMonths.length === 0) return showAlert("다운로드할 데이터가 없습니다.", "error"); // alert 대체
+    if (sortedFuelMonths.length === 0) return showAlert("다운로드할 데이터가 없습니다.", "error");
     const headers = ["월", "주유금액(원)"];
-    const csvContent = sortedFuelMonths.map(month => [month, monthlyFuelTotals[month]].join(",")).join("\n");
-    const BOM = "\uFEFF"; 
-    const blob = new Blob([BOM + headers.join(",") + "\n" + csvContent], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a"); link.setAttribute("href", url); link.setAttribute("download", `월별_주유합계_${new Date().toISOString().split('T')[0]}.csv`); link.click();
+    const data = sortedFuelMonths.map(month => [month, monthlyFuelTotals[month]]);
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.aoa_to_sheet([headers, ...data]);
+    XLSX.utils.book_append_sheet(workbook, worksheet, "월별합계");
+    XLSX.writeFile(workbook, `월별_주유합계_${new Date().toISOString().split('T')[0]}.xlsx`);
     showToast("📊 월별 내역 다운로드 완료");
   };
 
