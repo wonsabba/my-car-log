@@ -64,9 +64,9 @@ export default function Home() {
   const sortedFuelMonths = Object.keys(monthlyFuelTotals).sort((a, b) => b.localeCompare(a));
 
   const brandConfig: { [key: string]: { name: string; color: string } } = {
-    "1": { name: "SK Enclean", color: isDarkMode ? "text-red-400" : "text-red-600" },
-    "2": { name: "GS Caltex", color: isDarkMode ? "text-emerald-400" : "text-emerald-600" },
-    "3": { name: "알뜰 주유소", color: isDarkMode ? "text-orange-400" : "text-orange-600" }
+    "1": { name: "SK Enclean", color: isDarkMode ? "text-red-500" : "text-red-600" },
+    "2": { name: "GS Caltex", color: isDarkMode ? "text-emerald-300" : "text-emerald-500" },
+    "3": { name: "알뜰 주유소", color: isDarkMode ? "text-orange-500" : "text-orange-500" }
   };
 
   const showToast = (msg: string, type: "success" | "error" = "success") => {
@@ -223,6 +223,7 @@ export default function Home() {
             <div className="flex gap-4 ml-4">
               <Link href="/home" className="text-lg font-black">🏠</Link>
               <Link href="/stock" className="text-lg font-black">📈</Link>
+              <Link href="https://wonsabba-cash.vercel.app" className="text-lg font-black">💰</Link>
             </div>
           </div>
           
@@ -254,7 +255,7 @@ export default function Home() {
                 <button onClick={() => setIsMonthlyModalOpen(true)} className="text-base active:scale-90 transition-transform">📅</button>
               </>
             ) : (
-              <span className={`text-[14px] font-black px-2 py-1 rounded-md border ${isDarkMode ? 'bg-orange-900/20 text-orange-400 border-orange-900' : 'bg-orange-50 text-orange-700 border-orange-100'}`}>
+              <span className={`text-[14px] font-black px-2 py-1 rounded-md border ${isDarkMode ? 'bg-orange-900/20 text-orange-400 border-orange-900' : 'bg-orange-50 text-orange-600 border-orange-100'}`}>
                 Total : {totalMaintAmount.toLocaleString()} 원
               </span>
             )}
@@ -278,7 +279,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className={`px-4 py-2 flex border-b text-[13px] font-black uppercase tracking-tight ${isDarkMode ? 'bg-[#1e293b]/50 border-slate-800 text-slate-500' : 'bg-slate-50 border-slate-200 text-slate-400'}`}>
+        <div className={`px-4 py-2 flex border-b text-[14px] font-black tracking-tight ${isDarkMode ? 'bg-[#1e293b]/50 border-slate-500 text-slate-300' : 'bg-slate-80 border-slate-300 text-slate-600'}`}>
           {activeTab === 'fuel' ? (
             <>
               <div className="w-[22%] text-center">주유일자</div>
@@ -291,7 +292,7 @@ export default function Home() {
           ) : (
             <>
               <div className="w-[20%] text-center">정비일자</div>
-              <div className="w-[20%] text-center">금액</div>
+              <div className="w-[20%] text-right pr-8">금액</div>
               <div className="flex-1 px-4">정비내역 / 업체 / 메모</div>
               <div className="w-[15%] text-right pr-1">누적거리</div>
             </>
@@ -308,30 +309,30 @@ export default function Home() {
               <div key={log.id} onDoubleClick={() => startEdit(log)} className={`flex items-center px-4 py-4 cursor-pointer transition-all ${isDarkMode ? 'hover:bg-slate-900/50' : 'hover:bg-slate-50'}`}>
                 {activeTab === 'fuel' ? (
                   <>
-                    <div className="w-[22%] text-[14px] font-black text-center opacity-70 tracking-tighter">{log.refuel_date.replace(/-/g, '.')}</div>
+                    <div className="w-[22%] text-[14px] font-black text-center tracking-tighter">{log.refuel_date.replace(/-/g, '.')}</div>
                     <div className={`w-[12%] text-[14px] font-black text-center ${brandConfig[log.brand]?.color}`}>{brandConfig[log.brand]?.name.split(' ')[0]}</div>
-                    <div className="w-[15%] text-[14px] font-bold text-right opacity-70 tracking-tighter">{log.unit_price_krw.toLocaleString()}</div>
+                    <div className="w-[15%] text-[14px] font-bold text-right opacity-80 tracking-tighter">{log.unit_price_krw.toLocaleString()}</div>
                     <div className="w-[18%] text-[14px] font-black text-right pr-2 tracking-tighter">{log.amount_krw.toLocaleString()}</div>
-                    <div className="w-[15%] text-[14px] font-bold text-right opacity-70">{log.fuel_volume_l.toLocaleString()}</div>
+                    <div className="w-[15%] text-[14px] font-bold text-right opacity-80">{log.fuel_volume_l.toLocaleString()}</div>
                     <div className="w-[17%] text-[14px] font-black text-right text-blue-500">{tripVal > 0 ? tripVal.toLocaleString() : "-"}</div>
                   </>
                 ) : (
                   <>
-                    <div className="w-[20%] text-[14px] font-black text-center opacity-70 tracking-tighter">{log.maint_date.replace(/-/g, '.')}</div>
+                    <div className="w-[20%] text-[14px] font-black text-center tracking-tighter">{log.maint_date.replace(/-/g, '.')}</div>
                     <div className="w-[20%] text-[14px] font-black text-right pr-4 text-emerald-500 tracking-tighter">{log.amount_krw.toLocaleString()}</div>
                     <div className="flex-1 px-4 min-w-0 flex flex-col justify-center">
                       <div className={`text-[13px] font-black truncate ${isDarkMode ? 'text-slate-100' : 'text-slate-800'}`}>{log.content}</div>
                       <div className="flex items-center gap-1.5 mt-0.5">
-                        <span className="text-[10px] font-bold opacity-40 uppercase shrink-0">{log.company}</span>
+                        <span className="text-[11px] font-bold opacity-60 uppercase shrink-0">{log.company}</span>
                         {log.memo && (
                           <>
-                            <span className="text-[10px] opacity-20">|</span>
-                            <span className={`text-[11px] font-bold truncate ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>{log.memo}</span>
+                            <span className="text-[12px] opacity-50">|</span>
+                            <span className={`text-[11px] font-bold truncate ${isDarkMode ? 'text-blue-500' : 'text-blue-600'}`}>{log.memo}</span>
                           </>
                         )}
                       </div>
                     </div>
-                    <div className="w-[15%] text-[14px] font-black text-right opacity-70 tracking-tighter">{log.odometer_km?.toLocaleString()}</div>
+                    <div className="w-[15%] text-[14px] font-black text-right opacity-80 tracking-tighter">{log.odometer_km?.toLocaleString()}</div>
                   </>
                 )}
               </div>
