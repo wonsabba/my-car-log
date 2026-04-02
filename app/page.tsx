@@ -321,13 +321,13 @@ export default function Home() {
                     <div className="w-[20%] text-[14px] font-black text-center tracking-tighter">{log.maint_date.replace(/-/g, '.')}</div>
                     <div className="w-[20%] text-[14px] font-black text-right pr-4 text-emerald-500 tracking-tighter">{log.amount_krw.toLocaleString()}</div>
                     <div className="flex-1 px-4 min-w-0 flex flex-col justify-center">
-                      <div className={`text-[13px] font-black truncate ${isDarkMode ? 'text-slate-100' : 'text-slate-800'}`}>{log.content}</div>
+                      <div className={`text-[14px] font-black truncate ${isDarkMode ? 'text-slate-100' : 'text-slate-800'}`}>{log.content}</div>
                       <div className="flex items-center gap-1.5 mt-0.5">
-                        <span className="text-[11px] font-bold opacity-60 uppercase shrink-0">{log.company}</span>
+                        <span className="text-[13px] font-bold opacity-60 uppercase shrink-0">{log.company}</span>
                         {log.memo && (
                           <>
                             <span className="text-[12px] opacity-50">|</span>
-                            <span className={`text-[11px] font-bold truncate ${isDarkMode ? 'text-blue-500' : 'text-blue-600'}`}>{log.memo}</span>
+                            <span className={`text-[13px] font-bold truncate ${isDarkMode ? 'text-blue-500' : 'text-blue-600'}`}>{log.memo}</span>
                           </>
                         )}
                       </div>
