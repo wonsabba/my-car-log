@@ -215,7 +215,6 @@ export default function Home() {
     <div className={`flex flex-col h-screen w-full mx-auto overflow-hidden font-sans transition-colors duration-300 ${isDarkMode ? 'bg-[#0f172a] text-slate-100' : 'bg-slate-50 text-slate-800'}`}>
       {toast && <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-[110] px-6 py-2 rounded-full shadow-xl bg-blue-600 text-white font-bold text-xs shrink-0">{toast.msg}</div>}
 
-      {/* 🚀 상단 헤더 */}
       <header className={`w-full p-4 border-b shrink-0 ${isDarkMode ? 'bg-[#1e293b] border-slate-800' : 'bg-white border-slate-200'}`}>
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center gap-2">
@@ -228,7 +227,6 @@ export default function Home() {
           </div>
           
           <div className="flex items-center gap-3">
-            <button onClick={() => {resetForm(); setIsInputModalOpen(true);}} className="px-3 py-1.5 bg-blue-600 text-white rounded-xl font-black text-[11px] active:scale-95 transition-all shadow-md">+ 신규</button>
             <button onClick={() => setIsDarkMode(!isDarkMode)} className={`text-[10px] font-bold px-2 py-1 rounded-md transition-all ${isDarkMode ? 'bg-[#334155] text-blue-300' : 'bg-slate-100 text-blue-600'}`}>
               {isDarkMode ? 'LIGHT' : 'DARK'}
             </button>
@@ -236,16 +234,13 @@ export default function Home() {
           </div>
         </div>
 
-        {/* 탭 메뉴 */}
         <div className={`flex p-1 rounded-2xl border ${isDarkMode ? 'bg-[#0f172a] border-slate-700' : 'bg-slate-100 border-slate-200'}`}>
           <button onClick={() => {setActiveTab("fuel"); resetForm();}} className={`flex-1 py-2.5 rounded-xl text-sm font-black transition-all ${activeTab === 'fuel' ? (isDarkMode ? 'bg-[#334155] text-white shadow-lg' : 'bg-white text-blue-600 shadow-md') : 'text-slate-500'}`}>주유내역</button>
           <button onClick={() => {setActiveTab("maint"); resetForm();}} className={`flex-1 py-2.5 rounded-xl text-sm font-black transition-all ${activeTab === 'maint' ? (isDarkMode ? 'bg-[#334155] text-white shadow-lg' : 'bg-white text-blue-600 shadow-md') : 'text-slate-500'}`}>정비내역</button>
         </div>
       </header>
 
-      {/* 🚀 메인 목록 영역 */}
       <main className="flex-1 flex flex-col min-h-0 w-full overflow-hidden">
-        {/* 리스트 헤더 요약 정보 */}
         <div className={`px-5 py-4 border-b flex justify-between items-center shrink-0 ${isDarkMode ? 'bg-[#0f172a] border-slate-800' : 'bg-white border-slate-100'}`}>
           <div className="flex gap-2 items-center overflow-hidden">
             {activeTab === 'fuel' ? (
@@ -256,7 +251,7 @@ export default function Home() {
                 <span className={`text-[12px] font-black px-2 py-1 rounded-md border whitespace-nowrap ${isDarkMode ? 'bg-orange-900/20 text-orange-400 border-orange-900' : 'bg-orange-50 text-orange-600 border-orange-100'}`}>
                   {totalAmount.toLocaleString()} 원
                 </span>
-                <button onClick={() => setIsMonthlyModalOpen(true)} className="text-base">📅</button>
+                <button onClick={() => setIsMonthlyModalOpen(true)} className="text-base active:scale-90 transition-transform">📅</button>
               </>
             ) : (
               <span className={`text-[12px] font-black px-2 py-1 rounded-md border ${isDarkMode ? 'bg-orange-900/20 text-orange-400 border-orange-900' : 'bg-orange-50 text-orange-700 border-orange-100'}`}>
@@ -264,31 +259,45 @@ export default function Home() {
               </span>
             )}
           </div>
-          <button onClick={downloadExcel} className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md">📊</button>
+
+          {/* ✅ 신규 버튼과 엑셀 버튼을 하나의 묶음으로 처리하여 나란히 배치 */}
+          <div className="flex items-center gap-2 shrink-0">
+            <button 
+              onClick={downloadExcel} 
+              className={`p-1.5 rounded-md transition-all active:scale-90 ${isDarkMode ? 'hover:bg-slate-800' : 'hover:bg-slate-100'}`}
+            >
+              <span className="text-lg">📊</span>
+            </button>
+            <button 
+              onClick={() => {resetForm(); setIsInputModalOpen(true);}} 
+              className="px-3 py-1.5 bg-blue-600 text-white rounded-xl font-black text-[11px] active:scale-95 transition-all shadow-md"
+            >
+              + 신규
+            </button>
+            
+          </div>
         </div>
 
-        {/* 목록 헤더 */}
         <div className={`px-4 py-2 flex border-b text-[13px] font-black uppercase tracking-tight ${isDarkMode ? 'bg-[#1e293b]/50 border-slate-800 text-slate-500' : 'bg-slate-50 border-slate-200 text-slate-400'}`}>
           {activeTab === 'fuel' ? (
             <>
               <div className="w-[22%] text-center">주유일자</div>
-              <div className="w-[13%] text-center">회사</div>
+              <div className="w-[12%] text-center">회사</div>
               <div className="w-[15%] text-right">단가</div>
-              <div className="w-[18%] text-right pr-2">주유액</div>
-              <div className="w-[15%] text-right">주유량</div>
-              <div className="w-[17%] text-right">Trip</div>
+              <div className="w-[18%] text-right pr-5">주유액</div>
+              <div className="w-[15%] text-right pr-2">주유량</div>
+              <div className="w-[17%] text-right pr-2">Trip</div>
             </>
           ) : (
             <>
               <div className="w-[20%] text-center">정비일자</div>
-              <div className="w-[20%] text-center pr-1">금액</div>
+              <div className="w-[20%] text-center">금액</div>
               <div className="flex-1 px-4">정비내역 / 업체 / 메모</div>
               <div className="w-[15%] text-center">Km</div>
             </>
           )}
         </div>
 
-        {/* 실제 리스트 영역 */}
         <div className={`flex-1 overflow-y-auto divide-y custom-scrollbar ${isDarkMode ? 'divide-slate-900' : 'divide-slate-100'}`}>
           {(activeTab === 'fuel' ? logs : maintLogs).map((log, index) => {
             const currentList = activeTab === 'fuel' ? logs : maintLogs;
@@ -300,7 +309,7 @@ export default function Home() {
                 {activeTab === 'fuel' ? (
                   <>
                     <div className="w-[22%] text-[13px] font-black text-center opacity-60 tracking-tighter">{log.refuel_date.replace(/-/g, '.')}</div>
-                    <div className={`w-[13%] text-[13px] font-black text-center ${brandConfig[log.brand]?.color}`}>{brandConfig[log.brand]?.name.split(' ')[0]}</div>
+                    <div className={`w-[12%] text-[13px] font-black text-center ${brandConfig[log.brand]?.color}`}>{brandConfig[log.brand]?.name.split(' ')[0]}</div>
                     <div className="w-[15%] text-[13px] font-bold text-right opacity-60 tracking-tighter">{log.unit_price_krw.toLocaleString()}</div>
                     <div className="w-[18%] text-[14px] font-black text-right pr-2 tracking-tighter">{log.amount_krw.toLocaleString()}</div>
                     <div className="w-[15%] text-[13px] font-bold text-right opacity-60">{log.fuel_volume_l.toLocaleString()}</div>
@@ -308,8 +317,8 @@ export default function Home() {
                   </>
                 ) : (
                   <>
-                    <div className="w-[22%] text-[13px] font-black text-center opacity-60 tracking-tighter">{log.maint_date.replace(/-/g, '.')}</div>
-                    <div className="w-[23%] text-[14px] font-black text-right pr-4 text-emerald-500 tracking-tighter">{log.amount_krw.toLocaleString()}</div>
+                    <div className="w-[20%] text-[13px] font-black text-center opacity-60 tracking-tighter">{log.maint_date.replace(/-/g, '.')}</div>
+                    <div className="w-[20%] text-[14px] font-black text-right pr-4 text-emerald-500 tracking-tighter">{log.amount_krw.toLocaleString()}</div>
                     <div className="flex-1 px-4 min-w-0 flex flex-col justify-center">
                       <div className={`text-[13px] font-black truncate ${isDarkMode ? 'text-slate-100' : 'text-slate-800'}`}>{log.content}</div>
                       <div className="flex items-center gap-1.5 mt-0.5">
@@ -334,7 +343,6 @@ export default function Home() {
         </div>
       </main>
 
-      {/* 🚀 입력 폼 모달 (팝업) */}
       {isInputModalOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 p-4 backdrop-blur-md">
           <div className={`w-full max-w-md p-6 rounded-[32px] shadow-2xl border ${isDarkMode ? 'bg-[#111c3a] border-[#1e2e56]' : 'bg-white border-slate-200'}`}>
@@ -383,7 +391,7 @@ export default function Home() {
         </div>
       )}
 
-      {/* 알림 및 월별 모달 UI */}
+      {/* 알림 및 확인 모달 (변화 없음) */}
       {alertModal.isOpen && (
         <div className="fixed inset-0 z-[150] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
           <div className={`w-full max-w-xs rounded-3xl shadow-2xl flex flex-col ${isDarkMode ? 'bg-[#111c3a] border-[#1e2e56] border' : 'bg-white border-slate-200 border'}`}>
@@ -408,17 +416,28 @@ export default function Home() {
         </div>
       )}
 
+      {/* 🚀 [복구 완료] 월별 주유액 팝업 내 엑셀 버튼 추가 */}
       {isMonthlyModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
           <div className={`w-full max-w-sm rounded-3xl shadow-2xl flex flex-col max-h-[80vh] ${isDarkMode ? 'bg-[#111c3a] border-[#1e2e56] border' : 'bg-white border-slate-200 border'}`}>
             <div className={`p-5 border-b flex justify-between items-center ${isDarkMode ? 'border-slate-700' : 'border-slate-100'}`}>
-              <h2 className="text-lg font-black">월별 주유액</h2>
-              <button onClick={() => setIsMonthlyModalOpen(false)}>닫기 ✕</button>
+              <div className="flex items-center gap-2">
+                <h2 className="text-lg font-black tracking-tight">월별 주유액</h2>
+                {/* ✅ 엑셀 버튼 복구 */}
+                <button 
+                  onClick={downloadMonthlyExcel} 
+                  className={`p-1 rounded-md transition-all active:scale-90 ${isDarkMode ? 'hover:bg-slate-800' : 'hover:bg-slate-100'}`}
+                  title="월별 엑셀 다운로드"
+                >
+                  📊
+                </button>
+              </div>
+              <button onClick={() => setIsMonthlyModalOpen(false)} className="text-sm font-bold">닫기 ✕</button>
             </div>
-            <div className="p-5 overflow-y-auto space-y-3">
+            <div className="p-5 overflow-y-auto space-y-3 custom-scrollbar">
               {sortedFuelMonths.map(month => (
                 <div key={month} className={`flex justify-between items-center p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/50`}>
-                  <span className="text-sm font-black">{month}</span>
+                  <span className="text-sm font-black text-blue-500">{month}</span>
                   <span className="text-sm font-black text-blue-500">{monthlyFuelTotals[month].toLocaleString()} 원</span>
                 </div>
               ))}
@@ -429,6 +448,7 @@ export default function Home() {
 
       <style jsx>{`
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
       `}</style>
     </div>
