@@ -372,7 +372,7 @@ export default function Home() {
 
       {/* 🚀 메인 목록 영역 (전체 화면 사용) */}
       <main className={`flex-1 flex flex-col min-h-0 relative overflow-x-auto ${isDarkMode ? 'bg-[#0f172a]' : 'bg-white'}`}>
-        <div className="min-w-[500px] flex flex-col h-full shrink-0">
+        <div className="min-w-[400px] flex flex-col h-full shrink-0">
           <div className={`sticky top-0 backdrop-blur-md z-10 border-b ${isDarkMode ? 'bg-[#0f172a]/90 border-slate-800' : 'bg-white/95 border-slate-100'}`}>
             <div className="px-5 py-4 flex justify-between items-center">
               <div className="flex gap-3 items-center">
