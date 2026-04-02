@@ -13,7 +13,7 @@ export default function Home() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [toast, setToast] = useState<{ msg: string; type: "success" | "error" } | null>(null);
   
-  // ✅ 입력 폼 모달 열림 상태 추가
+  // 모달 상태
   const [isInputModalOpen, setIsInputModalOpen] = useState(false);
   const [isMonthlyModalOpen, setIsMonthlyModalOpen] = useState(false);
   const [alertModal, setAlertModal] = useState<{ isOpen: boolean; msg: string; type?: "info" | "error" }>({ isOpen: false, msg: "" });
@@ -41,6 +41,7 @@ export default function Home() {
     memo: ""
   });
 
+  // 주유금액 자동 계산
   useEffect(() => {
     if (activeTab === "fuel") {
       const price = Number(formData.unit_price_krw);
@@ -110,17 +111,17 @@ export default function Home() {
 
   const downloadExcel = () => {
     if (activeTab === "fuel") {
-      if (logs.length === 0) return showAlert("다운로드할 데이터가 없습니다.", "error");
+      if (logs.length === 0) return showAlert("데이터가 없습니다.", "error");
       const headers = ["주유일자", "주유회사", "단가(원)", "주유량(L)", "주유액(원)", "누적주행거리(Km)"];
-      const data = logs.map(log => [log.refuel_date, brandConfig[log.brand]?.name || "미지정", log.unit_price_krw, log.fuel_volume_l, log.amount_krw, log.distance_km]);
+      const data = logs.map(log => [log.refuel_date.replace(/-/g, '.'), brandConfig[log.brand]?.name || "미지정", log.unit_price_krw, log.fuel_volume_l, log.amount_krw, log.distance_km]);
       const workbook = XLSX.utils.book_new();
       const worksheet = XLSX.utils.aoa_to_sheet([headers, ...data]);
       XLSX.utils.book_append_sheet(workbook, worksheet, "주유내역");
       XLSX.writeFile(workbook, `주유내역_${new Date().toISOString().split('T')[0]}.xlsx`);
     } else {
-      if (maintLogs.length === 0) return showAlert("다운로드할 데이터가 없습니다.", "error");
+      if (maintLogs.length === 0) return showAlert("데이터가 없습니다.", "error");
       const headers = ["정비일자", "정비회사", "정비내역", "정비금액", "주행거리(km)", "메모"];
-      const data = maintLogs.map(log => [log.maint_date, log.company, log.content, log.amount_krw, log.odometer_km, log.memo]);
+      const data = maintLogs.map(log => [log.maint_date.replace(/-/g, '.'), log.company, log.content, log.amount_krw, log.odometer_km, log.memo]);
       const workbook = XLSX.utils.book_new();
       const worksheet = XLSX.utils.aoa_to_sheet([headers, ...data]);
       XLSX.utils.book_append_sheet(workbook, worksheet, "정비내역");
@@ -130,7 +131,7 @@ export default function Home() {
   };
 
   const downloadMonthlyExcel = () => {
-    if (sortedFuelMonths.length === 0) return showAlert("다운로드할 데이터가 없습니다.", "error");
+    if (sortedFuelMonths.length === 0) return showAlert("데이터가 없습니다.", "error");
     const headers = ["월", "주유금액(원)"];
     const data = sortedFuelMonths.map(month => [month, monthlyFuelTotals[month]]);
     const workbook = XLSX.utils.book_new();
@@ -161,7 +162,7 @@ export default function Home() {
         if (!error) { showToast("🚀 저장 완료"); resetForm(); fetchLogs(); }
       }
     }
-    setIsInputModalOpen(false); // 저장 후 닫기
+    setIsInputModalOpen(false);
   };
 
   const resetForm = () => {
@@ -180,7 +181,7 @@ export default function Home() {
         const { error } = await supabase.from(table).delete().eq("id", editingId);
         if (!error) { showToast("🗑️ 삭제 완료"); resetForm(); fetchLogs(); }
         setConfirmModal({ isOpen: false, msg: "", onConfirm: () => {} });
-        setIsInputModalOpen(false); // 삭제 후 입력창 닫기
+        setIsInputModalOpen(false);
       }
     });
   };
@@ -192,7 +193,7 @@ export default function Home() {
     } else {
       setMaintFormData({ maint_date: log.maint_date, company: log.company || "", content: log.content, amount_krw: log.amount_krw.toString(), odometer_km: log.odometer_km?.toString() || "", memo: log.memo || "" });
     }
-    setIsInputModalOpen(true); // 수정 시 모달 열기
+    setIsInputModalOpen(true);
   };
 
   if (!session) {
@@ -201,76 +202,137 @@ export default function Home() {
         <div className={`w-full max-w-sm p-8 rounded-3xl shadow-2xl border ${isDarkMode ? 'bg-[#111c3a] border-[#1e2e56]' : 'bg-white border-slate-200'}`}>
           <h1 className={`text-2xl font-black mb-6 text-center tracking-tighter italic ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>Brandon CAR</h1>
           <form onSubmit={handleLogin} className="space-y-4">
-            <input type="email" placeholder="Email" className={`w-full p-4 border rounded-2xl outline-none font-bold ${isDarkMode ? 'bg-[#1e2e56] border-[#2a3f75] text-white focus:border-blue-500 placeholder-[#5c72a8]' : 'bg-white border-slate-200 text-slate-800 focus:border-blue-600'}`} value={email} onChange={(e) => setEmail(e.target.value)} required />
-            <input type="password" placeholder="Password" className={`w-full p-4 border rounded-2xl outline-none font-bold ${isDarkMode ? 'bg-[#1e2e56] border-[#2a3f75] text-white focus:border-blue-500 placeholder-[#5c72a8]' : 'bg-white border-slate-200 text-slate-800 focus:border-blue-600'}`} value={password} onChange={(e) => setPassword(e.target.value)} required />
-            <button type="submit" className="w-full py-4 bg-blue-600 text-white rounded-2xl font-black text-lg active:scale-95 transition-all">LOGIN</button>
+            <input type="email" placeholder="Email" className={`w-full p-4 border rounded-2xl outline-none font-bold ${isDarkMode ? 'bg-[#1e2e56] border-[#2a3f75] text-white focus:border-blue-500 placeholder-[#5c72a8]' : 'bg-white border-slate-200 text-slate-800'}`} value={email} onChange={(e) => setEmail(e.target.value)} required />
+            <input type="password" placeholder="Password" className={`w-full p-4 border rounded-2xl outline-none font-bold ${isDarkMode ? 'bg-[#1e2e56] border-[#2a3f75] text-white focus:border-blue-500 placeholder-[#5c72a8]' : 'bg-white border-slate-200 text-slate-800'}`} value={password} onChange={(e) => setPassword(e.target.value)} required />
+            <button type="submit" className="w-full py-4 bg-blue-600 text-white rounded-2xl font-black text-lg active:scale-95 transition-all shadow-xl">LOGIN</button>
           </form>
         </div>
-        {alertModal.isOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
-            <div className={`w-full max-w-xs rounded-3xl shadow-2xl overflow-hidden flex flex-col ${isDarkMode ? 'bg-[#111c3a] border-[#1e2e56] border' : 'bg-white border-slate-200 border'}`}>
-              <div className="p-6 text-center mt-2">
-                <div className={`text-3xl mb-3 ${alertModal.type === 'error' ? 'text-red-500' : 'text-blue-500'}`}>{alertModal.type === 'error' ? '⚠️' : 'ℹ️'}</div>
-                <p className={`text-sm font-bold leading-relaxed ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>{alertModal.msg}</p>
-              </div>
-              <div className="p-4 pt-0"><button onClick={() => setAlertModal({ isOpen: false, msg: "" })} className={`w-full py-3 rounded-xl font-black text-sm transition-all active:scale-95 ${isDarkMode ? 'bg-slate-800 text-white hover:bg-slate-700' : 'bg-slate-100 text-slate-800 hover:bg-slate-200'}`}>확인</button></div>
-            </div>
-          </div>
-        )}
       </div>
     );
   }
 
   return (
-    <div className={`flex flex-col h-screen max-w-6xl mx-auto overflow-hidden border-x font-sans transition-colors duration-300 ${isDarkMode ? 'bg-[#0f172a] text-slate-100 border-slate-800' : 'bg-slate-50 text-slate-800 border-slate-200'}`}>
-      {toast && <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-[60] px-6 py-2 rounded-full shadow-xl bg-blue-600 text-white font-bold text-xs shrink-0">{toast.msg}</div>}
+    <div className={`flex flex-col h-screen w-full mx-auto overflow-hidden font-sans transition-colors duration-300 ${isDarkMode ? 'bg-[#0f172a] text-slate-100' : 'bg-slate-50 text-slate-800'}`}>
+      {toast && <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-[110] px-6 py-2 rounded-full shadow-xl bg-blue-600 text-white font-bold text-xs shrink-0">{toast.msg}</div>}
 
-      {/* 🚀 상단 헤더 & 메뉴 */}
-      <header className={`w-full p-4 border-b flex flex-col gap-4 ${isDarkMode ? 'bg-[#1e293b] border-slate-800' : 'bg-white border-slate-200'}`}>
-        <div className="flex justify-between items-center">
+      {/* 🚀 상단 헤더 */}
+      <header className={`w-full p-4 border-b shrink-0 ${isDarkMode ? 'bg-[#1e293b] border-slate-800' : 'bg-white border-slate-200'}`}>
+        <div className="flex justify-between items-center mb-4">
           <div className="flex items-center gap-2">
             <img src="/GV80.jpg" alt="GV80" className="w-8 h-8 rounded-lg shadow-sm" />
-            <h1 className={`text-2xl font-black tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>GV80</h1>
+            <h1 className={`text-xl font-black tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>GV80</h1>
             <div className="flex gap-4 ml-4">
-              <Link href="/home" className={`text-lg font-black ${isDarkMode ? 'text-emerald-400' : 'text-blue-600'}`}>🏠</Link>
-              <Link href="/stock" className={`text-lg font-black ${isDarkMode ? 'text-yellow-400' : 'text-yellow-600'}`}>📈</Link>
+              <Link href="/home" className="text-lg font-black">🏠</Link>
+              <Link href="/stock" className="text-lg font-black">📈</Link>
             </div>
           </div>
           
           <div className="flex items-center gap-3">
-            <button onClick={() => {resetForm(); setIsInputModalOpen(true);}} className="px-4 py-2 bg-blue-600 text-white rounded-xl font-black text-xs active:scale-95 transition-all shadow-lg">+ 신규 기록</button>
+            <button onClick={() => {resetForm(); setIsInputModalOpen(true);}} className="px-3 py-1.5 bg-blue-600 text-white rounded-xl font-black text-[11px] active:scale-95 transition-all shadow-md">+ 신규</button>
             <button onClick={() => setIsDarkMode(!isDarkMode)} className={`text-[10px] font-bold px-2 py-1 rounded-md transition-all ${isDarkMode ? 'bg-[#334155] text-blue-300' : 'bg-slate-100 text-blue-600'}`}>
               {isDarkMode ? 'LIGHT' : 'DARK'}
             </button>
-            <button onClick={handleLogout} className={`text-[10px] font-bold uppercase ${isDarkMode ? 'text-slate-300 hover:text-red-400' : 'text-slate-400 hover:text-red-600'}`}>Logout</button>
+            <button onClick={handleLogout} className="text-[10px] font-bold text-slate-400">Logout</button>
           </div>
         </div>
 
-        <div className="flex px-4 py-2">
-  <div className={`flex p-1 rounded-2xl border w-full ${isDarkMode ? 'bg-[#0f172a] border-slate-700' : 'bg-slate-100 border-slate-200'}`}>
-    <button 
-      onClick={() => {setActiveTab("fuel"); resetForm();}} 
-      className={`flex-1 py-2.5 rounded-xl text-sm font-black transition-all ${
-        activeTab === 'fuel' 
-          ? (isDarkMode ? 'bg-[#334155] text-white shadow-lg' : 'bg-white text-blue-600 shadow-md') 
-          : (isDarkMode ? 'text-slate-500 hover:text-slate-400' : 'text-slate-400 hover:text-slate-600')
-      }`}
-    >
-      주유내역
-    </button>
-    <button 
-      onClick={() => {setActiveTab("maint"); resetForm();}} 
-      className={`flex-1 py-2.5 rounded-xl text-sm font-black transition-all ${
-        activeTab === 'maint' 
-          ? (isDarkMode ? 'bg-[#334155] text-white shadow-lg' : 'bg-white text-blue-600 shadow-md') 
-          : (isDarkMode ? 'text-slate-500 hover:text-slate-400' : 'text-slate-400 hover:text-slate-600')
-      }`}
-    >
-      정비내역
-    </button>
-  </div>
-</div>
+        {/* 탭 메뉴 */}
+        <div className={`flex p-1 rounded-2xl border ${isDarkMode ? 'bg-[#0f172a] border-slate-700' : 'bg-slate-100 border-slate-200'}`}>
+          <button onClick={() => {setActiveTab("fuel"); resetForm();}} className={`flex-1 py-2.5 rounded-xl text-sm font-black transition-all ${activeTab === 'fuel' ? (isDarkMode ? 'bg-[#334155] text-white shadow-lg' : 'bg-white text-blue-600 shadow-md') : 'text-slate-500'}`}>주유내역</button>
+          <button onClick={() => {setActiveTab("maint"); resetForm();}} className={`flex-1 py-2.5 rounded-xl text-sm font-black transition-all ${activeTab === 'maint' ? (isDarkMode ? 'bg-[#334155] text-white shadow-lg' : 'bg-white text-blue-600 shadow-md') : 'text-slate-500'}`}>정비내역</button>
+        </div>
       </header>
+
+      {/* 🚀 메인 목록 영역 */}
+      <main className="flex-1 flex flex-col min-h-0 w-full overflow-hidden">
+        {/* 리스트 헤더 요약 정보 */}
+        <div className={`px-5 py-4 border-b flex justify-between items-center shrink-0 ${isDarkMode ? 'bg-[#0f172a] border-slate-800' : 'bg-white border-slate-100'}`}>
+          <div className="flex gap-2 items-center overflow-hidden">
+            {activeTab === 'fuel' ? (
+              <>
+                <span className={`text-[12px] font-black px-2 py-1 rounded-md border whitespace-nowrap ${isDarkMode ? 'bg-blue-600/20 text-blue-300 border-blue-900' : 'bg-blue-50 text-blue-700 border-blue-100'}`}>
+                  {Number(totalVolume.toFixed(1)).toLocaleString()}L
+                </span>
+                <span className={`text-[12px] font-black px-2 py-1 rounded-md border whitespace-nowrap ${isDarkMode ? 'bg-orange-900/20 text-orange-400 border-orange-900' : 'bg-orange-50 text-orange-600 border-orange-100'}`}>
+                  {totalAmount.toLocaleString()} 원
+                </span>
+                <button onClick={() => setIsMonthlyModalOpen(true)} className="text-base">📅</button>
+              </>
+            ) : (
+              <span className={`text-[12px] font-black px-2 py-1 rounded-md border ${isDarkMode ? 'bg-orange-900/20 text-orange-400 border-orange-900' : 'bg-orange-50 text-orange-700 border-orange-100'}`}>
+                총 {totalMaintAmount.toLocaleString()} 원
+              </span>
+            )}
+          </div>
+          <button onClick={downloadExcel} className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md">📊</button>
+        </div>
+
+        {/* 목록 헤더 */}
+        <div className={`px-4 py-2 flex border-b text-[13px] font-black uppercase tracking-tight ${isDarkMode ? 'bg-[#1e293b]/50 border-slate-800 text-slate-500' : 'bg-slate-50 border-slate-200 text-slate-400'}`}>
+          {activeTab === 'fuel' ? (
+            <>
+              <div className="w-[22%] text-center">주유일자</div>
+              <div className="w-[13%] text-center">회사</div>
+              <div className="w-[15%] text-right">단가</div>
+              <div className="w-[18%] text-right pr-2">주유액</div>
+              <div className="w-[15%] text-right">주유량</div>
+              <div className="w-[17%] text-right">Trip</div>
+            </>
+          ) : (
+            <>
+              <div className="w-[20%] text-center">정비일자</div>
+              <div className="w-[20%] text-center pr-1">금액</div>
+              <div className="flex-1 px-4">정비내역 / 업체 / 메모</div>
+              <div className="w-[15%] text-center">Km</div>
+            </>
+          )}
+        </div>
+
+        {/* 실제 리스트 영역 */}
+        <div className={`flex-1 overflow-y-auto divide-y custom-scrollbar ${isDarkMode ? 'divide-slate-900' : 'divide-slate-100'}`}>
+          {(activeTab === 'fuel' ? logs : maintLogs).map((log, index) => {
+            const currentList = activeTab === 'fuel' ? logs : maintLogs;
+            const nextLog = currentList[index + 1];
+            const tripVal = nextLog ? (activeTab === 'fuel' ? (Number(log.distance_km) - Number(nextLog.distance_km)) : (Number(log.odometer_km) - Number(nextLog.odometer_km))) : 0;
+            
+            return (
+              <div key={log.id} onDoubleClick={() => startEdit(log)} className={`flex items-center px-4 py-4 cursor-pointer transition-all ${isDarkMode ? 'hover:bg-slate-900/50' : 'hover:bg-slate-50'}`}>
+                {activeTab === 'fuel' ? (
+                  <>
+                    <div className="w-[22%] text-[13px] font-black text-center opacity-60 tracking-tighter">{log.refuel_date.replace(/-/g, '.')}</div>
+                    <div className={`w-[13%] text-[13px] font-black text-center ${brandConfig[log.brand]?.color}`}>{brandConfig[log.brand]?.name.split(' ')[0]}</div>
+                    <div className="w-[15%] text-[13px] font-bold text-right opacity-60 tracking-tighter">{log.unit_price_krw.toLocaleString()}</div>
+                    <div className="w-[18%] text-[14px] font-black text-right pr-2 tracking-tighter">{log.amount_krw.toLocaleString()}</div>
+                    <div className="w-[15%] text-[13px] font-bold text-right opacity-60">{log.fuel_volume_l.toLocaleString()}</div>
+                    <div className="w-[17%] text-[13px] font-black text-right text-blue-500">{tripVal > 0 ? tripVal.toLocaleString() : "-"}</div>
+                  </>
+                ) : (
+                  <>
+                    <div className="w-[22%] text-[13px] font-black text-center opacity-60 tracking-tighter">{log.maint_date.replace(/-/g, '.')}</div>
+                    <div className="w-[23%] text-[14px] font-black text-right pr-4 text-emerald-500 tracking-tighter">{log.amount_krw.toLocaleString()}</div>
+                    <div className="flex-1 px-4 min-w-0 flex flex-col justify-center">
+                      <div className={`text-[13px] font-black truncate ${isDarkMode ? 'text-slate-100' : 'text-slate-800'}`}>{log.content}</div>
+                      <div className="flex items-center gap-1.5 mt-0.5">
+                        <span className="text-[9px] font-bold opacity-40 uppercase shrink-0">{log.company}</span>
+                        {log.memo && (
+                          <>
+                            <span className="text-[9px] opacity-20">|</span>
+                            <span className={`text-[10px] font-bold truncate ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>{log.memo}</span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                    <div className="w-[15%] text-[13px] font-black text-right opacity-60 tracking-tighter">{log.odometer_km?.toLocaleString()}</div>
+                  </>
+                )}
+              </div>
+            );
+          })}
+          {(activeTab === 'fuel' ? logs : maintLogs).length === 0 && (
+            <div className="text-center py-20 opacity-20 font-black">데이터가 없습니다.</div>
+          )}
+        </div>
+      </main>
 
       {/* 🚀 입력 폼 모달 (팝업) */}
       {isInputModalOpen && (
@@ -282,66 +344,64 @@ export default function Home() {
               </h2>
               <button onClick={() => {setIsInputModalOpen(false); resetForm();}} className="text-slate-500 text-lg">✕</button>
             </div>
-            
             <form onSubmit={handleSave} className="space-y-4">
               {activeTab === "fuel" ? (
                 <>
                   <div className="grid grid-cols-2 gap-3">
-                    <div><label className="text-[11px] font-bold ml-1 mb-1 block uppercase opacity-60">주유일자</label><input type="date" className={`p-3 border rounded-2xl w-full text-sm font-bold outline-none ${isDarkMode ? 'bg-[#1e293b] border-slate-700 text-white' : 'bg-white border-slate-200'}`} value={formData.refuel_date} onChange={(e) => setFormData({...formData, refuel_date: e.target.value})} required /></div>
-                    <div><label className="text-[11px] font-bold ml-1 mb-1 block uppercase opacity-60">주유회사</label><select className={`p-3 border rounded-2xl w-full text-sm font-bold outline-none ${isDarkMode ? 'bg-[#1e293b] border-slate-700 text-white' : 'bg-white border-slate-200'}`} value={formData.brand} onChange={(e) => setFormData({...formData, brand: e.target.value})}><option value="1">SK Enclean</option><option value="2">GS Caltex</option><option value="3">알뜰 주유소</option></select></div>
+                    <div><label className="text-[11px] font-bold block opacity-60 ml-1 mb-1">주유일자</label><input type="date" className={`p-3 border rounded-2xl w-full font-bold outline-none ${isDarkMode ? 'bg-[#1e293b] border-slate-700 text-white' : 'bg-white border-slate-300'}`} value={formData.refuel_date} onChange={(e) => setFormData({...formData, refuel_date: e.target.value})} required /></div>
+                    <div><label className="text-[11px] font-bold block opacity-60 ml-1 mb-1">주유회사</label><select className={`p-3 border rounded-2xl w-full font-bold outline-none ${isDarkMode ? 'bg-[#1e293b] border-slate-700 text-white' : 'bg-white border-slate-300'}`} value={formData.brand} onChange={(e) => setFormData({...formData, brand: e.target.value})}><option value="1">SK Enclean</option><option value="2">GS Caltex</option><option value="3">알뜰 주유소</option></select></div>
                   </div>
                   <div className="grid grid-cols-2 gap-3">
-                    <div><label className="text-[11px] font-bold ml-1 mb-1 block uppercase opacity-60">단가 (원)</label><input type="number" className={`p-3 border rounded-2xl w-full text-sm font-bold outline-none ${isDarkMode ? 'bg-[#1e293b] border-slate-700 text-white' : 'bg-white border-slate-200'}`} value={formData.unit_price_krw} onChange={(e) => setFormData({...formData, unit_price_krw: e.target.value})} required /></div>
-                    <div><label className="text-[11px] font-bold ml-1 mb-1 block uppercase opacity-60">주유량 (L)</label><input type="number" step="0.01" className={`p-3 border rounded-2xl w-full text-sm font-bold outline-none ${isDarkMode ? 'bg-[#1e293b] border-slate-700 text-white' : 'bg-white border-slate-200'}`} value={formData.fuel_volume_l} onChange={(e) => setFormData({...formData, fuel_volume_l: e.target.value})} required /></div>
+                    <div><label className="text-[11px] font-bold block opacity-60 ml-1 mb-1">단가 (원)</label><input type="number" className={`p-3 border rounded-2xl w-full font-bold outline-none ${isDarkMode ? 'bg-[#1e293b] border-slate-700 text-white' : 'bg-white border-slate-300'}`} value={formData.unit_price_krw} onChange={(e) => setFormData({...formData, unit_price_krw: e.target.value})} required /></div>
+                    <div><label className="text-[11px] font-bold block opacity-60 ml-1 mb-1">주유량 (L)</label><input type="number" step="0.01" className={`p-3 border rounded-2xl w-full font-bold outline-none ${isDarkMode ? 'bg-[#1e293b] border-slate-700 text-white' : 'bg-white border-slate-300'}`} value={formData.fuel_volume_l} onChange={(e) => setFormData({...formData, fuel_volume_l: e.target.value})} required /></div>
                   </div>
                   <div className="grid grid-cols-2 gap-3">
-                    <div><label className="text-[11px] font-bold ml-1 mb-1 block uppercase text-blue-500">주유금액 (원)</label><input type="number" className={`p-3 border-2 border-blue-500/30 rounded-2xl w-full text-sm font-black outline-none ${isDarkMode ? 'bg-[#0f172a] text-blue-300' : 'bg-blue-50 text-blue-800'}`} value={formData.amount_krw} onChange={(e) => setFormData({...formData, amount_krw: e.target.value})} required /></div>
-                    <div><label className="text-[11px] font-bold ml-1 mb-1 block uppercase text-emerald-500">누적거리 (Km)</label><input type="number" className={`p-3 border border-emerald-500/30 rounded-2xl w-full text-sm font-bold outline-none ${isDarkMode ? 'bg-[#1e293b] text-emerald-400' : 'bg-white text-emerald-600'}`} value={formData.distance_km} onChange={(e) => setFormData({...formData, distance_km: e.target.value})} required /></div>
+                    <div><label className="text-[11px] font-bold block text-blue-500 ml-1 mb-1">주유금액 (원)</label><input type="number" className={`p-3 border-2 border-blue-500/30 rounded-2xl w-full font-black outline-none ${isDarkMode ? 'bg-[#0f172a] text-blue-300' : 'bg-blue-50 text-blue-800'}`} value={formData.amount_krw} onChange={(e) => setFormData({...formData, amount_krw: e.target.value})} required /></div>
+                    <div><label className="text-[11px] font-bold block text-emerald-500 ml-1 mb-1">누적거리 (Km)</label><input type="number" className={`p-3 border border-emerald-500/30 rounded-2xl w-full font-bold outline-none ${isDarkMode ? 'bg-[#1e293b] text-emerald-400' : 'bg-white text-emerald-600'}`} value={formData.distance_km} onChange={(e) => setFormData({...formData, distance_km: e.target.value})} required /></div>
                   </div>
                 </>
               ) : (
                 <>
                   <div className="grid grid-cols-2 gap-3">
-                    <div><label className="text-[11px] font-bold ml-1 mb-1 block uppercase opacity-60">정비일자</label><input type="date" className={`p-3 border rounded-2xl w-full text-sm font-bold outline-none ${isDarkMode ? 'bg-[#1e293b] border-slate-700 text-white' : 'bg-white border-slate-200'}`} value={maintFormData.maint_date} onChange={(e) => setMaintFormData({...maintFormData, maint_date: e.target.value})} required /></div>
-                    <div><label className="text-[11px] font-bold ml-1 mb-1 block uppercase opacity-60">정비회사</label><input type="text" className={`p-3 border rounded-2xl w-full text-sm font-bold outline-none ${isDarkMode ? 'bg-[#1e293b] border-slate-700 text-white' : 'bg-white border-slate-200'}`} value={maintFormData.company} onChange={(e) => setMaintFormData({...maintFormData, company: e.target.value})} required /></div>
+                    <div><label className="text-[11px] font-bold block opacity-60 ml-1 mb-1">정비일자</label><input type="date" className={`p-3 border rounded-2xl w-full font-bold outline-none ${isDarkMode ? 'bg-[#1e293b] border-slate-700 text-white' : 'bg-white border-slate-300'}`} value={maintFormData.maint_date} onChange={(e) => setMaintFormData({...maintFormData, maint_date: e.target.value})} required /></div>
+                    <div><label className="text-[11px] font-bold block opacity-60 ml-1 mb-1">정비회사</label><input type="text" className={`p-3 border rounded-2xl w-full font-bold outline-none ${isDarkMode ? 'bg-[#1e293b] border-slate-700 text-white' : 'bg-white border-slate-300'}`} value={maintFormData.company} onChange={(e) => setMaintFormData({...maintFormData, company: e.target.value})} required /></div>
                   </div>
-                  <div><label className="text-[11px] font-bold ml-1 mb-1 block uppercase opacity-60">정비내역</label><input type="text" className={`p-3 border rounded-2xl w-full text-sm font-bold outline-none ${isDarkMode ? 'bg-[#1e293b] border-slate-700 text-white' : 'bg-white border-slate-200'}`} value={maintFormData.content} onChange={(e) => setMaintFormData({...maintFormData, content: e.target.value})} required /></div>
+                  <div><label className="text-[11px] font-bold block opacity-60 ml-1 mb-1">정비내역</label><input type="text" className={`p-3 border rounded-2xl w-full font-bold outline-none ${isDarkMode ? 'bg-[#1e293b] border-slate-700 text-white' : 'bg-white border-slate-300'}`} value={maintFormData.content} onChange={(e) => setMaintFormData({...maintFormData, content: e.target.value})} required /></div>
                   <div className="grid grid-cols-2 gap-3">
-                    <div><label className="text-[11px] font-bold ml-1 mb-1 block uppercase opacity-60">금액 (원)</label><input type="number" className={`p-3 border rounded-2xl w-full text-sm font-bold outline-none ${isDarkMode ? 'bg-[#1e293b] border-slate-700 text-white' : 'bg-white border-slate-200'}`} value={maintFormData.amount_krw} onChange={(e) => setMaintFormData({...maintFormData, amount_krw: e.target.value})} required /></div>
-                    <div><label className="text-[11px] font-bold ml-1 mb-1 block uppercase opacity-60">누적거리 (Km)</label><input type="number" className={`p-3 border rounded-2xl w-full text-sm font-bold outline-none ${isDarkMode ? 'bg-[#1e293b] border-slate-700 text-white' : 'bg-white border-slate-200'}`} value={maintFormData.odometer_km} onChange={(e) => setMaintFormData({...maintFormData, odometer_km: e.target.value})} required /></div>
+                    <div><label className="text-[11px] font-bold block opacity-60 ml-1 mb-1">금액 (원)</label><input type="number" className={`p-3 border rounded-2xl w-full font-bold outline-none ${isDarkMode ? 'bg-[#1e293b] border-slate-700 text-white' : 'bg-white border-slate-300'}`} value={maintFormData.amount_krw} onChange={(e) => setMaintFormData({...maintFormData, amount_krw: e.target.value})} required /></div>
+                    <div><label className="text-[11px] font-bold block opacity-60 ml-1 mb-1">누적거리 (Km)</label><input type="number" className={`p-3 border rounded-2xl w-full font-bold outline-none ${isDarkMode ? 'bg-[#1e293b] border-slate-700 text-white' : 'bg-white border-slate-300'}`} value={maintFormData.odometer_km} onChange={(e) => setMaintFormData({...maintFormData, odometer_km: e.target.value})} required /></div>
                   </div>
-                  <div><label className="text-[11px] font-bold ml-1 mb-1 block uppercase opacity-60">메모</label><input type="text" className={`p-3 border rounded-2xl w-full text-sm font-bold outline-none ${isDarkMode ? 'bg-[#1e293b] border-slate-700 text-white' : 'bg-white border-slate-200'}`} value={maintFormData.memo} onChange={(e) => setMaintFormData({...maintFormData, memo: e.target.value})} /></div>
+                  <div><label className="text-[11px] font-bold block opacity-60 ml-1 mb-1">메모</label><input type="text" className={`p-3 border rounded-2xl w-full font-bold outline-none ${isDarkMode ? 'bg-[#1e293b] border-slate-700 text-white' : 'bg-white border-slate-300'}`} value={maintFormData.memo} onChange={(e) => setMaintFormData({...maintFormData, memo: e.target.value})} /></div>
                 </>
               )}
-              
               <div className="flex gap-3 pt-4">
                 {editingId && <button type="button" onClick={handleDelete} className="flex-1 py-4 bg-red-600/10 text-red-500 rounded-2xl font-black active:scale-95 transition-all">삭제</button>}
-                <button type="submit" className="flex-[2] py-4 bg-blue-600 text-white rounded-2xl font-black text-lg active:scale-95 transition-all shadow-xl">{editingId ? "수정 완료" : "기록 저장"}</button>
+                <button type="submit" className="flex-[2] py-4 bg-blue-600 text-white rounded-2xl font-black text-lg active:scale-95 transition-all shadow-xl">{editingId ? "수정" : "저장"}</button>
               </div>
             </form>
           </div>
         </div>
       )}
 
-      {/* 🚀 나머지 알림 및 월별 모달 UI (기존 코드 유지) */}
+      {/* 알림 및 월별 모달 UI */}
       {alertModal.isOpen && (
         <div className="fixed inset-0 z-[150] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
-          <div className={`w-full max-w-xs rounded-3xl shadow-2xl overflow-hidden flex flex-col ${isDarkMode ? 'bg-[#111c3a] border-[#1e2e56] border' : 'bg-white border-slate-200 border'}`}>
+          <div className={`w-full max-w-xs rounded-3xl shadow-2xl flex flex-col ${isDarkMode ? 'bg-[#111c3a] border-[#1e2e56] border' : 'bg-white border-slate-200 border'}`}>
             <div className="p-6 text-center mt-2">
               <div className={`text-3xl mb-3 ${alertModal.type === 'error' ? 'text-red-500' : 'text-blue-500'}`}>{alertModal.type === 'error' ? '⚠️' : 'ℹ️'}</div>
               <p className={`text-sm font-bold leading-relaxed ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>{alertModal.msg}</p>
             </div>
-            <div className="p-4 pt-0"><button onClick={() => setAlertModal({ isOpen: false, msg: "" })} className={`w-full py-3 rounded-xl font-black text-sm transition-all active:scale-95 ${isDarkMode ? 'bg-slate-800 text-white hover:bg-slate-700' : 'bg-slate-100 text-slate-800 hover:bg-slate-200'}`}>확인</button></div>
+            <div className="p-4 pt-0"><button onClick={() => setAlertModal({ isOpen: false, msg: "" })} className={`w-full py-3 rounded-xl font-black text-sm ${isDarkMode ? 'bg-slate-800 text-white' : 'bg-slate-100 text-slate-800'}`}>확인</button></div>
           </div>
         </div>
       )}
 
       {confirmModal.isOpen && (
         <div className="fixed inset-0 z-[150] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
-          <div className={`w-full max-w-xs rounded-3xl shadow-2xl overflow-hidden flex flex-col ${isDarkMode ? 'bg-[#111c3a] border-[#1e2e56] border' : 'bg-white border-slate-200 border'}`}>
+          <div className={`w-full max-w-xs rounded-3xl shadow-2xl flex flex-col ${isDarkMode ? 'bg-[#111c3a] border-[#1e2e56] border' : 'bg-white border-slate-200 border'}`}>
             <div className="p-6 text-center mt-2"><div className="text-3xl mb-3 text-red-500">🗑️</div><p className={`text-sm font-bold leading-relaxed ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>{confirmModal.msg}</p></div>
             <div className="flex p-4 gap-3 pt-0">
-              <button onClick={() => setConfirmModal({ isOpen: false, msg: "", onConfirm: () => {} })} className={`flex-1 py-3 rounded-xl font-bold text-sm ${isDarkMode ? 'bg-slate-800 text-slate-300' : 'bg-slate-100 text-slate-600'}`}>취소</button>
+              <button onClick={() => setConfirmModal({ isOpen: false, msg: "", onConfirm: () => {} })} className={`flex-1 py-3 rounded-xl font-bold text-sm ${isDarkMode ? 'bg-slate-800' : 'bg-slate-100'}`}>취소</button>
               <button onClick={confirmModal.onConfirm} className="flex-1 py-3 rounded-xl font-bold text-sm bg-red-600 text-white">삭제</button>
             </div>
           </div>
@@ -350,17 +410,14 @@ export default function Home() {
 
       {isMonthlyModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
-          <div className={`w-full max-w-sm rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[80vh] ${isDarkMode ? 'bg-[#111c3a] border-[#1e2e56] border' : 'bg-white border-slate-200 border'}`}>
+          <div className={`w-full max-w-sm rounded-3xl shadow-2xl flex flex-col max-h-[80vh] ${isDarkMode ? 'bg-[#111c3a] border-[#1e2e56] border' : 'bg-white border-slate-200 border'}`}>
             <div className={`p-5 border-b flex justify-between items-center ${isDarkMode ? 'border-slate-700' : 'border-slate-100'}`}>
-              <div className="flex items-center gap-2">
-                <h2 className="text-lg font-black tracking-tight">월별 주유액</h2>
-                <button onClick={downloadMonthlyExcel} className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md">📊</button>
-              </div>
-              <button onClick={() => setIsMonthlyModalOpen(false)} className="text-sm font-bold">닫기 ✕</button>
+              <h2 className="text-lg font-black">월별 주유액</h2>
+              <button onClick={() => setIsMonthlyModalOpen(false)}>닫기 ✕</button>
             </div>
-            <div className="p-5 overflow-y-auto custom-scrollbar flex-1 space-y-3">
+            <div className="p-5 overflow-y-auto space-y-3">
               {sortedFuelMonths.map(month => (
-                <div key={month} className={`flex justify-between items-center p-4 rounded-2xl border ${isDarkMode ? 'bg-[#1e293b] border-slate-700/50' : 'bg-slate-50 border-slate-200'}`}>
+                <div key={month} className={`flex justify-between items-center p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/50`}>
                   <span className="text-sm font-black">{month}</span>
                   <span className="text-sm font-black text-blue-500">{monthlyFuelTotals[month].toLocaleString()} 원</span>
                 </div>
@@ -369,87 +426,6 @@ export default function Home() {
           </div>
         </div>
       )}
-
-      {/* 🚀 메인 목록 영역 (전체 화면 사용) */}
-      <main className={`flex-1 flex flex-col min-h-0 relative overflow-x-auto ${isDarkMode ? 'bg-[#0f172a]' : 'bg-white'}`}>
-        <div className="min-w-[400px] flex flex-col h-full shrink-0">
-          <div className={`sticky top-0 backdrop-blur-md z-10 border-b ${isDarkMode ? 'bg-[#0f172a]/90 border-slate-800' : 'bg-white/95 border-slate-100'}`}>
-            <div className="px-5 py-4 flex justify-between items-center">
-              <div className="flex gap-3 items-center">
-                {activeTab === 'fuel' ? (
-                  <>
-                    <span className={`text-[13px] font-black px-3 py-1.5 rounded-full border ${isDarkMode ? 'bg-blue-600/20 text-blue-300 border-blue-900' : 'bg-blue-50 text-blue-700 border-blue-100'}`}>
-                      {Number(totalVolume.toFixed(1)).toLocaleString()}L
-                    </span>
-                    <span className={`text-[13px] font-black px-3 py-1.5 rounded-full border ${isDarkMode ? 'bg-orange-900/20 text-orange-400 border-orange-900' : 'bg-orange-50 text-orange-600 border-orange-100'}`}>
-                      {totalAmount.toLocaleString()} 원
-                    </span>
-                    <button onClick={() => setIsMonthlyModalOpen(true)} className="text-lg ml-1">📅</button>
-                  </>
-                ) : (
-                  <span className={`text-[13px] font-black px-3 py-1.5 rounded-full border ${isDarkMode ? 'bg-orange-900/20 text-orange-400 border-orange-900' : 'bg-orange-50 text-orange-700 border-orange-100'}`}>
-                    총 {totalMaintAmount.toLocaleString()} 원
-                  </span>
-                )}
-              </div>
-              <button onClick={downloadExcel} className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md">📊</button>
-            </div>
-            
-            <div className={`px-4 py-2 flex items-center border-t text-[10px] font-black uppercase tracking-widest ${isDarkMode ? 'bg-[#1e293b]/50 border-slate-800 text-slate-500' : 'bg-slate-50 border-slate-200 text-slate-400'}`}>
-              {activeTab === 'fuel' ? (
-                <>
-                  <div className="w-[20%] text-center">주유일자</div>
-                  <div className="w-[15%] text-center">회사</div>
-                  <div className="w-[15%] text-right">단가</div>
-                  <div className="w-[15%] text-right">주유량</div>
-                  <div className="w-[20%] text-right pr-4">주유액</div>
-                  <div className="w-[15%] text-right">주행거리</div>
-                </>
-              ) : (
-                <>
-                  <div className="w-[20%] text-center">정비일자</div>
-                  <div className="w-[20%] text-right pr-4">정비금액</div>
-                  <div className="w-[45%] px-4">정비내역 / 업체</div>
-                  <div className="w-[15%] text-right">누적거리</div>
-                </>
-              )}
-            </div>
-          </div>
-
-          <div className={`flex-1 overflow-y-auto divide-y custom-scrollbar ${isDarkMode ? 'divide-slate-900' : 'divide-slate-100'}`}>
-            {(activeTab === 'fuel' ? logs : maintLogs).map((log, index) => {
-              const currentList = activeTab === 'fuel' ? logs : maintLogs;
-              const nextLog = currentList[index + 1];
-              const tripVal = nextLog ? (activeTab === 'fuel' ? (Number(log.distance_km) - Number(nextLog.distance_km)) : (Number(log.odometer_km) - Number(nextLog.odometer_km))) : 0;
-              
-              return (
-                <div key={log.id} onDoubleClick={() => startEdit(log)} className={`flex items-center px-4 py-4 cursor-pointer transition-colors ${isDarkMode ? 'hover:bg-slate-900/50' : 'hover:bg-slate-50'}`}>
-                  {activeTab === 'fuel' ? (
-                    <>
-                      <div className="w-[20%] text-sm font-black text-center opacity-60">{log.refuel_date}</div>
-                      <div className={`w-[15%] text-sm font-black text-center ${brandConfig[log.brand]?.color}`}>{brandConfig[log.brand]?.name.split(' ')[0]}</div>
-                      <div className="w-[15%] text-sm font-bold text-right opacity-60">{log.unit_price_krw.toLocaleString()}</div>
-                      <div className="w-[15%] text-sm font-bold text-right opacity-60">{log.fuel_volume_l.toLocaleString()}</div>
-                      <div className="w-[20%] text-sm font-black text-right pr-4">{log.amount_krw.toLocaleString()}</div>
-                      <div className="w-[15%] text-sm font-black text-right text-blue-500">{tripVal > 0 ? tripVal.toLocaleString() : "-"}</div>
-                    </>
-                  ) : (
-                    <>
-                      <div className="w-[20%] text-sm font-black text-center opacity-60">{log.maint_date}</div>
-                      <div className="w-[20%] text-sm font-black text-right pr-4 text-emerald-500">{log.amount_krw.toLocaleString()}</div>
-                      <div className="w-[45%] px-4 overflow-hidden">
-                        <div className="text-sm font-black truncate">{log.content}</div>
-                        <div className="text-[10px] font-bold opacity-40 uppercase">{log.company} {log.memo && `| ${log.memo}`}</div>
-                      </div>
-                      <div className="w-[15%] text-sm font-black text-right opacity-60">{log.odometer_km?.toLocaleString()}</div>
-                    </>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </main>
 
       <style jsx>{`
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
