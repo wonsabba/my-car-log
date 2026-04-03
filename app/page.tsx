@@ -217,10 +217,10 @@ export default function Home() {
 
       <header className={`w-full p-4 border-b shrink-0 ${isDarkMode ? 'bg-[#1e293b] border-slate-800' : 'bg-white border-slate-200'}`}>
         <div className="flex justify-between items-center mb-4">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5">
             <img src="/GV80.jpg" alt="GV80" className="w-8 h-8 rounded-lg shadow-sm" />
             <h1 className={`text-xl font-black tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>GV80</h1>
-            <div className="flex gap-4 ml-4">
+            <div className="flex gap-1 ml-1">
             </div>
             <Link href="/home" className="flex items-center justify-center hover:opacity-70 transition-opacity">
             <img src="/House.png" alt="홈지출내역" className="w-8 h-8 rounded-lg shadow-sm"/>
