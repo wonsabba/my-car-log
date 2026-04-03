@@ -181,9 +181,12 @@ export default function StockPage() {
           <div className="flex items-center gap-2">
             <h1 className="text-xl font-black italic tracking-tighter text-blue-500">Stock</h1>
             <div className="flex gap-3 ml-2">
-              <Link href="/home" className="text-slate-300 hover:text-slate-800 font-black text-1xl tracking-tighter">🏠</Link> 
-              <Link href="/" className="text-slate-300 hover:text-slate-800 transition-colors">
-                <img src="/GV80.jpg" alt="Icon" className="w-5 h-5 inline-block mr-1 -mt-1 rounded-md"/></Link>
+              <Link href="/" className="flex items-center justify-center hover:opacity-70 transition-opacity">
+                <img src="/GV80.jpg" alt="GV80" className="w-7 h-7 rounded-lg shadow-sm" />
+              </Link>
+              <Link href="/home" className="flex items-center justify-center hover:opacity-70 transition-opacity">
+                <img src="/House.png" alt="홈지출내역" className="w-7 h-7 rounded-lg shadow-sm"/>
+              </Link>
             </div>
           </div>
           <button onClick={() => setIsDarkMode(!isDarkMode)} className="text-[9px] font-black px-1.5 py-0.5 rounded border">{isDarkMode ? 'LIGHT' : 'DARK'}</button>
