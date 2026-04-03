@@ -119,9 +119,9 @@ export default function HouseholdLedger() {
 
       <header className="p-2 border-b border-slate-100 flex justify-between items-center bg-white sticky top-0 z-20 shrink-0">
         <div className="flex items-center gap-4">
-          <h1 className="text-1xl font-black text-blue-600 tracking-tighter">🏠 House</h1>
+          <h1 className="text-2xl font-black text-blue-600 tracking-tighter">🏠 House</h1>
           <Link href="/" className="text-slate-300 hover:text-slate-800 font-black text-1xl tracking-tighter transition-colors">
-            <img src="/GV80.jpg" alt="GV80 Icon" className="w-5 h-5 inline-block mr-1 -mt-1 rounded-md" />
+            <img src="/GV80.jpg" alt="GV80 Icon" className="w-7 h-7 inline-block mr-1 -mt-1 rounded-md" />
           </Link>
         </div>
         <div className="flex gap-2">
