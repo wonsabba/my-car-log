@@ -221,10 +221,18 @@ export default function Home() {
             <img src="/GV80.jpg" alt="GV80" className="w-8 h-8 rounded-lg shadow-sm" />
             <h1 className={`text-xl font-black tracking-tighter ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>GV80</h1>
             <div className="flex gap-4 ml-4">
-              <Link href="/home" className="text-lg font-black">🏠</Link>
-              <Link href="/stock" className="text-lg font-black">📈</Link>
-              <Link href="https://wonsabba-cash.vercel.app" className="text-lg font-black">💰</Link>
             </div>
+            <Link href="/home" className="flex items-center justify-center hover:opacity-70 transition-opacity">
+            <img src="/House.png" alt="홈지출내역" className="w-8 h-8 rounded-lg shadow-sm"/>
+            </Link>
+            
+            <Link href="/stock" className="flex items-center justify-center hover:opacity-70 transition-opacity">
+            <img src="/Stock.png" alt="주식내역" className="w-8 h-8 rounded-lg shadow-sm"/>
+            </Link>
+
+            <Link href="https://wonsabba-cash.vercel.app" className="flex items-center justify-center hover:opacity-70 transition-opacity">
+            <img src="/Money.png" alt="현금내역" className="w-8 h-8 rounded-lg shadow-sm"/>
+            </Link>
           </div>
           
           <div className="flex items-center gap-3">
