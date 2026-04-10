@@ -17,9 +17,20 @@ export default function HouseholdLedger() {
   const [tempBudget, setTempBudget] = useState("");
 
   const defaultAmounts: { [key: string]: number } = {
-    "BNK 이체": 1000000, "펀드,월세": 1000000, "동백전(수학)": 500000, "국민연금/보험": 369260,
-    "환화종신보험": 208000, "가족,처가,동문": 100000, "주택청약(KB)": 100000, "규원영어": 250000,
-    "생활비": 500000, "ISA": 500000, "안마,치아보험": 68270, "가족통신요금": 88000, "상조회비": 50000, "관리비": 280000,
+    "BNK 이체": 1000000, 
+    "펀드,월세": 1000000, 
+    "동백전(수학)": 500000, 
+    "국민연금/보험": 369260,
+    "환화종신보험": 208000, 
+    "가족,처가,동문": 100000, 
+    "주택청약(KB)": 100000, 
+    "규원영어": 250000,
+    "생활비": 500000, 
+    "ISA": 500000, 
+    "안마,치아보험": 68270, 
+    "가족통신요금": 88000, 
+    "상조회비": 50000, 
+    "관리비": 280000,
   };
 
   const showToast = (msg: string, type: "success" | "error" = "success") => {
@@ -147,7 +158,7 @@ export default function HouseholdLedger() {
           </div>
         )}
 
-        <div className="bg-slate-50 px-4 py-2.5 flex text-[11px] font-black text-slate-500 border-b border-slate-200 sticky top-0 z-10 uppercase tracking-widest">
+        <div className="bg-slate-50 px-4 py-2.5 flex text-[13px] font-black text-slate-500 border-b border-slate-200 sticky top-0 z-10 uppercase tracking-widest">
           <div className={`${colWidths.item} shrink-0 text-center`}>항목</div>
           <div className={`${colWidths.amount} text-right pr-[35px] shrink-0 border-r border-slate-200 bg-slate-100/50`}>사용금액</div>
           <div className="flex-1 text-center px-4">비고</div>
@@ -182,7 +193,7 @@ export default function HouseholdLedger() {
                   {isEditing && editMode === "all" ? (
                     <div className="flex-1 flex gap-2 items-left">
                       <input className="flex-1 text-xs font-bold border-b-2 border-blue-400 outline-none bg-transparent" value={tempData.remarks} onChange={e => setTempData({...tempData, remarks: e.target.value})} />
-                      <button onClick={handleSave} className="text-[11px] font-black text-blue-600">SAVE</button>
+                      <button onClick={handleSave} className="text-[12px] font-black text-blue-600">SAVE</button>
                       <button onClick={() => handleDelete(log.id)} className="text-[11px] font-black text-red-600 ml-1">DEL</button>
                     </div>
                   ) : (<div className="text-[12px] font-bold text-slate-600 whitespace-normal break-all leading-snug">{log.remarks || "-"}</div>)}
@@ -195,7 +206,7 @@ export default function HouseholdLedger() {
 
       <footer className="absolute bottom-0 left-0 right-0 bg-slate-900 text-white p-4 py-2 pb-1 space-y-1 z-30 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] rounded-t-[2.5rem] border-t border-slate-700">
         <div className="flex items-center border-b border-slate-800 pb-1 mb-1 opacity-50">
-           <div className="flex-1 text-center text-[8px] font-black tracking-[0.2em]">CLOUD SYNC SYSTEM ACTIVE</div>
+           <div className="flex-1 text-center text-[8px] font-black tracking-[0.2em]">Monthly Money System</div>
         </div>
         <div className="flex items-center">
           <div className={`${colWidths.item} text-center text-[10px] font-black text-slate-400 tracking-tighter`}>Card Total</div>
@@ -210,7 +221,7 @@ export default function HouseholdLedger() {
         <div className="flex items-center border-t border-slate-800 pt-0.5 mt-0.5">
           <div className={`${colWidths.item} text-center text-[10px] font-black text-slate-300 uppercase`}>Total</div>
           <div className={`${colWidths.amount} text-right pr-5 font-black text-sm border-r border-slate-700 text-white`}>{totalSpent.toLocaleString()}</div>
-          <div className="flex-1 pl-4 text-[10px] text-slate-500 font-black italic">사용금액</div>
+          <div className="flex-1 pl-4 text-[10px] text-slate-500 font-black">사용금액</div>
         </div>
 
         <div className="flex items-center">
