@@ -17,20 +17,9 @@ export default function HouseholdLedger() {
   const [tempBudget, setTempBudget] = useState("");
 
   const defaultAmounts: { [key: string]: number } = {
-    "BNK 이체": 1000000, 
-    "펀드,월세": 1000000, 
-    "동백전(수학)": 500000, 
-    "국민연금/보험": 369260,
-    "환화종신보험": 208000, 
-    "가족,처가,동문": 100000, 
-    "주택청약(KB)": 100000, 
-    "규원영어": 250000,
-    "생활비": 500000, 
-    "ISA": 500000, 
-    "안마,치아보험": 68270, 
-    "가족통신요금": 88000, 
-    "상조회비": 50000, 
-    "관리비": 280000,
+    "BNK 이체": 1000000, "펀드,월세": 1000000, "동백전(수학)": 500000, "국민연금/보험": 369260,
+    "환화종신보험": 208000, "가족,처가,동문": 100000, "주택청약(KB)": 100000, "규원영어": 250000,
+    "생활비": 500000, "ISA": 500000, "안마,치아보험": 68270, "가족통신요금": 88000, "상조회비": 50000, "관리비": 280000,
   };
 
   const showToast = (msg: string, type: "success" | "error" = "success") => {
@@ -38,29 +27,15 @@ export default function HouseholdLedger() {
     setTimeout(() => setToast(null), 2000);
   };
 
-  // ✅ DB에서 Budget(기준금액) 불러오기
   const fetchBudget = async () => {
-    const { data, error } = await supabase
-      .from("app_settings")
-      .select("value_num")
-      .eq("id", "household_budget")
-      .single();
+    const { data, error } = await supabase.from("app_settings").select("value_num").eq("id", "household_budget").single();
     if (data && !error) setBudget(data.value_num);
   };
 
-  // ✅ DB에 Budget(기준금액) 저장하기
   const updateBudget = async (newVal: number) => {
-    const { error } = await supabase
-      .from("app_settings")
-      .update({ value_num: newVal, updated_at: new Date() })
-      .eq("id", "household_budget");
-
-    if (!error) {
-      setBudget(newVal);
-      showToast("☁️ 클라우드에 기준금액 저장 완료");
-    } else {
-      showToast("저장 실패", "error");
-    }
+    const { error } = await supabase.from("app_settings").update({ value_num: newVal, updated_at: new Date() }).eq("id", "household_budget");
+    if (!error) { setBudget(newVal); showToast("☁️ 기준금액 저장 완료"); }
+    else { showToast("저장 실패", "error"); }
   };
 
   useEffect(() => {
@@ -68,10 +43,7 @@ export default function HouseholdLedger() {
   }, []);
 
   useEffect(() => { 
-    if (session) {
-      fetchLogs();
-      fetchBudget(); // ✅ 세션 연결 시 기준금액도 가져옴
-    } 
+    if (session) { fetchLogs(); fetchBudget(); } 
   }, [session]);
 
   const fetchLogs = async () => {
@@ -144,7 +116,8 @@ export default function HouseholdLedger() {
           <div className="bg-blue-50 p-3 border-b border-blue-100 space-y-2 animate-in slide-in-from-top">
             <div className="flex gap-2 items-center">
               <input type="text" placeholder="항목명" className="w-[120px] p-2 rounded-lg border border-blue-200 text-xs font-bold outline-none" value={tempData.item_name} onChange={e => setTempData({...tempData, item_name: e.target.value})} />
-              <input type="number" placeholder="금액" className="w-[120px] p-2 rounded-lg border border-blue-200 text-xs font-bold text-right outline-none" value={tempData.amount} onChange={e => setTempData({...tempData, amount: e.target.value})} />
+              {/* ✅ 신규 등록 시 금액 블록 적용 */}
+              <input type="number" placeholder="금액" className="w-[120px] p-2 rounded-lg border border-blue-200 text-xs font-bold text-right outline-none" value={tempData.amount} onChange={e => setTempData({...tempData, amount: e.target.value})} onFocus={(e) => e.target.select()} />
               <label className="flex items-center gap-1 cursor-pointer bg-white px-2 py-2 rounded-lg border border-blue-200 shrink-0">
                 <input type="checkbox" checked={tempData.is_card} onChange={e => setTempData({...tempData, is_card: e.target.checked})} className="w-3.5 h-3.5" />
                 <span className="text-[9px] font-black text-slate-500 tracking-tighter">Card</span>
@@ -179,7 +152,8 @@ export default function HouseholdLedger() {
 
                 <div className={`${colWidths.amount} shrink-0 text-right pr-5 border-r border-slate-100 font-black text-sm`}>
                   {isEditing ? (
-                    <input autoFocus type="number" className="w-full text-right outline-none bg-transparent" value={tempData.amount} onChange={e => setTempData({...tempData, amount: e.target.value})} onKeyDown={e => e.key === 'Enter' && handleSave()} />
+                    /* ✅ 사용금액 수정 시 클릭(포커스) 하면 블록 지정 */
+                    <input autoFocus type="number" className="w-full text-right outline-none bg-transparent" value={tempData.amount} onChange={e => setTempData({...tempData, amount: e.target.value})} onKeyDown={e => e.key === 'Enter' && handleSave()} onFocus={(e) => e.target.select()} />
                   ) : (
                     <div className="font-black text-sm text-slate-950 cursor-pointer hover:bg-yellow-100 px-1 rounded" 
                       onClick={() => { 
@@ -193,7 +167,7 @@ export default function HouseholdLedger() {
                   {isEditing && editMode === "all" ? (
                     <div className="flex-1 flex gap-2 items-left">
                       <input className="flex-1 text-xs font-bold border-b-2 border-blue-400 outline-none bg-transparent" value={tempData.remarks} onChange={e => setTempData({...tempData, remarks: e.target.value})} />
-                      <button onClick={handleSave} className="text-[13px] font-black text-blue-600">SAVE</button>
+                      <button onClick={handleSave} className="text-[11px] font-black text-blue-600">SAVE</button>
                       <button onClick={() => handleDelete(log.id)} className="text-[11px] font-black text-red-600 ml-1">DEL</button>
                     </div>
                   ) : (<div className="text-[12px] font-bold text-slate-600 whitespace-normal break-all leading-snug">{log.remarks || "-"}</div>)}
@@ -221,16 +195,18 @@ export default function HouseholdLedger() {
         <div className="flex items-center border-t border-slate-800 pt-0.5 mt-0.5">
           <div className={`${colWidths.item} text-center text-[10px] font-black text-slate-300 uppercase`}>Total</div>
           <div className={`${colWidths.amount} text-right pr-5 font-black text-sm border-r border-slate-700 text-white`}>{totalSpent.toLocaleString()}</div>
-          <div className="flex-1 pl-4 text-[10px] text-slate-500 font-black">사용금액</div>
+          <div className="flex-1 pl-4 text-[10px] text-slate-500 font-black italic">사용금액</div>
         </div>
 
         <div className="flex items-center">
           <div className={`${colWidths.item} text-center text-[11px] font-black text-slate-300 uppercase`}>Budget</div>
           <div className={`${colWidths.amount} text-right pr-5 border-r border-slate-700`}>
             {editMode === "budget" ? (
+              /* ✅ 기준금액(Budget) 수정 시에도 자동 블록 지정 */
               <input autoFocus type="number" className="w-full text-right font-black text-lg bg-slate-800 text-orange-400 outline-none rounded" 
                 value={tempBudget} 
                 onChange={(e) => setTempBudget(e.target.value)} 
+                onFocus={(e) => e.target.select()}
                 onBlur={() => { if(tempBudget) updateBudget(Number(tempBudget)); setEditMode(null); }} 
                 onKeyDown={(e) => { if(e.key === 'Enter' && tempBudget) { updateBudget(Number(tempBudget)); setEditMode(null); } }} />
             ) : (
