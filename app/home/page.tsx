@@ -185,17 +185,17 @@ export default function HouseholdLedger() {
         <div className="flex items-center">
           <div className={`${colWidths.item} text-center text-[10px] font-black text-slate-400 tracking-tighter`}>Card Total</div>
           <div className={`${colWidths.amount} text-right pr-5 font-black text-sm border-r border-slate-700 text-blue-400`}>{totalCard.toLocaleString()}</div>
-          <div className="flex-1 pl-4 text-[10px] text-slate-500 font-bold uppercase">카드종합</div>
+          <div className="flex-1 pl-4 text-[11px] text-slate-500 font-bold uppercase">카드종합</div>
         </div>
         <div className="flex items-center">
           <div className={`${colWidths.item} text-center text-[10px] font-black text-slate-400 tracking-tighter`}>Cash Total</div>
           <div className={`${colWidths.amount} text-right pr-5 font-black text-sm border-r border-slate-700 text-emerald-400`}>{totalCash.toLocaleString()}</div>
-          <div className="flex-1 pl-4 text-[10px] text-slate-500 font-bold uppercase">일반종합</div>
+          <div className="flex-1 pl-4 text-[11px] text-slate-500 font-bold uppercase">일반종합</div>
         </div>
         <div className="flex items-center border-t border-slate-800 pt-0.5 mt-0.5">
           <div className={`${colWidths.item} text-center text-[10px] font-black text-slate-300 uppercase`}>Total</div>
           <div className={`${colWidths.amount} text-right pr-5 font-black text-sm border-r border-slate-700 text-white`}>{totalSpent.toLocaleString()}</div>
-          <div className="flex-1 pl-4 text-[10px] text-slate-500 font-black italic">사용금액</div>
+          <div className="flex-1 pl-4 text-[11px] text-slate-500 font-black italic">사용금액</div>
         </div>
 
         <div className="flex items-center">
