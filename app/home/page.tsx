@@ -210,11 +210,11 @@ export default function HouseholdLedger() {
                 onBlur={() => { if(tempBudget) updateBudget(Number(tempBudget)); setEditMode(null); }} 
                 onKeyDown={(e) => { if(e.key === 'Enter' && tempBudget) { updateBudget(Number(tempBudget)); setEditMode(null); } }} />
             ) : (
-              <div className="font-black text-lg text-white cursor-pointer hover:text-orange-400 transition-colors" 
+              <div className="font-black text-lg text-violet-400 cursor-pointer hover:opacity-80 transition-all" 
                 onClick={() => { setEditMode("budget"); setTempBudget(budget.toString()); }}>{budget.toLocaleString()}</div>
             )}
           </div>
-          <div className="flex-1 pl-4 text-[10px] text-slate-500 font-bold uppercase tracking-tighter">기준금액</div>
+          <div className="flex-1 pl-4 text-[11px] text-slate-500 font-bold uppercase tracking-tighter">기준금액</div>
         </div>
 
         <div className="flex items-center border-t border-slate-700 pt-1 mt-1">

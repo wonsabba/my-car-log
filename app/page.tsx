@@ -255,7 +255,7 @@ export default function Home() {
             {activeTab === 'fuel' ? (
               <>
                 <span className={`text-[14px] font-black px-2 py-1 rounded-md border whitespace-nowrap ${isDarkMode ? 'bg-blue-600/20 text-blue-300 border-blue-900' : 'bg-blue-50 text-blue-700 border-blue-100'}`}>
-                  {Number(totalVolume.toFixed(1)).toLocaleString()}L
+                  {Number(totalVolume.toFixed(1)).toLocaleString()} L
                 </span>
                 <span className={`text-[14px] font-black px-2 py-1 rounded-md border whitespace-nowrap ${isDarkMode ? 'bg-orange-900/20 text-orange-400 border-orange-900' : 'bg-orange-50 text-orange-600 border-orange-100'}`}>
                   {totalAmount.toLocaleString()} 원
