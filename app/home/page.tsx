@@ -128,7 +128,7 @@ export default function HouseholdLedger() {
 
       <header className="p-2 border-b border-slate-100 flex justify-between items-center bg-white sticky top-0 z-20 shrink-0">
         <div className="flex items-center gap-4">
-          <h1 className="text-2xl font-black text-blue-600 tracking-tighter">🏠 House</h1>
+          <h1 className="text-2xl font-black text-black-600 tracking-tighter">🏠 House</h1>
           <Link href="/" className="text-slate-300 hover:text-slate-800 transition-colors">
             <img src="/GV80.jpg" alt="Icon" className="w-7 h-7 inline-block rounded-md" />
           </Link>
@@ -168,7 +168,7 @@ export default function HouseholdLedger() {
           {logs.map((log) => {
             const isEditing = editingId === log.id;
             return (
-              <div key={log.id} className={`flex items-left px-4 py-[12px] hover:bg-slate-50 transition-colors ${isEditing ? 'bg-yellow-50' : ''}`}
+              <div key={log.id} className={`flex items-left px-4 py-[13px] hover:bg-slate-50 transition-colors ${isEditing ? 'bg-yellow-50' : ''}`}
                 onDoubleClick={() => { setEditingId(log.id); setEditMode("all"); setTempData({ item_name: log.item_name, amount: log.amount.toString(), remarks: log.remarks || "", is_card: log.is_card }); }}>
                 
                 <div className={`${colWidths.item} shrink-0 font-black text-sm text-left pl-4 ${log.is_card ? 'text-blue-700' : 'text-slate-900'}`}>
@@ -193,7 +193,7 @@ export default function HouseholdLedger() {
                   {isEditing && editMode === "all" ? (
                     <div className="flex-1 flex gap-2 items-left">
                       <input className="flex-1 text-xs font-bold border-b-2 border-blue-400 outline-none bg-transparent" value={tempData.remarks} onChange={e => setTempData({...tempData, remarks: e.target.value})} />
-                      <button onClick={handleSave} className="text-[12px] font-black text-blue-600">SAVE</button>
+                      <button onClick={handleSave} className="text-[13px] font-black text-blue-600">SAVE</button>
                       <button onClick={() => handleDelete(log.id)} className="text-[11px] font-black text-red-600 ml-1">DEL</button>
                     </div>
                   ) : (<div className="text-[12px] font-bold text-slate-600 whitespace-normal break-all leading-snug">{log.remarks || "-"}</div>)}
