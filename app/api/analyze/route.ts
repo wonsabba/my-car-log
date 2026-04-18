@@ -15,8 +15,10 @@ export async function POST(req: Request) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // 모델 설정 (Flash 모델이 빠르고 무료로 쓰기 좋습니다)
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    // 'models/' 접두사를 명시적으로 붙여줍니다.
+    // 'models/'를 붙인 정식 명칭을 사용합니다.
+    // route.ts 수정
+    const model = genAI.getGenerativeModel({ model: "models/gemini-2.5-flash" });
 
     const prompt = tab === "fuel" 
       ? "이 주유 영수증 이미지에서 다음 정보를 JSON 형식으로 추출해줘: { brand: '1(SK), 2(GS), 3(알뜰) 중 숫자만', unit_price_krw: '단가(숫자)', fuel_volume_l: '주유량(숫자)', amount_krw: '총액(숫자)', refuel_date: 'YYYY-MM-DD' }. 텍스트 설명 없이 오직 JSON만 반환해."
@@ -40,7 +42,13 @@ export async function POST(req: Request) {
     
     return NextResponse.json(JSON.parse(text));
   } catch (error: any) {
-    console.error("Gemini 분석 에러:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    // 터미널에 아주 자세한 에러 원인을 찍어줍니다.
+    console.error("🔥 Gemini API 에러 상세:", error.message); 
+    console.error("🔥 에러 스택:", error.stack);
+    
+    return NextResponse.json({ 
+      error: "AI 분석 중 오류가 발생했습니다.",
+      detail: error.message 
+    }, { status: 500 });
   }
 }
