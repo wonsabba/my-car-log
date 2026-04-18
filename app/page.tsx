@@ -54,7 +54,7 @@ export default function Home() {
     if (!file) return;
 
     setIsAnalyzing(true);
-    showToast("🔍 AI가 영수증을 분석 중입니다...", "success");
+    showToast("🔍 AI 영수증을 분석중...", "success");
 
     // 서버로 보낼 데이터 준비
     const apiFormData = new FormData();
@@ -78,14 +78,14 @@ export default function Home() {
       console.log('압축 후 용량:', compressedFile.size / 1024 / 1024, 'MB');
 
       // 3. 압축된 파일을 FormData에 담아 서버로 전송
-      const formData = new FormData();
-      formData.append("file", compressedFile);
-      formData.append("tab", activeTab);
+      const apiFormDataWithCompressed = new FormData(); 
+      apiFormDataWithCompressed.append("file", compressedFile);
+      apiFormDataWithCompressed.append("tab", activeTab);
 
       // 🚀 우리가 만든 API Route 호출
       const response = await fetch("/api/analyze", {
         method: "POST",
-        body: apiFormData,
+        body: apiFormDataWithCompressed,
       });
 
       if (!response.ok) throw new Error("분석 실패");
@@ -114,7 +114,7 @@ export default function Home() {
       }
 
       setIsInputModalOpen(true); // 입력 모달창 열기
-      showToast("✅ 인식 완료! 내용을 확인해주세요.");
+      showToast("✅ 인식완료! 확인해주세요.");
     } catch (error) {
       console.error("분석 에러:", error);
       showToast("인식에 실패했습니다. 직접 입력해주세요.", "error");
