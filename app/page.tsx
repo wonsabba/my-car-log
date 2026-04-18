@@ -54,7 +54,7 @@ export default function Home() {
     if (!file) return;
 
     setIsAnalyzing(true);
-    showToast("🔍 AI 영수증을 분석중...", "success");
+    showToast("🔍 AI 영수증 분석중...", "success");
 
     // 서버로 보낼 데이터 준비
     const apiFormData = new FormData();
@@ -114,7 +114,7 @@ export default function Home() {
       }
 
       setIsInputModalOpen(true); // 입력 모달창 열기
-      showToast("✅ 인식완료! 확인해주세요.");
+      showToast("✅ 인식완료! 내용을 확인해 주세요.");
     } catch (error) {
       console.error("분석 에러:", error);
       showToast("인식에 실패했습니다. 직접 입력해주세요.", "error");
