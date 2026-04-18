@@ -114,7 +114,7 @@ export default function Home() {
       }
 
       setIsInputModalOpen(true); // 입력 모달창 열기
-      showToast("✅ 인식완료! 내용을 확인해 주세요.");
+      showToast("✅ 인식완료! 내용확인.");
     } catch (error) {
       console.error("분석 에러:", error);
       showToast("인식에 실패했습니다. 직접 입력해주세요.", "error");
