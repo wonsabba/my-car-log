@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { supabase } from "../utils/supabase";
 import Link from "next/link";
 import * as XLSX from "xlsx";
@@ -23,6 +23,9 @@ export default function Home() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const [formData, setFormData] = useState({
     refuel_date: new Date().toISOString().split('T')[0],
     brand: "1",
@@ -40,6 +43,50 @@ export default function Home() {
     odometer_km: "",
     memo: ""
   });
+
+  // --- 영수증 처리 로직 추가 ---
+  const handleReceiptClick = () => fileInputRef.current?.click();
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsAnalyzing(true);
+    showToast("🔍 AI 영수증 분석 중...", "success");
+
+    try {
+      // 1.5초 대기 (Vibe Coding 테스트용)
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
+      if (activeTab === "fuel") {
+        setFormData({
+          refuel_date: new Date().toISOString().split('T')[0],
+          brand: "1",
+          unit_price_krw: "1650",
+          fuel_volume_l: "45.45",
+          amount_krw: "75000",
+          distance_km: "" // 주행거리는 직접 입력 유도
+        });
+      } else {
+        setMaintFormData({
+          maint_date: new Date().toISOString().split('T')[0],
+          company: "블루핸즈(AI)",
+          content: "엔진오일 교환",
+          amount_krw: "120000",
+          odometer_km: "",
+          memo: "영수증 자동 인식"
+        });
+      }
+
+      setIsInputModalOpen(true); // 모달 자동 열기
+      showToast("✅ 분석 완료! 내용을 확인하세요.");
+    } catch (error) {
+      showToast("분석 실패", "error");
+    } finally {
+      setIsAnalyzing(false);
+      if (e.target) e.target.value = "";
+    }
+  };
 
   // 주유금액 자동 계산
   useEffect(() => {
@@ -213,6 +260,12 @@ export default function Home() {
 
   return (
     <div className={`flex flex-col h-screen w-full mx-auto overflow-hidden font-sans transition-colors duration-300 ${isDarkMode ? 'bg-[#0f172a] text-slate-100' : 'bg-slate-50 text-slate-800'}`}>
+      
+      {/* 분석 중일 때 상단에 파란색 로딩 바 표시 */}
+      {isAnalyzing && (
+        <div className="fixed top-0 left-0 w-full h-1.5 bg-blue-500 z-[200] animate-pulse" />
+      )}
+
       {toast && <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-[110] px-6 py-2 rounded-full shadow-xl bg-blue-600 text-white font-bold text-xs shrink-0">{toast.msg}</div>}
 
       <header className={`w-full p-4 border-b shrink-0 ${isDarkMode ? 'bg-[#1e293b] border-slate-800' : 'bg-white border-slate-200'}`}>
@@ -271,12 +324,33 @@ export default function Home() {
 
           {/* ✅ 신규 버튼과 엑셀 버튼을 하나의 묶음으로 처리하여 나란히 배치 */}
           <div className="flex items-center gap-2 shrink-0">
+            {/* 숨겨진 Input */}
+            <input
+              type="file"
+              ref={fileInputRef}
+              className="hidden"
+              accept="image/*"
+              capture="environment"
+              onChange={handleFileChange}
+            />
+            
+            {/* 영수증 버튼 추가 */}
+            <button 
+              onClick={handleReceiptClick}
+              disabled={isAnalyzing}
+              className={`p-1.5 rounded-md transition-all active:scale-90 ${isAnalyzing ? 'animate-pulse' : ''} ${isDarkMode ? 'hover:bg-slate-800' : 'hover:bg-slate-100'}`}
+              title="영수증 인식"
+            >
+              <span className="text-lg">📷</span>
+            </button>
+
             <button 
               onClick={downloadExcel} 
               className={`p-1.5 rounded-md transition-all active:scale-90 ${isDarkMode ? 'hover:bg-slate-800' : 'hover:bg-slate-100'}`}
             >
               <span className="text-lg">📊</span>
             </button>
+            
             <button 
               onClick={() => {resetForm(); setIsInputModalOpen(true);}} 
               className="px-3 py-1.5 bg-blue-600 text-white rounded-xl font-black text-[11px] active:scale-95 transition-all shadow-md"
