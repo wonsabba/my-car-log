@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { supabase } from "../utils/supabase";
 import Link from "next/link";
 import * as XLSX from "xlsx";
+import imageCompression from 'browser-image-compression';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<"fuel" | "maint">("fuel");
@@ -53,7 +54,7 @@ export default function Home() {
     if (!file) return;
 
     setIsAnalyzing(true);
-    showToast("🔍 AI가 영수증을 분석하고 있습니다...", "success");
+    showToast("🔍 AI가 영수증을 분석 중입니다...", "success");
 
     // 서버로 보낼 데이터 준비
     const apiFormData = new FormData();
@@ -61,6 +62,26 @@ export default function Home() {
     apiFormData.append("tab", activeTab); // 현재 '주유'인지 '정비'인지 알려줌
 
     try {
+
+      // 1. 압축 옵션 설정
+      const options = {
+        maxSizeMB: 1,          // 최대 용량 1MB
+        maxWidthOrHeight: 1280, // 가로세로 최대 1280px (AI 인식에 충분한 화질)
+        useWebWorker: true,
+      };
+
+      console.log('압축 시작 전 용량:', file.size / 1024 / 1024, 'MB');
+
+      // 2. 이미지 압축 실행
+      const compressedFile = await imageCompression(file, options);
+
+      console.log('압축 후 용량:', compressedFile.size / 1024 / 1024, 'MB');
+
+      // 3. 압축된 파일을 FormData에 담아 서버로 전송
+      const formData = new FormData();
+      formData.append("file", compressedFile);
+      formData.append("tab", activeTab);
+
       // 🚀 우리가 만든 API Route 호출
       const response = await fetch("/api/analyze", {
         method: "POST",
