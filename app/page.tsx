@@ -47,44 +47,59 @@ export default function Home() {
   // --- 영수증 처리 로직 추가 ---
   const handleReceiptClick = () => fileInputRef.current?.click();
 
+  // --- 영수증 처리 로직 (Gemini API 연동 버전) ---
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     setIsAnalyzing(true);
-    showToast("🔍 AI 영수증 분석 중...", "success");
+    showToast("🔍 AI가 영수증을 분석하고 있습니다...", "success");
+
+    // 서버로 보낼 데이터 준비
+    const apiFormData = new FormData();
+    apiFormData.append("file", file);
+    apiFormData.append("tab", activeTab); // 현재 '주유'인지 '정비'인지 알려줌
 
     try {
-      // 1.5초 대기 (Vibe Coding 테스트용)
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      // 🚀 우리가 만든 API Route 호출
+      const response = await fetch("/api/analyze", {
+        method: "POST",
+        body: apiFormData,
+      });
 
+      if (!response.ok) throw new Error("분석 실패");
+
+      const result = await response.json();
+
+      // AI가 분석해준 결과값(result)을 입력 폼에 세팅
       if (activeTab === "fuel") {
         setFormData({
-          refuel_date: new Date().toISOString().split('T')[0],
-          brand: "1",
-          unit_price_krw: "1650",
-          fuel_volume_l: "45.45",
-          amount_krw: "75000",
+          refuel_date: result.refuel_date || new Date().toISOString().split('T')[0],
+          brand: String(result.brand || "1"),
+          unit_price_krw: String(result.unit_price_krw || ""),
+          fuel_volume_l: String(result.fuel_volume_l || ""),
+          amount_krw: String(result.amount_krw || ""),
           distance_km: "" // 주행거리는 직접 입력 유도
         });
       } else {
         setMaintFormData({
-          maint_date: new Date().toISOString().split('T')[0],
-          company: "블루핸즈(AI)",
-          content: "엔진오일 교환",
-          amount_krw: "120000",
+          maint_date: result.maint_date || new Date().toISOString().split('T')[0],
+          company: result.company || "",
+          content: result.content || "",
+          amount_krw: String(result.amount_krw || ""),
           odometer_km: "",
-          memo: "영수증 자동 인식"
+          memo: "AI 자동인식"
         });
       }
 
-      setIsInputModalOpen(true); // 모달 자동 열기
-      showToast("✅ 분석 완료! 내용을 확인하세요.");
+      setIsInputModalOpen(true); // 입력 모달창 열기
+      showToast("✅ 인식 완료! 내용을 확인해주세요.");
     } catch (error) {
-      showToast("분석 실패", "error");
+      console.error("분석 에러:", error);
+      showToast("인식에 실패했습니다. 직접 입력해주세요.", "error");
     } finally {
       setIsAnalyzing(false);
-      if (e.target) e.target.value = "";
+      if (e.target) e.target.value = ""; // 파일 선택 초기화
     }
   };
 

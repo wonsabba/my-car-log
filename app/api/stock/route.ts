@@ -1,5 +1,6 @@
 // app/api/stock/route.ts
 import { NextResponse } from 'next/server';
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
