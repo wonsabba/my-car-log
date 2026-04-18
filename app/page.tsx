@@ -380,25 +380,25 @@ export default function Home() {
             
             {/* 영수증 버튼 추가 */}
             <button 
-  onClick={handleReceiptClick}
-  disabled={isAnalyzing}
-  className={`p-1.5 rounded-md transition-all active:scale-90 flex items-center justify-center ${
-    isAnalyzing ? 'animate-pulse' : ''
-  } ${
-    isDarkMode ? 'hover:bg-slate-800' : 'hover:bg-slate-100'
-  }`}
-  style={{ width: '42px', height: '42px' }} // 👈 버튼 크기는 유지하면서 고정
-  title="영수증 인식"
->
-  <span className={`
-    text-[28px]               /* 👈 아이콘 크기를 기존 text-lg보다 훨씬 키움 */
-    leading-[0]                /* 👈 줄 높이를 0으로 만들어 아래 쏠림 방지 */
-    flex items-center justify-center
-    translate-y-[-4px]         /* 👈 그래도 미세하게 아래라면 여기서 조절 */
-  `}>
-    📷
-  </span>
-</button>
+              onClick={handleReceiptClick}
+              disabled={isAnalyzing}
+              className={`p-1.5 rounded-md transition-all active:scale-90 flex items-center justify-center ${
+                isAnalyzing ? 'animate-pulse' : ''
+              } ${
+                isDarkMode ? 'hover:bg-slate-800' : 'hover:bg-slate-100'
+              }`}
+              style={{ width: '42px', height: '42px' }} // 👈 버튼 크기는 유지하면서 고정
+              title="영수증 인식"
+            >
+              <span className={`
+                text-[28px]               /* 👈 아이콘 크기를 기존 text-lg보다 훨씬 키움 */
+                leading-[0]                /* 👈 줄 높이를 0으로 만들어 아래 쏠림 방지 */
+                flex items-center justify-center
+                translate-y-[-1px]         /* 👈 그래도 미세하게 아래라면 여기서 조절 */
+              `}>
+                📷
+              </span>
+            </button>
 
             <button 
               onClick={() => {resetForm(); setIsInputModalOpen(true);}} 
